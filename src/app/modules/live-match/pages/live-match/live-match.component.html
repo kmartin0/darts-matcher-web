@@ -1,0 +1,16 @@
+<div class="page-container" [ngClass]="{'full': setInPlay?.set === selectedRound?.set && legInPlay?.leg === selectedRound?.leg}">
+
+    <mat-toolbar color="primary"></mat-toolbar>
+
+    <app-x01-match-sheet (selectedRound$)="selectedRound=$event"
+                         (editScore)="onScoreSubmit(createEditThrow($event))"
+                         (deleteThrow)="publishDeleteThrow($event)" (deleteSet)="publishDeleteSet($event)"
+                         (deleteLeg)="publishDeleteLeg($event)" [checkouts]="checkouts"
+                         [match]="match"></app-x01-match-sheet>
+
+  <mat-error class="match-error">{{error | async}}</mat-error>
+
+    <app-keyboard *ngIf="setInPlay?.set === selectedRound?.set && legInPlay?.leg === selectedRound?.leg"
+                  (scoreOutput)="onScoreSubmit(createNewThrow($event))"></app-keyboard>
+
+</div>

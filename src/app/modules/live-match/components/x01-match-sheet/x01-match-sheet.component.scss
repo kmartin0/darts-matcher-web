@@ -1,0 +1,204 @@
+@import "devices";
+
+.container {
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-rows: max-content max-content 1fr;
+  grid-gap: 8px;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+}
+
+// ===== PLAYER INFORMATION SECTION =====
+.mat-card {
+  padding: 8px;
+  word-wrap: break-word;
+}
+
+.players-information-container, .players-remaining-container {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(112px, 1fr);
+  grid-gap: 6px;
+  text-align: center;
+  word-break: break-all;
+}
+
+.player-information-container {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-rows: max-content 1fr max-content;
+  grid-gap: 8px;
+}
+
+.average-container > div, .best-of-container > div, .player-score-container > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: auto;
+
+  @include device(phone, phablet, tablet) {
+    width: 90%;
+  }  .average-container-label {
+       border-bottom: 1px solid;
+     }
+
+  @include device(desktop) {
+    width: 75%;
+  }
+
+  @include device(desktop-xl) {
+    width: 50%;
+  }
+}
+
+.average-container > div {
+  @include device(phone) {
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+.average-container > div > *, .best-of-container > div > * {
+  padding: 4px;
+}
+
+.average-container-label {
+  border-bottom: 1px solid;
+}
+
+.player-information-middle-container {
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-rows: max-content 1fr;
+}
+
+.edit-score-button {
+  padding: 4px;
+  align-self: center;
+  margin: 0 auto;
+  width: 100%;
+
+  @include device(tablet, desktop, desktop-xl) {
+    width: 75%;
+  }
+}
+
+.name {
+  min-height: 2em;
+  max-height: 2em;
+}
+
+// ===== REMAINING SECTION =====
+.player-remaining-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.player-remaining-middle-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.leg-select-header-container {
+  display: grid;
+  grid-auto-flow: column;
+  align-items: center;
+}
+
+.player-information-middle-container, .player-remaining-middle-container, .timeline-cell-header.timeline-darts-header, .timeline-cell-value.timeline-darts-value {
+  @include device(desktop-xl) {
+    grid-column: span 1;
+  }
+}
+
+.player-information-container, .player-remaining-container, .timeline-cell-header, .timeline-cell-value {
+  @include device(desktop-xl) {
+    grid-column: span 2;
+  }
+}
+
+.player-information-container, .player-remaining-container, .player-information-middle-container, .player-remaining-middle-container {
+  border-style: solid;
+  border-width: 2px;
+}
+
+.starts-leg {
+  height: 1em;
+  width: 1em;
+  margin: 4px auto;
+  border-radius: 50%;
+}
+
+.checkout-hint span:not(:nth-child(-n+2)):before  {
+  content: ', ';
+}
+
+// ===== TIMELINE SECTION =====
+.timeline-container {
+  height: 100%;
+  min-height: 185px;
+  width: 100%;
+  overflow-y: scroll;
+}
+
+.timeline-container::-webkit-scrollbar {
+  display: none;
+}
+
+//.timeline-table {
+//  width: 100%;
+//  table-layout: fixed;
+//  padding: 0;
+//  margin: 0;
+//}
+
+//.timeline-cell-content {
+//  flex-direction: row;
+//  display: flex;
+//  align-items: center;
+//}
+
+//table tr, table th, table td {
+//  text-align: center;
+//  padding: 4px;
+//  word-wrap: break-word;
+//}
+
+//table tr {
+//  width: 100%;
+//  background-color: yellow;
+//  //display: grid;
+//  //  grid-auto-flow: column;
+//  //  grid-auto-columns: 1fr;
+//  //  position: sticky;
+//}
+
+.timeline-header-row, .timeline-data-row {
+  width: 100%;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  word-break: break-all;
+}
+
+.timeline-cell-header, .timeline-cell-value {
+  padding: 8px;
+  margin: 0;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  justify-items: center;
+}
+
+.timeline-cell-header > *, .timeline-cell-value > * {
+  padding: 4px;
+}
+
+mat-footer-row::after, mat-header-row::after, mat-row::after {
+  display: none;
+}

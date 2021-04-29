@@ -1,0 +1,85 @@
+<form appLoading [loading$]="loading$" class="vertical-form" [formGroup]="form" (ngSubmit)="onSubmitForm()"
+      #formDirective="ngForm">
+  <mat-form-field appearance="outline">
+    <mat-label>Username</mat-label>
+    <input matInput
+           aria-labelledby="label-username"
+           type="text"
+           placeholder="JohnDoe1"
+           formControlName="userName">
+    <mat-error>
+      <ng-template appFormControlError [control]="form.get('userName')"></ng-template>
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>first name</mat-label>
+    <input matInput
+           aria-labelledby="label-firstName"
+           type="text"
+           placeholder="John"
+           formControlName="firstName">
+    <mat-error>
+      <ng-template appFormControlError [control]="form.get('firstName')"></ng-template>
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>last name</mat-label>
+    <input matInput
+           aria-labelledby="label-lastName"
+           type="text"
+           placeholder="Doe"
+           formControlName="lastName">
+    <mat-error>
+      <ng-template appFormControlError [control]="form.get('lastName')"></ng-template>
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+    <input matInput
+           aria-labelledby="label-email"
+           type="email"
+           placeholder="JohnDoe@email.com"
+           formControlName="email">
+    <mat-error>
+      <ng-template appFormControlError [control]="form.get('email')"></ng-template>
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Password</mat-label>
+    <input matInput
+           aria-labelledby="label-password"
+           type="password"
+           placeholder="*****"
+           formControlName="password"
+           autocomplete="off">
+    <mat-error>
+      <ng-template appFormControlError [control]="form.get('password')"></ng-template>
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Password</mat-label>
+    <input matInput
+           aria-labelledby="label-password-confirm"
+           type="password"
+           placeholder="*****"
+           formControlName="confirmPassword"
+           autocomplete="off">
+    <mat-error>
+      <ng-template appFormControlError [control]="form.get('confirmPassword')"></ng-template>
+    </mat-error>
+  </mat-form-field>
+
+  <mat-error class="form-group-errors">
+    <ng-template appFormControlError [control]="form"></ng-template>
+  </mat-error>
+
+  <button [disabled]="loading$ | async" mat-flat-button color="primary" type="submit">Register</button>
+  <!--    <div *ngIf="loading$ | async" class="spinner">-->
+  <!--      <mat-spinner diameter="48"></mat-spinner>-->
+  <!--    </div>-->
+</form>

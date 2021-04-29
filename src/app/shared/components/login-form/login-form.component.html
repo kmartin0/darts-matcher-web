@@ -1,0 +1,34 @@
+<form appLoading [loading$]="loading$" class="vertical-form" [formGroup]="form" (ngSubmit)="onSubmitForm()"
+      #formDirective="ngForm">
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+    <input matInput
+           aria-labelledby="label-email"
+           type="email"
+           placeholder="JohnDoe@email.com"
+           formControlName="email"
+           required>
+    <mat-error>
+      <ng-template appFormControlError [control]="form.get('email')"></ng-template>
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Password</mat-label>
+    <input matInput
+           aria-labelledby="label-password"
+           type="password"
+           placeholder="*****"
+           formControlName="password"
+           required
+           autocomplete="on">
+    <mat-error>
+      <ng-template appFormControlError [control]="form.get('password')"></ng-template>
+    </mat-error>
+  </mat-form-field>
+
+  <mat-error>
+    <ng-template appFormControlError [control]="form"></ng-template>
+  </mat-error>
+  <button [disabled]="loading$ | async" mat-flat-button color="primary" type="submit">Login</button>
+</form>

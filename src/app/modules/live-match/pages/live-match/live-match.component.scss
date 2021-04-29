@@ -1,0 +1,30 @@
+.page-container {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-rows: max-content minmax(100px, 2fr) auto;
+  grid-gap: 8px;
+  padding-bottom: 8px;
+}
+
+app-x01-match-sheet, app-keyboard, mat-error {
+  padding: 0 6px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+app-x01-match-sheet, app-keyboard {
+  width: 100%;
+  height: 100%;
+}
+
+app-x01-match-sheet {
+  overflow-y: auto;
+}
+
+.match-error {
+  min-height: 1em;
+}
+
+.page-container.full {
+  grid-template-rows: max-content minmax(100px, 2fr) auto minmax(140px, 1fr);
+}

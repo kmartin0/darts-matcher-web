@@ -1,0 +1,34 @@
+@import '~@angular/material/theming';
+
+@mixin app-sidebar-theme($color-config) {
+  $background: map-get($color-config, background);
+  $primary: map-get($color-config, primary);
+  $accent: map-get($color-config, accent);
+  $border-color: mat-color($background, contrast-card);
+
+  .dashboard-sidenav {
+    background-color: mat-color($accent);
+  }
+
+  .dashboard-sidenav a {
+    color: mat-color($accent, default-contrast);
+  }
+
+  .dashboard-sidenav li:hover a {
+    color: mat-color($primary, default-contrast);
+  }
+
+  .dashboard-sidenav li:hover {
+    background-color: mat-color($primary, .75);
+  }
+
+  li.active-nav {
+    border-left-color: mat-color($accent, 900);
+  }
+
+  li.active-nav:hover {
+    border-left-color: mat-color($primary, 900);
+  }
+
+}
+

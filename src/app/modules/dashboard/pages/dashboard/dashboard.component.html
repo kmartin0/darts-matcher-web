@@ -1,0 +1,39 @@
+<div class="page-container">
+  <mat-toolbar color="primary">
+    <button (click)="sidenav.toggle()" mat-icon-button>
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>{{title}}</span>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav class="dashboard-sidenav" mode="side" opened>
+      <div>
+        <ul>
+          <li [routerLinkActive]="['active-nav']">
+            <a [routerLink]="navRoutes.createMatch" >
+              <mat-icon svgIcon="darts"></mat-icon>
+              <span>Create X01Match</span>
+            </a>
+          </li>
+
+          <li [routerLinkActive]="['active-nav']">
+            <a [routerLink]="navRoutes.matchHistory">
+              <mat-icon svgIcon="darts"></mat-icon>
+              <span>X01Match history</span>
+            </a>
+          </li>
+
+          <li class="logout">
+            <a (click)="onLogout()">
+              <mat-icon svgIcon="logout"></mat-icon>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content class="dashboard-content"><router-outlet></router-outlet></mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
+

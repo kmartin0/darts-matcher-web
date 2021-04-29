@@ -1,0 +1,81 @@
+<form appLoading [loading$]="loading$" class="vertical-form" [formGroup]="form" (ngSubmit)="onSubmitForm()"
+      #formDirective="ngForm">
+  <label style="margin-bottom: 4px">Select match type</label>
+  <mat-radio-group formControlName="matchType">
+    <mat-radio-button value="MATCH_501">501</mat-radio-button>
+    <mat-error>
+      <ng-template appFormControlError [control]="form.get('matchType')"></ng-template>
+    </mat-error>
+  </mat-radio-group>
+
+  <div formGroupName="bestOf" class="vertical-form" style="margin-top: 12px">
+    <label style="margin-bottom: 4px">Select best of type</label>
+    <mat-radio-group style="margin-bottom: 16px" formControlName="type">
+      <mat-radio-button value="SETS">Sets</mat-radio-button>
+      <mat-radio-button value="LEGS">Legs</mat-radio-button>
+      <mat-error>
+        <ng-template appFormControlError [control]="form.get('bestOf').get('type')"></ng-template>
+      </mat-error>
+    </mat-radio-group>
+
+    <div>
+      <mat-form-field class="best-of-input" *ngIf="form.get('bestOf').get('type').value === 'SETS'"
+                      appearance="outline">
+        <mat-label>Sets</mat-label>
+        <input matInput
+               aria-labelledby="label-sets"
+               type="number"
+               placeholder="3"
+               formControlName="sets">
+        <mat-error>
+          <ng-template appFormControlError [control]="form.get('bestOf').get('sets')"></ng-template>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="best-of-input" appearance="outline">
+        <mat-label>Legs</mat-label>
+        <input matInput
+               aria-labelledby="label-legs"
+               type="number"
+               placeholder="5"
+               formControlName="legs">
+        <mat-error>
+          <ng-template appFormControlError [control]="form.get('bestOf').get('legs')"></ng-template>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div formArrayName="players">
+
+    <div class="players-label-container">
+      <mat-label class="players-label-item">Players</mat-label>
+      <button class="players-label-item" *ngIf="players.controls.length < 4" type="button" mat-icon-button
+              color="accent" (click)="addPlayer()">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </div>
+
+    <div *ngFor="let player of players.controls; let i=index">
+      <mat-form-field appearance="outline">
+        <mat-label>Player</mat-label>
+        <input matInput
+               type="text"
+               placeholder="John Doe"
+               [formControlName]="i">
+        <button tabindex="-1" *ngIf="players.controls.length > 1" type="button" mat-icon-button matSuffix (click)="removePlayer(i)">
+          <mat-icon>remove_circle</mat-icon>
+        </button>
+        <mat-error>
+          <ng-template appFormControlError [control]="players.controls[i]"></ng-template>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <mat-error>
+    <ng-template appFormControlError [control]="form"></ng-template>
+  </mat-error>
+
+  <button [disabled]="loading$ | async" mat-flat-button color="primary" type="submit">Create</button>
+</form>

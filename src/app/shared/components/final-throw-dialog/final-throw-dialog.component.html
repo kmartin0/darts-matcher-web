@@ -1,0 +1,15 @@
+<label class="mat-title" id="final-throw-radio-group-label">Darts used final throw</label>
+<div mat-dialog-content>
+  <mat-radio-group
+    aria-labelledby="final-throw-radio-group-label"
+    class="final-throw-radio-group"
+    [formControl]="dartsUsedFormControl">
+    <mat-radio-button class="final-throw-radio-button" *ngFor="let darts of dartsUsedOptions" [value]="darts">
+      {{darts}}
+    </mat-radio-button>
+  </mat-radio-group>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button (click)="onSubmit()">Ok</button>
+</div>

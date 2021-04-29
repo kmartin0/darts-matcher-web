@@ -1,0 +1,8 @@
+<div class="dashboard-page-container">
+  <div class="match-settings-container">
+   <h1>X01Match Settings</h1>
+    <div class="surface">
+      <app-create-match-form [loading$]="loading$" (validForm)="createMatch($event)"></app-create-match-form>
+    </div>
+  </div>
+</div>

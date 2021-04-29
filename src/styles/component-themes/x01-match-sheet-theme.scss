@@ -1,0 +1,73 @@
+@import '~@angular/material/theming';
+@import "devices";
+
+@mixin app-player-leg-theme($color-config, $typography-config) {
+  @if $color-config != null {
+    @include app-player-leg-color($color-config);
+  }
+  @if $typography-config != null {
+    @include app-player-leg-typography($typography-config);
+  }
+}
+
+@mixin app-player-leg-color($color-config) {
+  $primary: map-get($color-config, primary);
+  $accent: map-get($color-config, accent);
+
+  .player-information-container, .player-remaining-container, .player-information-middle-container, .player-remaining-middle-container {
+    border-color: transparent;
+  }
+
+  .player-information-container.current-throw, .player-remaining-container.current-throw {
+    border-color: mat-color($primary);
+  }
+
+  .starts-leg {
+    background-color: mat-color($accent);
+  }
+}
+
+@mixin app-player-leg-typography($typography-config) {
+
+  .players-information-container, .players-remaining-container, .timeline-cell-value, .timeline-cell-header, .match-error {
+    @include device(phone, phablet) {
+      @include mat-typography-level-to-styles($typography-config, subheading-2);
+    }
+
+    @include device(tablet, desktop, desktop-xl) {
+      @include mat-typography-level-to-styles($typography-config, title);
+    }
+  }
+
+  .name {
+    @include device(phone, phablet) {
+      @include mat-typography-level-to-styles($typography-config, title);
+    }
+
+    @include device(tablet, desktop, desktop-xl) {
+      @include mat-typography-level-to-styles($typography-config, headline);
+      font-weight: 500;
+    }
+  }
+
+  .average-value, .best-of-value, .last-score-value, .player-score-value {
+    font-weight: 600;
+  }
+
+  .big-remaining {
+    @include device(phone) {
+      @include mat-typography-level-to-styles($typography-config, headline);
+      font-weight: 500;
+    }
+
+    @include device(phablet) {
+      @include mat-typography-level-to-styles($typography-config, display-1);
+      font-weight: 600;
+    }
+
+    @include device(tablet, desktop, desktop-xl) {
+      @include mat-typography-level-to-styles($typography-config, display-3);
+      font-weight: 600;
+    }
+  }
+}

@@ -1,0 +1,19 @@
+<p class="title">Remove the selected set or leg</p>
+<p *ngIf="action === actions.DELETE_SET" class="subtitle">Are you sure you want to delete Set {{data.selectedSetNumber}}?</p>
+<p *ngIf="action === actions.DELETE_LEG" class="subtitle">Are you sure you want to delete Leg {{data.selectedLegNumber}}?</p>
+<div *ngIf="isDataValid(); else emptyState" class="delete-buttons-container">
+  <ng-container *ngIf="action === null">
+    <button type="button" mat-flat-button color="warn" (click)="onDeleteSetClick()">Delete selected Set: {{data.selectedSetNumber}}</button>
+    <button type="button" mat-flat-button color="warn" (click)="onDeleteLegClick()">Delete selected Leg: {{data.selectedLegNumber}}</button>
+  </ng-container>
+
+</div>
+
+<ng-template #emptyState>
+  No edit actions can be made yet.
+</ng-template>
+
+<div mat-dialog-actions>
+  <button type="button" cdkfocusinitial mat-button (click)="onCancel()">Cancel</button>
+  <button *ngIf="action !== null" type="button" mat-button color="warn" (click)="onDelete()">Yes</button>
+</div>

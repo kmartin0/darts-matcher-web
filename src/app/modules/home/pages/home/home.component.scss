@@ -1,0 +1,32 @@
+@import '~@angular/material/theming';
+
+.page-container {
+  padding: 12px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+header {
+  width: fit-content;
+  text-align: center;
+  align-self: center;
+}
+
+#title {
+  margin: 0;
+}
+
+#subtitle {
+  margin: 0;
+}
+
+header, .login-register-container {
+  margin-bottom: 24px;
+}
+
+.login-register-container.disabled {
+  pointer-events: none;
+  opacity: .5;
+}

@@ -1,0 +1,61 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidenav-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.dashboard-sidenav {
+  padding: 12px 0;
+  width: 260px;
+  flex: 1;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  width: 100%;
+  text-decoration: none;
+  display: inline-block;
+  white-space: nowrap;
+  padding: 10px 14px;
+}
+
+li {
+  list-style-position: inside;
+}
+
+li:hover {
+  cursor: pointer;
+}
+
+li.active-nav {
+  border-left-width: 6px;
+  border-left-style: solid;
+}
+
+li.active-nav a {
+  padding-left: 8px;
+}
+
+.logout {
+  margin-top: 24px;
+}
+
+mat-icon {
+  vertical-align: middle;
+  line-height: 100%;
+  margin-right: 12px;
+}
+
+.dashboard-content {
+  flex: 1;
+}

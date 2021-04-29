@@ -1,0 +1,46 @@
+@import "devices";
+
+.mat-dialog-actions {
+  justify-content: flex-end;
+}
+
+.title {
+  line-height: 1em;
+  font-weight: 500;
+  font-size: 18px;
+
+  @include tablet() {
+    font-size: 20px;
+  }
+
+  @include desktop() {
+    font-size: 26px;
+  }
+
+  @include desktop-xl() {
+    font-size: 26px;
+  }
+}
+
+.subtitle {
+  line-height: 1em;
+  font-weight: 500;
+  font-size: 14px;
+
+  @include tablet() {
+    font-size: 15px;
+  }
+
+  @include desktop() {
+    font-size: 16px;
+  }
+
+  @include desktop-xl() {
+    font-size: 16px;
+  }
+}
+
+.edit-throw-form {
+  display: flex;
+  flex-direction: column;
+}

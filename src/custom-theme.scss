@@ -1,0 +1,59 @@
+@import '~@angular/material/theming';
+@import "component-themes";
+@import url('https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
+// Define a custom typography config that overrides the font-family as well as the
+// `headlines` and `body-1` levels.
+$custom-typography: mat-typography-config(
+  $font-family: 'Roboto, sans serif',
+  $headline: mat-typography-level(32px, 48px, 700)
+);
+
+// TODO: Dashboard + Home Responsive font size.
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core($custom-typography);
+
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$primary: mat-palette($mat-indigo);
+$accent: mat-palette($mat-green);
+$warn: mat-palette($mat-red);
+
+$custom-color-collection: (
+  help : #181817,
+  success :  #0a630f,
+  contrast: (
+    success :  #FFFFFF,
+    help: #FFFFFF
+  )
+);
+
+$my-app-custom: mat-palette($custom-color-collection, custom);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as `color` or `typography`.
+$candy-app-theme: mat-light-theme(
+    $primary,
+    $accent,
+    $warn
+);
+
+$color-config: mat-get-color-config($candy-app-theme);
+
+$candy-app-theme: map_merge($candy-app-theme, (custom: $my-app-custom));
+$custom: map-get($candy-app-theme, custom);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($candy-app-theme);
+
+// Custom Component Themes
+@include custom-component-themes($color-config, $custom-typography);
+

@@ -1,0 +1,34 @@
+@import '~@angular/material/theming';
+@import "devices";
+
+@mixin app-keyboard-theme($color-config, $typography-config) {
+  @if $color-config != null {
+    @include app-keyboard-color($color-config);
+  }
+  @if $typography-config != null {
+    @include app-keyboard-typography($typography-config);
+  }
+}
+
+@mixin app-keyboard-color($color-config) {
+  $primary: map-get($color-config, primary);
+  $accent: map-get($color-config, accent);
+
+}
+
+@mixin app-keyboard-typography($typography-config) {
+  .score-title, .score-value {
+    @include device(phone) {
+      @include mat-typography-level-to-styles($typography-config, subheading-2);
+    }
+
+    @include device(phablet) {
+      @include mat-typography-level-to-styles($typography-config, subheading-2);
+      font-weight: 500;
+    }
+
+    @include device(tablet, desktop, desktop-xl) {
+      @include mat-typography-level-to-styles($typography-config, title);
+    }
+  }
+}

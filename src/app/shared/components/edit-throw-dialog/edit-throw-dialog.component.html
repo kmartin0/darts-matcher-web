@@ -1,0 +1,22 @@
+<p class="title">Edit score</p>
+
+<div *ngIf="isDataValid(); else emptyState" class="edit-throw-form">
+  <p class="subtitle">Set {{data.selectedSetNumber}} - Leg {{data.selectedLegNumber}} - Round {{data.round}}</p>
+
+  <mat-form-field style="width: fit-content" class="leg-select-field" appearance="outline">
+    <mat-label>New Score</mat-label>
+    <input matInput cdkfocusinitial autocomplete="off" type="number" [formControl]="newScoreInput">
+    <mat-error *ngIf="newScoreInput.invalid">{{newScoreInput.getError('invalid')}}</mat-error>
+  </mat-form-field>
+
+</div>
+
+<ng-template #emptyState>
+  There are no rounds played in this leg, no score can be edited.
+</ng-template>
+
+<div mat-dialog-actions>
+  <button *ngIf="isDataValid()" type="button" mat-button (click)="onDelete()">Delete Score</button>
+  <button type="button" mat-button mat-dialog-close>Cancel</button>
+  <button type="button" mat-button (click)="onSubmit()">Ok</button>
+</div>
