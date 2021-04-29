@@ -4,5 +4,6 @@ export const environment = {
   dartsMatcherApiUrl: 'DARTS_MATCHER_API_URL',
   dartsMatcherWebsocketUrl: 'DARTS_MATCHER_WEBSOCKET_URL',
   clientId: 'CLIENT_ID',
-  clientSecret: 'CLIENT_SECRET'
+  clientSecret: 'CLIENT_SECRET',
+  testString: 'TEST_STRING'
 };
