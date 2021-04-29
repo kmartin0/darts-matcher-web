@@ -1,5 +1,5 @@
 //Install express server
-import {environment} from "./src/environments/environment";
+// import {environment} from "./src/environments/environment";
 
 const express = require('express');
 const bodyParser = require("body-parser");
@@ -17,9 +17,9 @@ app.get('*', function (req, res) {
 });
 
 // Initialize production config vars.
-environment.dartsMatcherApiUrl=process.env.DARTS_MATCHER_API_URL;
-environment.dartsMatcherWebsocketUrl=process.env.DARTS_MATCHER_WEBSOCKET_URL;
-environment.testString=process.env.TEST_STRING;
+// environment.dartsMatcherApiUrl=process.env.DARTS_MATCHER_API_URL;
+// environment.dartsMatcherWebsocketUrl=process.env.DARTS_MATCHER_WEBSOCKET_URL;
+// environment.testString=process.env.TEST_STRING;
 
 // Initialize the app.
 const server = app.listen(process.env.PORT || 4200, function () {
