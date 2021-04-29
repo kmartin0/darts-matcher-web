@@ -5,5 +5,5 @@ export const environment = {
   dartsMatcherWebsocketUrl: 'DARTS_MATCHER_WEBSOCKET_URL',
   clientId: 'CLIENT_ID',
   clientSecret: 'CLIENT_SECRET',
-  testString: 'TEST_STRING'
+  testString: process.env.TEST_STRING
 };
