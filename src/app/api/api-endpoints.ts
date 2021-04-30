@@ -25,8 +25,3 @@ export const CREATE_MATCH = `${BASE_URL}/matches`;
 export const GET_MATCH = (id: string) => `${BASE_URL}/matches/${id}`;
 export const GET_DARTS_MATCHER_WEBSOCKET = `${BASE_URL_WEBSOCKET}/darts-matcher-websocket/websocket`;
 export const GET_CHECKOUTS = `${BASE_URL}/checkouts`;
-
-
-
-
-
