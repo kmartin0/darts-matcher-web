@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
-import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -18,13 +17,6 @@ export class AppComponent {
 
   constructor(private matIconRegistry: MatIconRegistry, private sanitizer: DomSanitizer) {
     this.registerIcons();
-    console.log(environment.dartsMatcherApiUrl);
-    console.log(environment.dartsMatcherWebsocketUrl);
-    console.log(environment.production);
-
-    console.log(environment.clientSecret);
-    console.log(environment.clientId);
-    console.log(environment.testString);
   }
 
   private registerIcons() {
