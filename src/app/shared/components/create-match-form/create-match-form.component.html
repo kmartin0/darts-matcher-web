@@ -56,20 +56,39 @@
       </button>
     </div>
 
-    <div *ngFor="let player of players.controls; let i=index">
+    <div *ngFor="let player of players.controls; let i=index" [formGroup]="$any(player)">
       <mat-form-field appearance="outline">
         <mat-label>Player</mat-label>
         <input matInput
                type="text"
                placeholder="John Doe"
-               [formControlName]="i">
-        <button tabindex="-1" *ngIf="players.controls.length > 1" type="button" mat-icon-button matSuffix (click)="removePlayer(i)">
+               formControlName="playerId">
+
+        <mat-checkbox formControlName="bot" matSuffix>Dart Bot</mat-checkbox>
+
+        <!--        <button title="Login" tabindex="-1" mat-icon-button matSuffix>-->
+        <!--          <mat-icon>login</mat-icon>-->
+        <!--        </button>-->
+
+        <button title="Remove Player" tabindex="-1" *ngIf="players.controls.length > 1" type="button" mat-icon-button
+                matSuffix (click)="removePlayer(i)">
           <mat-icon>remove_circle</mat-icon>
         </button>
+
         <mat-error>
-          <ng-template appFormControlError [control]="players.controls[i]"></ng-template>
+          <ng-template appFormControlError [control]="player.get('playerId')"></ng-template>
         </mat-error>
       </mat-form-field>
+
+      <div *ngIf="player.get('bot')?.value">
+        <mat-label>Dart Bot Average: {{player.get('botAvg')?.value}}</mat-label>
+        <mat-slider class="avg-slider" formControlName="botAvg" thumbLabel min="1" max="180"
+                    step="1"></mat-slider>
+        <mat-error>
+          <ng-template appFormControlError [control]="player.get('botAvg')"></ng-template>
+        </mat-error>
+      </div>
+
     </div>
   </div>
 

@@ -21,6 +21,7 @@ import {WebsocketErrorBody} from '../../../../api/error/websocket-error-body';
 import {ApiErrorEnum} from '../../../../api/error/api-error.enum';
 import {BasicDialogService} from '../../../../shared/services/basic-dialog-service';
 import {TargetErrors} from '../../../../api/error/api-error-body';
+import {PlayerType} from '../../../../shared/models/match/player-type';
 
 @Component({
   selector: 'app-live-match',
@@ -82,6 +83,22 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
       // TODO: For some reason broker is not connected.
     }
   }
+
+  // publishDartBotThrow(dartBotId: string) {
+  //   console.log('DartBot throwing: ' + dartBotId);
+  //
+  //   if (this.liveMatchWebsocket.connected) {
+  //
+  //     const publishParams: IRxStompPublishParams = {
+  //       body: JSON.stringify(x01DeleteLeg),
+  //       destination: `/topic/matches/${x01DeleteLeg.matchId}:delete-leg`
+  //     };
+  //
+  //     this.liveMatchWebsocket.publish(publishParams);
+  //   } else {
+  //     // TODO: For some reason broker is not connected.
+  //   }
+  // }
 
   publishDeleteSet(x01DeleteSet: X01DeleteSet) {
     console.log(x01DeleteSet);
@@ -288,6 +305,14 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
     }, error => {
       console.log(error);
     });
+  }
+
+  private checkDartBotTurn() {
+    const currentThrower = this.match.players.find(matchPlayer => matchPlayer.playerId === this.match.currentThrower);
+
+    if (currentThrower?.playerType === PlayerType.DART_BOT) {
+
+    }
   }
 
 }

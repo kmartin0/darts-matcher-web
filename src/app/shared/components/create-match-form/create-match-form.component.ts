@@ -6,6 +6,7 @@ import {MatchStatus} from '../../models/match/match-status';
 import {MatchType} from '../../models/match/match-type';
 import {MatchPlayer} from '../../models/match/match-player';
 import {PlayerType} from '../../models/match/player-type';
+import {X01DartBotSettings} from '../../models/x01-match/x01-dart-bot/x01-dart-bot-settings';
 
 @Component({
   selector: 'app-create-match-form',
@@ -22,7 +23,11 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
       sets: ['1', [Validators.min(1), Validators.required]],
     }),
     players: this.fb.array([
-      this.fb.control('', Validators.required)
+      this.fb.group({
+        playerId: ['', Validators.required],
+        bot: [false, Validators.required],
+        botAvg: [40, [Validators.min(1), Validators.max(180), Validators.required]]
+      })
     ])
   });
 
@@ -39,7 +44,11 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
   }
 
   addPlayer() {
-    this.players.push(this.fb.control('', Validators.required));
+    this.players.push(this.fb.group({
+      playerId: ['', Validators.required],
+      bot: [false, Validators.required],
+      botAvg: [40, [Validators.min(1), Validators.max(180), Validators.required]]
+    }));
   }
 
   createFormResult(): X01Match {
@@ -47,21 +56,26 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
 
     const x01Players: MatchPlayer[] = [];
 
-    (form.get('players').value as string[]).forEach(player => {
+    const formArrayPlayers = form.get('players') as FormArray;
+    let dartBotSetting: X01DartBotSettings;
+
+    (formArrayPlayers.value).forEach(player => {
+
+      if (player.bot) dartBotSetting = {expectedThreeDartAverage: player.botAvg};
+
       x01Players.push({
-        playerId: player,
-        playerType: PlayerType.ANONYMOUS,
+        playerId: player.playerId,
+        playerType: player.bot ? PlayerType.DART_BOT : PlayerType.ANONYMOUS,
       });
     });
-
 
     return {
       id: undefined,
       startDate: new Date(),
       endDate: undefined,
       throwFirst: x01Players[0].playerId,
+      dartBotSettings: dartBotSetting,
       currentThrower: undefined,
-      orderOfPlay: undefined,
       matchType: MatchType.X01,
       x01: 501,
       matchStatus: MatchStatus.IN_PLAY,
@@ -78,6 +92,13 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
 
   removePlayer(index: number) {
     this.players.removeAt(index);
+  }
+
+  test() {
+    const test: MatchPlayer = {
+      playerId: '',
+      playerType: undefined
+    };
   }
 
 }

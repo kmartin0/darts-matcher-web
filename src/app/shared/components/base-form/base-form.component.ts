@@ -49,6 +49,7 @@ export abstract class BaseFormComponent<T> {
 
   updateFormValidity(control: AbstractControl) {
     control.updateValueAndValidity();
+    control.markAsTouched();
 
     if (control instanceof FormGroup) {
       Object.keys(control.controls).forEach(key => {

@@ -25,6 +25,8 @@ import { EditThrowDialogComponent } from './components/edit-throw-dialog/edit-th
 import {MatSelectModule} from '@angular/material/select';
 import { EditSetLegDialogComponent } from './components/edit-set-leg-dialog/edit-set-leg-dialog.component';
 import { BasicDialogComponent } from './components/basic-dialog/basic-dialog.component';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatSliderModule} from '@angular/material/slider';
 
 @NgModule({
   declarations: [
@@ -56,6 +58,8 @@ import { BasicDialogComponent } from './components/basic-dialog/basic-dialog.com
     MatRadioModule,
     MatDialogModule,
     MatSelectModule,
+    MatCheckboxModule,
+    MatSliderModule
   ],
   exports: [
     LoginFormComponent,

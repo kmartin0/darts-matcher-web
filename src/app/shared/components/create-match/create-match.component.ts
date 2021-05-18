@@ -27,6 +27,7 @@ export class CreateMatchComponent implements OnDestroy {
   }
 
   createMatch(match: X01Match) {
+    console.log(match.players);
     this.matchService.createMatch(match)
       .pipe(withLoading(this.loading$))
       .subscribe(value => {
