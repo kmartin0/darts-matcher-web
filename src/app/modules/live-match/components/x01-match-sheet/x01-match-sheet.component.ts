@@ -14,13 +14,13 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import {getSetInPlay, X01Match} from '../../../../shared/models/x01-match/x01-match';
+import {getSet, getSetInPlay, X01Match} from '../../../../shared/models/x01-match/x01-match';
 import {UserService} from '../../../../shared/services/user.service';
 import {User} from '../../../../shared/models/user';
 import {X01MatchSheetUiData} from './x01-match-sheet-ui-data';
 import {PlayerType} from '../../../../shared/models/match/player-type';
-import {getLegInPlay, X01Set} from '../../../../shared/models/x01-match/set/x01-set';
-import {X01Leg} from '../../../../shared/models/x01-match/leg/x01-leg';
+import {getLeg, getLegInPlay} from '../../../../shared/models/x01-match/set/x01-set';
+import {getRoundInPlay} from '../../../../shared/models/x01-match/leg/x01-leg';
 import {FormControl} from '@angular/forms';
 import {Observable, of, Subject, zip} from 'rxjs';
 import {takeUntil, tap} from 'rxjs/operators';
@@ -40,7 +40,9 @@ import {X01DeleteSet} from '../../../../shared/models/x01-delete-set';
 import {X01DeleteLeg} from '../../../../shared/models/x01-delete-leg';
 import {Checkout} from '../../../../shared/models/x01-match/checkout/checkout';
 import {SectionArea} from '../../../../shared/models/x01-match/checkout/section-area';
+import {SelectedRound} from './selected-round';
 
+// TODO: Future: Create Simple view with only scoreboard / Past scores. Let user toggle between simple and advanced view in toolbar.
 @Component({
   selector: 'app-x01-match-sheet',
   templateUrl: './x01-match-sheet.component.html',
@@ -49,31 +51,28 @@ import {SectionArea} from '../../../../shared/models/x01-match/checkout/section-
 })
 export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
 
-  selectedRound: { set: number, leg: number, round: number };
-
   private registeredPlayers: User[] = [];
 
   @Input() checkouts: Checkout[];
   @Input() match: X01Match;
+  @Input() selectedRound: SelectedRound;
 
   @Output() deleteThrow = new EventEmitter<X01DeleteThrow>();
   @Output() deleteSet = new EventEmitter<X01DeleteSet>();
   @Output() deleteLeg = new EventEmitter<X01DeleteLeg>();
   @Output() editScore = new EventEmitter<{ playerId: string, round: number, score: number }>();
-  @Output() selectedRound$ = new EventEmitter<{ set: number, leg: number, round: number }>();
+  @Output() selectedRoundChange = new EventEmitter<SelectedRound>();
 
   @ViewChild('container') container: ElementRef;
   @ViewChildren('playerInformationContainer', {read: ElementRef}) playerInformationContainers: QueryList<ElementRef>;
   @ViewChild('timelineTableContainer', {read: ElementRef}) timelineTableContainer: ElementRef;
+  @ViewChild('toggleEditButton', {read: ElementRef}) toggleEditButton: ElementRef;
 
   matchUiData: X01MatchSheetUiData;
   modeEdit = false;
-  selectedLeg = new FormControl({set: 0, leg: 0});
+  legSelectionFormControl = new FormControl({set: 0, leg: 0});
   sectionAreas = SectionArea;
   unsubscribe$ = new Subject();
-
-  setInPlay: X01Set;
-  legInPlay: X01Leg;
 
   get middleOrder(): number {
     if (!this.match || !this.match.players) return null;
@@ -87,7 +86,6 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
     if (changes.match && changes.match.currentValue) {
       this.updateRegisteredPlayers().subscribe(() => {
         this.updateMatchUiData();
-        this.emitSelectedRound();
         this.scrollContentIntoView();
       });
     }
@@ -99,7 +97,7 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.selectedLeg.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+    this.legSelectionFormControl.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
       this.onSelectedLegChange();
     });
   }
@@ -107,7 +105,7 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
   onEditSetLegClick() {
     if (!this.dialog.openDialogs || !this.dialog.openDialogs.length) {
 
-      const selectLegValue = this.selectedLeg.value;
+      const selectLegValue = this.legSelectionFormControl.value;
       const setNumber = selectLegValue && selectLegValue.set ? selectLegValue.set : null;
       const legNumber = selectLegValue && selectLegValue.leg ? selectLegValue.leg : null;
 
@@ -123,7 +121,7 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
 
   onEditScoreClick(roundToUpdate: number, playerIdToUpdate: string, oldScore: number) {
     if (!this.dialog.openDialogs || !this.dialog.openDialogs.length) {
-      const selectLegValue = this.selectedLeg.value;
+      const selectLegValue = this.legSelectionFormControl.value;
       const setNumber = selectLegValue && selectLegValue.set ? selectLegValue.set : null;
       const legNumber = selectLegValue && selectLegValue.leg ? selectLegValue.leg : null;
 
@@ -140,50 +138,9 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  private emitSelectedRound() {
-    let selectedRound = 1;
-    if (this.match.timeline) {
-      if (this.match.result.find(result => result.result)) {
-        selectedRound = 0;
-      } else {
-        const leg = this.getSelectedLeg();
-        if (leg && leg.rounds) {
-          const roundWithoutCurrentThrower = leg.rounds.find(legRound => {
-            return !legRound.playerScores.find(playerScore => playerScore.playerId === this.match.currentThrower);
-          });
-
-          if (roundWithoutCurrentThrower) {
-            selectedRound = roundWithoutCurrentThrower.round;
-          } else {
-            selectedRound = leg.rounds.reduce((previousValue, currentValue) => previousValue.round > currentValue.round ? previousValue : currentValue).round + 1;
-          }
-        }
-      }
-    }
-
-    this.selectedRound = {
-      set: this.selectedLeg.value.set,
-      leg: this.selectedLeg.value.leg,
-      round: selectedRound
-    };
-
-    this.selectedRound$.emit(this.selectedRound);
-  }
-
-  private getSelectedLeg(): X01Leg {
-    const legNumber = this.selectedLeg.value.leg;
-
-    return this.getSelectedSet().legs.find(leg => leg.leg === legNumber);
-  }
-
-  private getSelectedSet(): X01Set {
-    const setNumber = this.selectedLeg.value.set;
-
-    return this.match.timeline.find(set => set.set === setNumber);
-  }
-
-  private isLegInPlaySelected(): boolean {
-    return this.setInPlay.set === this.selectedRound?.set && this.legInPlay.leg === this.selectedRound?.leg;
+  toggleEditMode() {
+    this.modeEdit = !this.modeEdit;
+    this.toggleEditButton.nativeElement.blur();
   }
 
   private openEditSetLegDialog(dialogData: EditSetLegDialogData) {
@@ -241,8 +198,20 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private onSelectedLegChange() {
-    this.emitSelectedRound();
-    this.matchUiData.updateSelectedLeg(this.getSelectedLeg(), this.match.x01, this.checkouts);
+    let tmpSelectedRound = this.selectedRound;
+
+    const selectedSet = getSet(this.match, this.legSelectionFormControl.value.set);
+    const selectedLeg = getLeg(selectedSet, this.legSelectionFormControl.value.leg);
+
+    if (this.selectedRound) {
+      tmpSelectedRound.set = selectedSet;
+      tmpSelectedRound.leg = selectedLeg;
+    } else {
+      tmpSelectedRound = new SelectedRound(selectedSet, selectedLeg, null, null, null);
+    }
+
+    this.updateSelectedRound(tmpSelectedRound);
+    this.matchUiData.updateSelectedLeg(selectedLeg, this.match.x01, this.checkouts);
     this.scrollContentIntoView();
   }
 
@@ -276,12 +245,24 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private updateMatchUiData() {
-    this.setInPlay = getSetInPlay(this.match);
-    this.legInPlay = getLegInPlay(this.setInPlay);
+    // Update selected round in play.
+    const setInPlay = getSetInPlay(this.match);
+    const legInPlay = getLegInPlay(setInPlay);
 
-    this.matchUiData = new X01MatchSheetUiData(this.match, this.registeredPlayers, this.setInPlay.set, this.legInPlay.leg, this.checkouts, this.isLegInPlaySelected());
+    const newSelectedRound = new SelectedRound(
+      setInPlay, legInPlay, getRoundInPlay(legInPlay, this.match.currentThrower), setInPlay, legInPlay
+    );
 
-    this.selectedLeg.setValue({set: this.setInPlay.set, leg: this.legInPlay.leg});
+    this.updateSelectedRound(newSelectedRound);
+
+    this.matchUiData = new X01MatchSheetUiData(this.match, this.registeredPlayers, newSelectedRound.set.set, newSelectedRound.legInPlay.leg, this.checkouts, newSelectedRound.isLegInPlaySelected());
+
+    this.legSelectionFormControl.setValue({set: newSelectedRound.set.set, leg: newSelectedRound.leg.leg});
+  }
+
+  private updateSelectedRound(selectedRound: SelectedRound) {
+    this.selectedRound = selectedRound;
+    this.selectedRoundChange.emit(this.selectedRound);
   }
 
   private updateRegisteredPlayers(): Observable<User[]> {

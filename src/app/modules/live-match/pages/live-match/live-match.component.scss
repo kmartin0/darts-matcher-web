@@ -8,7 +8,7 @@
 
 app-x01-match-sheet, app-keyboard, mat-error {
   padding: 0 6px;
-  max-width: 1600px;
+  max-width: 1800px;
   margin: 0 auto;
 }
 
@@ -19,6 +19,10 @@ app-x01-match-sheet, app-keyboard {
 
 app-x01-match-sheet {
   overflow-y: auto;
+}
+
+app-keyboard {
+  max-width: 800px;
 }
 
 .match-error {

@@ -5,14 +5,12 @@ import {BehaviorSubject, Subject} from 'rxjs';
 import {map, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
 import {X01Throw} from '../../../../shared/models/x01-throw';
 import {IRxStompPublishParams, RxStomp} from '@stomp/rx-stomp';
-import {getLeg, getSetInPlay, X01Match} from '../../../../shared/models/x01-match/x01-match';
+import {X01Match} from '../../../../shared/models/x01-match/x01-match';
 import {
   FinalThrowDialogComponent,
   FinalThrowDialogData
 } from '../../../../shared/components/final-throw-dialog/final-throw-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
-import {getLegInPlay, X01Set} from '../../../../shared/models/x01-match/set/x01-set';
-import {X01Leg} from '../../../../shared/models/x01-match/leg/x01-leg';
 import {X01DeleteThrow} from '../../../../shared/models/x01-delete-throw';
 import {X01DeleteSet} from '../../../../shared/models/x01-delete-set';
 import {X01DeleteLeg} from '../../../../shared/models/x01-delete-leg';
@@ -22,6 +20,8 @@ import {ApiErrorEnum} from '../../../../api/error/api-error.enum';
 import {BasicDialogService} from '../../../../shared/services/basic-dialog-service';
 import {TargetErrors} from '../../../../api/error/api-error-body';
 import {PlayerType} from '../../../../shared/models/match/player-type';
+import {SelectedRound} from '../../components/x01-match-sheet/selected-round';
+import {X01DartBotThrow} from '../../../../shared/models/x01-match/x01-dart-bot/x01-dart-bot-throw';
 
 @Component({
   selector: 'app-live-match',
@@ -30,13 +30,11 @@ import {PlayerType} from '../../../../shared/models/match/player-type';
 })
 export class LiveMatchComponent implements OnInit, OnDestroy {
 
-  selectedRound: { set: number, leg: number, round: number };
+  selectedRound: SelectedRound;
 
   checkouts: Checkout[];
   error = new BehaviorSubject(null);
-  legInPlay: X01Leg;
   match: X01Match;
-  setInPlay: X01Set;
 
   private liveMatchWebsocket: RxStomp;
   private unsubscribe$ = new Subject();
@@ -47,24 +45,24 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
 
   createEditThrow(editScore: { playerId: string, round: number, score: number }): X01Throw {
     return {
-      leg: this.selectedRound.leg,
+      leg: this.selectedRound?.leg.leg,
       matchId: this.match.id,
       playerId: editScore.playerId,
       round: editScore.round,
       score: editScore.score,
-      set: this.selectedRound.set,
+      set: this.selectedRound?.set.set,
       dartsUsed: 3
     };
   }
 
   createNewThrow(scored: number): X01Throw {
     return {
-      leg: this.selectedRound.leg,
+      leg: this.selectedRound?.leg.leg,
       matchId: this.match.id,
       playerId: this.match.currentThrower,
-      round: this.selectedRound.round,
+      round: this.selectedRound?.round.round,
       score: scored,
-      set: this.selectedRound.set,
+      set: this.selectedRound?.set.set,
       dartsUsed: 3
     };
   }
@@ -84,21 +82,21 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
     }
   }
 
-  // publishDartBotThrow(dartBotId: string) {
-  //   console.log('DartBot throwing: ' + dartBotId);
-  //
-  //   if (this.liveMatchWebsocket.connected) {
-  //
-  //     const publishParams: IRxStompPublishParams = {
-  //       body: JSON.stringify(x01DeleteLeg),
-  //       destination: `/topic/matches/${x01DeleteLeg.matchId}:delete-leg`
-  //     };
-  //
-  //     this.liveMatchWebsocket.publish(publishParams);
-  //   } else {
-  //     // TODO: For some reason broker is not connected.
-  //   }
-  // }
+  publishDartBotThrow(x01DartBotThrow: X01DartBotThrow) {
+    console.log(x01DartBotThrow);
+
+    if (this.liveMatchWebsocket.connected) {
+
+      const publishParams: IRxStompPublishParams = {
+        body: JSON.stringify(x01DartBotThrow),
+        destination: `/topic/matches/${x01DartBotThrow.matchId}:throw-dart-bot`
+      };
+
+      this.liveMatchWebsocket.publish(publishParams);
+    } else {
+      // TODO: For some reason broker is not connected.
+    }
+  }
 
   publishDeleteSet(x01DeleteSet: X01DeleteSet) {
     console.log(x01DeleteSet);
@@ -148,6 +146,22 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
       });
     } else {
       this.publishScore(x01Throw);
+    }
+  }
+
+  private checkDartBotTurn() {
+    const currentThrower = this.match.players.find(matchPlayer => matchPlayer.playerId === this.match.currentThrower);
+
+    if (currentThrower?.playerType === PlayerType.DART_BOT) {
+      setTimeout(() => {
+        this.publishDartBotThrow({
+          dartBotId: currentThrower.playerId,
+          leg: this.selectedRound.leg.leg,
+          matchId: this.match.id,
+          round: this.selectedRound.round.round,
+          set: this.selectedRound.set.set
+        });
+      }, 300);
     }
   }
 
@@ -205,6 +219,8 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
         error = `Missed doubles error: ${details[errorKey]}`;
         break;
       }
+      default:
+        error = 'Oops, something went wrong, please try again or contact us.';
     }
 
     this.error.next(error);
@@ -219,7 +235,7 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
   }
 
   private isFinalThrow(x01Throw: X01Throw, match: X01Match): boolean {
-    const leg = getLeg(match, x01Throw.set, x01Throw.leg);
+    const leg = this.selectedRound.leg;
 
     if (!leg) return false;
 
@@ -297,22 +313,12 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
       console.log(match);
 
       this.match = match;
-      this.setInPlay = getSetInPlay(match);
-      this.legInPlay = getLegInPlay(this.setInPlay);
       this.error.next(null);
       this.changeDetectorRef.detectChanges();
+      this.checkDartBotTurn();
 
     }, error => {
       console.log(error);
     });
   }
-
-  private checkDartBotTurn() {
-    const currentThrower = this.match.players.find(matchPlayer => matchPlayer.playerId === this.match.currentThrower);
-
-    if (currentThrower?.playerType === PlayerType.DART_BOT) {
-
-    }
-  }
-
 }

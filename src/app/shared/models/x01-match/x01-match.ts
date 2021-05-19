@@ -24,6 +24,12 @@ export interface X01Match {
   timeline: X01Set[];
 }
 
+export function getSet(match: X01Match, setNumber: number) {
+  if (!match.timeline || !match.timeline.length) return null;
+
+  return match.timeline.find(x01Set => x01Set.set === setNumber);
+}
+
 export function getSetInPlay(match: X01Match): X01Set {
   if (!match.timeline || !match.timeline.length) return null;
 
@@ -36,22 +42,4 @@ export function getSetInPlay(match: X01Match): X01Set {
 
   // Return the first set without a result.
   return setsWithoutResult.reduce((previousValue, currentValue) => (currentValue.set < previousValue.set) ? currentValue : previousValue);
-
-}
-
-export function getLeg(match: X01Match, setNumber: number, legNumber: number) {
-  if (!match.timeline || !match.timeline.length) return null;
-
-  const set = getSet(match, setNumber);
-
-  if (!set || !set.legs) return null;
-
-  return set.legs.find(x01Leg => x01Leg.leg === legNumber);
-
-}
-
-export function getSet(match: X01Match, setNumber: number) {
-  if (!match.timeline || !match.timeline.length) return null;
-
-  return match.timeline.find(x01Set => x01Set.set === setNumber);
 }

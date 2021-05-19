@@ -6,6 +6,7 @@ import {X01Set} from '../../../../shared/models/x01-match/set/x01-set';
 import {X01Leg} from '../../../../shared/models/x01-match/leg/x01-leg';
 import {BehaviorSubject} from 'rxjs';
 import {Checkout} from '../../../../shared/models/x01-match/checkout/checkout';
+import {isElementScrolledOutsideView} from '@angular/cdk/overlay/position/scroll-clip';
 
 export interface RoundDataSource {
   round?: number;

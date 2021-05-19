@@ -7,6 +7,12 @@ export interface X01Set {
   legs: X01Leg[];
 }
 
+export function getLeg(set: X01Set, legNumber: number): X01Leg {
+  if (!set || !set.legs || !set.legs.length) return null;
+
+  return set.legs.find(x01Leg => x01Leg.leg === legNumber);
+}
+
 export function getLegInPlay(set: X01Set): X01Leg {
   if (!set || !set.legs || !set.legs.length) return null;
 

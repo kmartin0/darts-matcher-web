@@ -62,10 +62,15 @@
 
     @include device(phablet) {
       @include mat-typography-level-to-styles($typography-config, display-1);
-      font-weight: 600;
+      font-weight: 500;
     }
 
     @include device(tablet, desktop, desktop-xl) {
+      @include mat-typography-level-to-styles($typography-config, display-3);
+      font-weight: 600;
+    }
+
+    @include device(desktop-xl) {
       @include mat-typography-level-to-styles($typography-config, display-3);
       font-weight: 600;
     }
