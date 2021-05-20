@@ -13,6 +13,8 @@
 @mixin app-player-leg-color($color-config) {
   $primary: map-get($color-config, primary);
   $accent: map-get($color-config, accent);
+  $background: map-get($color-config, background);
+  $foreground: map-get($color-config, foreground);
 
   .player-information-container, .player-remaining-container, .player-information-middle-container, .player-remaining-middle-container {
     border-color: transparent;
@@ -25,6 +27,51 @@
   .starts-leg {
     background-color: mat-color($accent);
   }
+
+  .timeline-data-row {
+    //background-color: beige;
+    //background-clip: padding-box;
+  }
+
+  //.timeline-data-row:nth-child(odd) > .timeline-cell-value {
+  //  background-color: darken(mat-color($background, card), 50%);
+  //  background-clip: padding-box;
+  //}
+
+  //.timeline-data-row:nth-child(odd) > .timeline-cell-value {
+  //  background-color: darken(mat-color($background, card), 50%);
+  //
+  //}
+
+  //.timeline-cell-value,   .timeline-cell-header {
+  //  background-clip: padding-box;
+  //}
+
+  .mat-row {
+    border-bottom-width: 0;
+  }
+
+  .timeline-cell-value, .timeline-cell-header {
+    background-clip: padding-box;
+    border-color: mat-color($primary, 50);
+  }
+
+  .timeline-data-row:nth-child(odd) > .timeline-cell-value, {
+    background-color: mat-color($primary, 200);
+    color: mat-color($primary, '200-contrast');
+  }
+
+  .timeline-data-row:nth-child(even) > .timeline-cell-value {
+    background-color: mat-color($primary, 100);
+    color: mat-color($primary, '100-contrast');
+  }
+
+  .timeline-cell-header {
+    background-color: mat-color($primary, 500);
+    color: mat-color($primary, '500-contrast');
+  }
+
+
 }
 
 @mixin app-player-leg-typography($typography-config) {

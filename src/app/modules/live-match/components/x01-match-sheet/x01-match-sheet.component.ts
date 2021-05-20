@@ -41,13 +41,16 @@ import {X01DeleteLeg} from '../../../../shared/models/x01-delete-leg';
 import {Checkout} from '../../../../shared/models/x01-match/checkout/checkout';
 import {SectionArea} from '../../../../shared/models/x01-match/checkout/section-area';
 import {SelectedRound} from './selected-round';
+import {expandCollapseTrigger} from '../../../../shared/anim/expand-collapse.anim';
+import {blockInitialTrigger} from '../../../../shared/anim/block-initial-render-anim';
 
 // TODO: Future: Create Simple view with only scoreboard / Past scores. Let user toggle between simple and advanced view in toolbar.
 @Component({
   selector: 'app-x01-match-sheet',
   templateUrl: './x01-match-sheet.component.html',
   styleUrls: ['./x01-match-sheet.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [expandCollapseTrigger, blockInitialTrigger]
 })
 export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
 
@@ -66,6 +69,7 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
   @ViewChild('container') container: ElementRef;
   @ViewChildren('playerInformationContainer', {read: ElementRef}) playerInformationContainers: QueryList<ElementRef>;
   @ViewChild('timelineTableContainer', {read: ElementRef}) timelineTableContainer: ElementRef;
+  @ViewChild('toggleAverageButton', {read: ElementRef}) toggleAverageButton: ElementRef;
   @ViewChild('toggleEditButton', {read: ElementRef}) toggleEditButton: ElementRef;
 
   matchUiData: X01MatchSheetUiData;
@@ -73,6 +77,7 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
   legSelectionFormControl = new FormControl({set: 0, leg: 0});
   sectionAreas = SectionArea;
   unsubscribe$ = new Subject();
+  showAverages = true;
 
   get middleOrder(): number {
     if (!this.match || !this.match.players) return null;
@@ -136,6 +141,11 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
 
       this.openEditThrowDialog(dialogData);
     }
+  }
+
+  toggleAverage() {
+    this.showAverages = !this.showAverages;
+    this.toggleAverageButton.nativeElement.blur();
   }
 
   toggleEditMode() {

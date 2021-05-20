@@ -31,4 +31,18 @@
       @include mat-typography-level-to-styles($typography-config, title);
     }
   }
+
+  .keyboard-input-button {
+    @include device(phablet) {
+      font-size: 18px;
+    }
+
+    @include device(tablet) {
+      font-size: 20px;
+    }
+
+    @include device(desktop, desktop-xl) {
+      font-size: 24px;
+    }
+  }
 }

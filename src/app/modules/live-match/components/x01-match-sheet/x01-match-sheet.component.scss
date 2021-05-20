@@ -41,9 +41,11 @@
 
   @include device(phone, phablet, tablet) {
     width: 90%;
-  }  .average-container-label {
-       border-bottom: 1px solid;
-     }
+  }
+
+  .average-container-label {
+    border-bottom: 1px solid;
+  }
 
   @include device(desktop) {
     width: 75%;
@@ -135,7 +137,7 @@
   border-radius: 50%;
 }
 
-.checkout-hint span:not(:nth-child(-n+2)):before  {
+.checkout-hint span:not(:nth-child(-n+2)):before {
   content: ', ';
 }
 
@@ -151,34 +153,6 @@
   display: none;
 }
 
-//.timeline-table {
-//  width: 100%;
-//  table-layout: fixed;
-//  padding: 0;
-//  margin: 0;
-//}
-
-//.timeline-cell-content {
-//  flex-direction: row;
-//  display: flex;
-//  align-items: center;
-//}
-
-//table tr, table th, table td {
-//  text-align: center;
-//  padding: 4px;
-//  word-wrap: break-word;
-//}
-
-//table tr {
-//  width: 100%;
-//  background-color: yellow;
-//  //display: grid;
-//  //  grid-auto-flow: column;
-//  //  grid-auto-columns: 1fr;
-//  //  position: sticky;
-//}
-
 .timeline-header-row, .timeline-data-row {
   width: 100%;
   display: grid;
@@ -188,12 +162,36 @@
 }
 
 .timeline-cell-header, .timeline-cell-value {
+  height: 100%;
   padding: 8px;
   margin: 0;
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
   justify-items: center;
+
+}
+
+// TODO: When dark mode is applied move the border color to x01-match-sheet-theme.scss then find out what dark mode color is (pref dynamically mat-color(...)).
+.timeline-cell-value, .timeline-cell-header {
+  //border-left: 1px solid;
+  //border-right: 1px solid;
+
+  border-left-width: 1px;
+  border-left-style: solid;
+  border-right-width: 1px;
+  border-right-style: solid;
+
+  //border-left: 1px solid white;
+  //border-right: 1px solid white;
+}
+
+.timeline-cell-value:last-child, .timeline-cell-header:last-child {
+  border-right-width: 0;
+}
+
+.timeline-cell-value:first-child, .timeline-cell-header:first-child {
+  border-left-width: 0;
 }
 
 .timeline-cell-header > *, .timeline-cell-value > * {

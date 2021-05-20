@@ -1,4 +1,4 @@
-<div #container class="container" *ngIf="match && matchUiData">
+<div #container class="container" *ngIf="match && matchUiData" xmlns="http://www.w3.org/1999/html">
   <div class="players-information-container">
     <mat-card #playerInformationContainer class="player-information-container"
               *ngFor="let player of matchUiData.players let i = index"
@@ -16,10 +16,21 @@
 
       <p class="name">{{player.playerName}}</p>
 
-      <div class="average-container">
-        <p class="average-container-label">Average</p>
-        <div>3-Dart:<br><span class="average-value">{{player.average}}</span></div>
-        <div>First 9:<span class="average-value">{{player.averageFirstNine}}</span></div>
+      <div class="average-container" @blockInitialRenderAnimation>
+
+        <p style="text-align: center;" class="average-container-label">
+          Avg.
+          <button #toggleAverageButton mat-icon-button (click)="toggleAverage()">
+            <mat-icon *ngIf="showAverages" style="vertical-align: middle;">add</mat-icon>
+            <mat-icon *ngIf="!showAverages" style="vertical-align: middle">remove</mat-icon>
+          </button>
+        </p>
+
+        <ng-container *ngIf="showAverages">
+          <div @expandCollapseAnimation><span>3-Dart:</span><span class="average-value">{{player.average}}</span></div>
+          <div @expandCollapseAnimation><span>First 9:</span><span
+            class="average-value">{{player.averageFirstNine}}</span></div>
+        </ng-container>
       </div>
 
     </mat-card>
