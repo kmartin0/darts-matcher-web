@@ -70,7 +70,10 @@
         <ng-container *ngFor="let dart of player.checkoutHint?.suggested" [ngSwitch]="dart?.area">
           <span *ngSwitchCase="sectionAreas.TRIPLE">T{{dart.section}}</span>
           <span *ngSwitchCase="sectionAreas.DOUBLE">D{{dart.section}}</span>
-          <span *ngSwitchCase="sectionAreas.SINGLE">{{dart.section}}</span>
+          <span *ngSwitchCase="sectionAreas.INNER_SINGLE">{{dart.section}}</span>
+          <span *ngSwitchCase="sectionAreas.OUTER_SINGLE">{{dart.section}}</span>
+          <span *ngSwitchCase="sectionAreas.DOUBLE_BULL">BULL</span>
+          <span *ngSwitchCase="sectionAreas.SINGLE_BULL">25</span>
         </ng-container>
       </div>
 
