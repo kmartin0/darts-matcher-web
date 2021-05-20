@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
+import {ThemeService} from '../../shared/services/theme/theme-service';
 
 @Component({
   selector: 'app-root',
@@ -9,13 +10,15 @@ import {DomSanitizer} from '@angular/platform-browser';
 })
 export class AppComponent {
 
+  isDarkTheme$ = this.themeService.isDarkTheme;
+
   private iconSet: { name: string, path: string }[] = [
     {name: 'lock', path: 'assets/lock.svg'},
     {name: 'darts', path: 'assets/darts.svg'},
     {name: 'logout', path: 'assets/logout.svg'}
   ];
 
-  constructor(private matIconRegistry: MatIconRegistry, private sanitizer: DomSanitizer) {
+  constructor(private matIconRegistry: MatIconRegistry, private sanitizer: DomSanitizer, private themeService: ThemeService) {
     this.registerIcons();
   }
 

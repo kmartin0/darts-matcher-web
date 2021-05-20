@@ -21,6 +21,7 @@ import {CdkScrollableModule} from '@angular/cdk/scrolling';
 import {MatSelectModule} from '@angular/material/select';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 
@@ -45,7 +46,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     CdkScrollableModule,
     MatSelectModule,
     MatDialogModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatTooltipModule
   ]
 })
 export class LiveMatchModule { }

@@ -25,8 +25,3 @@ header {
 header, .login-register-container {
   margin-bottom: 24px;
 }
-
-.login-register-container.disabled {
-  pointer-events: none;
-  opacity: .5;
-}

@@ -4,56 +4,75 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
 
-// Define a custom typography config that overrides the font-family as well as the
-// `headlines` and `body-1` levels.
-$custom-typography: mat-typography-config(
+// Custom Typography.
+$typography-config: mat-typography-config(
   $font-family: 'Roboto, sans serif',
   $headline: mat-typography-level(32px, 48px, 700)
 );
 
-// TODO: Dashboard + Home Responsive font size.
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
-@include mat-core($custom-typography);
+// Include mat-core (Note: Must be imported exactly once.)
+@include mat-core($typography-config);
 
-
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$primary: mat-palette($mat-indigo);
-$accent: mat-palette($mat-green);
-$warn: mat-palette($mat-red);
-
-$custom-color-collection: (
+// Light Theme Configuration. Ref: https://stackoverflow.com/a/58165951
+$light-theme-custom-color-collection: (
   help : #181817,
-  success :  #0a630f,
+  success : #0a630f,
   contrast: (
-    success :  #FFFFFF,
+    success : #FFFFFF,
     help: #FFFFFF
   )
 );
 
-$my-app-custom: mat-palette($custom-color-collection, custom);
+$light-theme-primary: mat-palette($mat-indigo);
+$light-theme-accent: mat-palette($mat-green);
+$light-theme-warn: mat-palette($mat-red);
 
-// Create the theme object. A theme consists of configurations for individual
-// theming systems such as `color` or `typography`.
-$candy-app-theme: mat-light-theme(
-    $primary,
-    $accent,
-    $warn
+$light-theme: mat-light-theme(
+    $light-theme-primary,
+    $light-theme-accent,
+    $light-theme-warn
 );
 
-$color-config: mat-get-color-config($candy-app-theme);
+// Add custom color collection to the light theme.
+$light-theme-custom-palette: mat-palette($light-theme-custom-color-collection, custom);
+$light-theme: map_merge($light-theme, (custom: $light-theme-custom-palette));
 
-$candy-app-theme: map_merge($candy-app-theme, (custom: $my-app-custom));
-$custom: map-get($candy-app-theme, custom);
+// Dark theme Configuration.
+$dark-theme-custom-color-collection: (
+  help : #FFFFFF,
+  success : #FFFFFF,
+  contrast: (
+    help: #181817,
+    success : #0a630f
+  )
+);
 
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
-@include angular-material-theme($candy-app-theme);
+$dark-theme-primary: mat-palette($mat-purple);
+$dark-theme-accent: mat-palette($mat-yellow);
+$dark-theme-warn: mat-palette($mat-amber);
 
-// Custom Component Themes
-@include custom-component-themes($color-config, $custom-typography);
+$dark-theme: mat-dark-theme(
+    $dark-theme-primary,
+    $dark-theme-accent,
+    $dark-theme-warn
+);
 
+// Add custom color collection to the light theme.
+$dark-theme-custom-palette: mat-palette($dark-theme-custom-color-collection, custom);
+$dark-theme: map_merge($dark-theme, (custom: $dark-theme-custom-palette));
+
+// Set the light theme as default.
+@include angular-material-theme($light-theme);
+
+// Add Custom Component Themes.
+$light-theme-color-config: mat-get-color-config($light-theme);
+@include custom-component-themes($light-theme-color-config, $typography-config);
+
+.theme-dark {
+  // Include the dark theme.
+  @include angular-material-theme($dark-theme);
+
+  // Include the dark theme in custom component themes.
+  $dark-theme-color-config: mat-get-color-config($dark-theme);
+  @include custom-component-themes($dark-theme-color-config, $typography-config);
+}

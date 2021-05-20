@@ -32,3 +32,10 @@ app-keyboard {
 .page-container.full {
   grid-template-rows: max-content minmax(100px, 2fr) auto minmax(140px, 1fr);
 }
+
+.example-icon {
+  padding: 0 14px;
+}
+.example-spacer {
+  flex: 1 1 auto;
+}

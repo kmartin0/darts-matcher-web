@@ -1,6 +1,17 @@
-<div class="page-container" [ngClass]="{'full': selectedRound?.isLegInPlaySelected() && match?.matchStatus === 'IN_PLAY'}">
+<div class="page-container"
+     [ngClass]="{'full': selectedRound?.isLegInPlaySelected() && match?.matchStatus === 'IN_PLAY'}">
 
-  <mat-toolbar color="primary"></mat-toolbar>
+  <mat-toolbar color="primary">
+
+    <mat-toolbar-row>
+      <span>X01 Match</span>
+      <span class="example-spacer"></span>
+      <button mat-icon-button (click)="toggleTheme()" matTooltip="Toggle Theme">
+        <mat-icon>{{(isDarkTheme | async) ? 'light_mode' : 'dark_mode'}}</mat-icon>
+      </button>
+    </mat-toolbar-row>
+
+  </mat-toolbar>
 
   <app-x01-match-sheet
     (editScore)="onScoreSubmit(createEditThrow($event))"

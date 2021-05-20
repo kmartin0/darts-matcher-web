@@ -22,6 +22,7 @@ import {TargetErrors} from '../../../../api/error/api-error-body';
 import {PlayerType} from '../../../../shared/models/match/player-type';
 import {SelectedRound} from '../../components/x01-match-sheet/selected-round';
 import {X01DartBotThrow} from '../../../../shared/models/x01-match/x01-dart-bot/x01-dart-bot-throw';
+import {ThemeService} from '../../../../shared/services/theme/theme-service';
 
 @Component({
   selector: 'app-live-match',
@@ -30,16 +31,19 @@ import {X01DartBotThrow} from '../../../../shared/models/x01-match/x01-dart-bot/
 })
 export class LiveMatchComponent implements OnInit, OnDestroy {
 
-  selectedRound: SelectedRound;
+
 
   checkouts: Checkout[];
   error = new BehaviorSubject(null);
+  isDarkTheme = this.themeService.isDarkTheme;
   match: X01Match;
+  selectedRound: SelectedRound;
 
   private liveMatchWebsocket: RxStomp;
   private unsubscribe$ = new Subject();
 
-  constructor(private route: ActivatedRoute, private matchService: MatchService, private dialog: MatDialog, private basicDialogService: BasicDialogService, private changeDetectorRef: ChangeDetectorRef) {
+  constructor(private route: ActivatedRoute, private matchService: MatchService, private dialog: MatDialog,
+              private basicDialogService: BasicDialogService, private changeDetectorRef: ChangeDetectorRef, private themeService: ThemeService) {
     this.initMatch();
   }
 
@@ -147,6 +151,10 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
     } else {
       this.publishScore(x01Throw);
     }
+  }
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
   }
 
   private checkDartBotTurn() {

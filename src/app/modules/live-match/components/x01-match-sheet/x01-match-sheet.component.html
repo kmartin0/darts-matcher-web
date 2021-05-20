@@ -18,11 +18,11 @@
 
       <div class="average-container" @blockInitialRenderAnimation>
 
-        <p style="text-align: center;" class="average-container-label">
+        <p class="average-container-label">
           Avg.
           <button #toggleAverageButton mat-icon-button (click)="toggleAverage()">
-            <mat-icon *ngIf="showAverages" style="vertical-align: middle;">add</mat-icon>
-            <mat-icon *ngIf="!showAverages" style="vertical-align: middle">remove</mat-icon>
+            <mat-icon *ngIf="showAverages">add</mat-icon>
+            <mat-icon *ngIf="!showAverages">remove</mat-icon>
           </button>
         </p>
 
