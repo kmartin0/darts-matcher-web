@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {MatchService} from '../../../../shared/services/match.service';
 import {BehaviorSubject, Subject} from 'rxjs';
@@ -31,13 +31,12 @@ import {ThemeService} from '../../../../shared/services/theme/theme-service';
 })
 export class LiveMatchComponent implements OnInit, OnDestroy {
 
-
-
   checkouts: Checkout[];
   error = new BehaviorSubject(null);
   isDarkTheme = this.themeService.isDarkTheme;
   match: X01Match;
   selectedRound: SelectedRound;
+  @ViewChild('toggleThemeButton', {read: ElementRef}) toggleThemeButton: ElementRef;
 
   private liveMatchWebsocket: RxStomp;
   private unsubscribe$ = new Subject();
@@ -155,6 +154,7 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
 
   toggleTheme() {
     this.themeService.toggleTheme();
+    this.toggleThemeButton.nativeElement.blur();
   }
 
   private checkDartBotTurn() {
