@@ -26,6 +26,7 @@ export class KeyboardComponent implements OnInit, OnDestroy {
     {type: 'button', value: 'Ent'},
   ];
 
+  isWindowFocused = document.hasFocus();
   @Output() scoreOutput = new EventEmitter<number>();
   @ViewChild('scoreInput') scoreInput: ElementRef;
   score: number;
@@ -33,6 +34,16 @@ export class KeyboardComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
 
   constructor(private dialog: MatDialog) {
+  }
+
+  @HostListener('window:focus', ['$event'])
+  onFocus(): void {
+    this.isWindowFocused = true;
+  }
+
+  @HostListener('window:blur', ['$event'])
+  onBlur(): void {
+    this.isWindowFocused = false;
   }
 
   @HostListener('window:keydown', ['$event'])

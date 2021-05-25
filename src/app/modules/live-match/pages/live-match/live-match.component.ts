@@ -33,7 +33,7 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
 
   checkouts: Checkout[];
   error = new BehaviorSubject(null);
-  isDarkTheme = this.themeService.isDarkTheme;
+  isDarkTheme$ = this.themeService.isDarkTheme;
   match: X01Match;
   selectedRound: SelectedRound;
   @ViewChild('toggleThemeButton', {read: ElementRef}) toggleThemeButton: ElementRef;

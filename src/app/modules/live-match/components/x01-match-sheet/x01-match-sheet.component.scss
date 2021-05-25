@@ -16,6 +16,10 @@
   word-wrap: break-word;
 }
 
+.mat-row {
+  border-bottom-width: 0;
+}
+
 .players-information-container, .players-remaining-container {
   display: grid;
   grid-auto-flow: column;
@@ -169,21 +173,14 @@
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
   justify-items: center;
-
+  background-clip: padding-box;
 }
 
-// TODO: When dark mode is applied move the border color to x01-match-sheet-theme.scss then find out what dark mode color is (pref dynamically mat-color(...)).
 .timeline-cell-value, .timeline-cell-header {
-  //border-left: 1px solid;
-  //border-right: 1px solid;
-
   border-left-width: 1px;
   border-left-style: solid;
   border-right-width: 1px;
   border-right-style: solid;
-
-  //border-left: 1px solid white;
-  //border-right: 1px solid white;
 }
 
 .timeline-cell-value:last-child, .timeline-cell-header:last-child {

@@ -1,0 +1,34 @@
+@import '~@angular/material/theming';
+@import "custom-color-palettes";
+
+// Custom color collection. Ref: https://stackoverflow.com/a/58165951
+$light-theme-custom-color-collection: (
+  help : #181817,
+  success : #0a630f,
+  contrast: (
+    success : #FFFFFF,
+    help: #FFFFFF
+  )
+);
+
+// Custom color palette.
+$light-theme-custom-palette: mat-palette($light-theme-custom-color-collection, custom);
+
+// Primary palette.
+$light-theme-primary: mat-palette($mat-red);
+
+// Accent palette.
+$light-theme-accent:  mat-palette($mat-green);
+
+// Warn palette.
+$light-theme-warn: mat-palette($mat-dark-grey);
+
+// Create the light theme.
+$light-theme: mat-light-theme(
+    $light-theme-primary,
+    $light-theme-accent,
+    $light-theme-warn
+);
+
+// Add custom color collection to the light theme.
+$light-theme: map_merge($light-theme, (custom: $light-theme-custom-palette));

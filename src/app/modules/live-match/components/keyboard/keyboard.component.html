@@ -8,7 +8,7 @@
     </div>
 
     <div class="score-card-container">
-      <p class="score-value">
+      <p class="score-value" [ngClass]="{'focused': isWindowFocused}">
         {{score}}
       </p>
     </div>

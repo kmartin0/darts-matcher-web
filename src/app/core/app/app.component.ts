@@ -3,6 +3,11 @@ import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ThemeService} from '../../shared/services/theme/theme-service';
 
+// TODO: Some sort of summary with stats tab and overview scoring timeline, access through icon in match toolbar.
+// TODO: Api Error Handling.
+// TODO: Api Unauthorized handling (refresh token, forbidden etc.)
+// TODO: Dart bot tooltip (info bot will average each leg + avg to darts conversion table)
+// TODO: Redirect buttons should be able to ctrl+click to open in new tab
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

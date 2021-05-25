@@ -18,6 +18,10 @@
   .score-card-container {
     background-color: mat-color($background, card);
   }
+
+  .score-value.focused {
+    border-bottom-color: mat-color($primary);
+  }
 }
 
 @mixin app-keyboard-typography($typography-config) {

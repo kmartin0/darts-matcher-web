@@ -83,7 +83,7 @@
               [ngStyle]="{order: middleOrder}">
 
       <div class="leg-select-header-container">
-        <button (click)="onEditSetLegClick()" mat-icon-button *ngIf="modeEdit">
+        <button @expandCollapseAnimation (click)="onEditSetLegClick()" mat-icon-button *ngIf="modeEdit">
           <mat-icon>edit</mat-icon>
         </button>
         <span *ngIf="matchUiData.bestOf.isBestOfSets">Set {{legSelectionFormControl.value.set}}</span>
@@ -103,7 +103,7 @@
     </mat-card>
   </div>
 
-  <div #timelineTableContainer class="timeline-container">
+  <div #timelineTableContainer class="timeline-container" [ngClass]="{'dark': (isDarkMode$ | async)}">
     <mat-table class="timeline-table" [dataSource]="matchUiData.roundsDataSource">
 
       <ng-container *ngFor="let column of matchUiData.displayedColumns; index as i"

@@ -1,13 +1,13 @@
 <div class="page-container"
      [ngClass]="{'full': selectedRound?.isLegInPlaySelected() && match?.matchStatus === 'IN_PLAY'}">
 
-  <mat-toolbar color="primary">
+  <mat-toolbar [color]="(isDarkTheme$ | async) ? null : 'primary'">
 
     <mat-toolbar-row>
       <span>X01 Match</span>
       <span class="example-spacer"></span>
       <button #toggleThemeButton mat-icon-button (click)="toggleTheme()" matTooltip="Toggle Theme">
-        <mat-icon>{{(isDarkTheme | async) ? 'light_mode' : 'dark_mode'}}</mat-icon>
+        <mat-icon>{{(isDarkTheme$ | async) ? 'light_mode' : 'dark_mode'}}</mat-icon>
       </button>
     </mat-toolbar-row>
 

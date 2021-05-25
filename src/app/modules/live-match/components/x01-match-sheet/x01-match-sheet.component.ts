@@ -43,6 +43,7 @@ import {SectionArea} from '../../../../shared/models/x01-match/checkout/section-
 import {SelectedRound} from './selected-round';
 import {expandCollapseTrigger} from '../../../../shared/anim/expand-collapse.anim';
 import {blockInitialTrigger} from '../../../../shared/anim/block-initial-render-anim';
+import {ThemeService} from '../../../../shared/services/theme/theme-service';
 
 // TODO: Future: Create Simple view with only scoreboard / Past scores. Let user toggle between simple and advanced view in toolbar.
 @Component({
@@ -72,19 +73,21 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
   @ViewChild('toggleAverageButton', {read: ElementRef}) toggleAverageButton: ElementRef;
   @ViewChild('toggleEditButton', {read: ElementRef}) toggleEditButton: ElementRef;
 
+  isDarkMode$: Observable<boolean> = this.themeService.isDarkTheme;
   matchUiData: X01MatchSheetUiData;
   modeEdit = false;
   legSelectionFormControl = new FormControl({set: 0, leg: 0});
   sectionAreas = SectionArea;
-  unsubscribe$ = new Subject();
   showAverages = true;
+  unsubscribe$ = new Subject();
+
 
   get middleOrder(): number {
     if (!this.match || !this.match.players) return null;
     return Math.floor((this.match.players.length - 1) / 2);
   }
 
-  constructor(private userService: UserService, private changeDetector: ChangeDetectorRef, private dialog: MatDialog) {
+  constructor(private userService: UserService, private changeDetector: ChangeDetectorRef, private dialog: MatDialog, private themeService: ThemeService) {
   }
 
   ngOnChanges(changes: SimpleChanges) {
