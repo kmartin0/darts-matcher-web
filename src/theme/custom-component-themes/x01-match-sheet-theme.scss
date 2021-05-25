@@ -1,0 +1,141 @@
+@use 'sass:map';
+@use '~@angular/material/index' as mat;
+@use "devices" as devices;
+
+@mixin color($theme) {
+  // Get the color config from the theme.
+  $color-config: mat.get-color-config($theme);
+
+  // Get the primary color palette from the color-config.
+  $primary-palette: map.get($color-config, 'primary');
+  $accent-palette: map.get($color-config, 'accent');
+  $background-palette: map.get($color-config, 'background');
+
+  .player-information-container, .player-remaining-container, .player-information-middle-container, .player-remaining-middle-container {
+    border-color: transparent;
+  }
+
+  .player-information-container.current-throw, .player-remaining-container.current-throw {
+    border-color: mat.get-color-from-palette($accent-palette);
+  }
+
+  .starts-leg {
+    background-color: mat.get-color-from-palette($accent-palette);
+  }
+
+  .timeline-cell-value, .timeline-cell-header {
+    border-color: mat.get-color-from-palette($background-palette, background);
+  }
+
+  // Default table with lighter hue.
+  .timeline-container {
+    .timeline-data-row:nth-child(even) {
+      & > .timeline-cell-value {
+        background-color: mat.get-color-from-palette($primary-palette, 200);
+        color: mat.get-color-from-palette($primary-palette, '200-contrast');
+      }
+    }
+
+    .timeline-data-row:nth-child(odd) {
+      & > .timeline-cell-value {
+        background-color: mat.get-color-from-palette($primary-palette, 400);
+        color: mat.get-color-from-palette($primary-palette, '400-contrast');
+      }
+    }
+
+    .timeline-cell-header {
+      background-color: mat.get-color-from-palette($primary-palette, 600);
+      color: mat.get-color-from-palette($primary-palette, '600-contrast');
+    }
+  }
+
+  // Darker table with darker hue
+  .timeline-container {
+    &.dark {
+      .timeline-data-row:nth-child(even) {
+        & > .timeline-cell-value {
+          background-color: mat.get-color-from-palette($primary-palette, 600);
+          color: mat.get-color-from-palette($primary-palette, '600-contrast');
+        }
+      }
+
+      .timeline-data-row:nth-child(odd) {
+        & > .timeline-cell-value {
+          background-color: mat.get-color-from-palette($primary-palette, 800);
+          color: mat.get-color-from-palette($primary-palette, '800-contrast');
+        }
+      }
+
+      .timeline-cell-header {
+        background-color: mat.get-color-from-palette($primary-palette, 900);
+        color: mat.get-color-from-palette($primary-palette, '900-contrast');
+      }
+    }
+  }
+
+}
+
+@mixin typography($theme) {
+  // Get the typography config from the theme.
+  $typography-config: mat.get-typography-config($theme);
+
+
+  .players-information-container, .players-remaining-container, .timeline-cell-value, .timeline-cell-header, .match-error {
+    @include devices.device(phone, phablet) {
+      @include mat.typography-level($typography-config, subheading-2);
+    }
+
+    @include devices.device(tablet, desktop, desktop-xl) {
+      @include mat.typography-level($typography-config, title);
+    }
+  }
+
+  .name {
+    @include devices.device(phone, phablet) {
+      @include mat.typography-level($typography-config, title);
+    }
+
+    @include devices.device(tablet, desktop, desktop-xl) {
+      @include mat.typography-level($typography-config, headline);
+      font-weight: 500;
+    }
+  }
+
+  .average-value, .best-of-value, .last-score-value, .player-score-value {
+    font-weight: 600;
+  }
+
+  .big-remaining {
+    @include devices.device(phone) {
+      @include mat.typography-level($typography-config, headline);
+      font-weight: 500;
+    }
+
+    @include devices.device(phablet) {
+      @include mat.typography-level($typography-config, display-1);
+      font-weight: 500;
+    }
+
+    @include devices.device(tablet, desktop, desktop-xl) {
+      @include mat.typography-level($typography-config, display-3);
+      font-weight: 600;
+    }
+
+    @include devices.device(desktop-xl) {
+      @include mat.typography-level($typography-config, display-3);
+      font-weight: 600;
+    }
+  }
+}
+
+@mixin theme($theme) {
+  $color-config: mat.get-color-config($theme);
+  @if $color-config != null {
+    @include color($theme);
+  }
+
+  $typography-config: mat.get-typography-config($theme);
+  @if $typography-config != null {
+    @include typography($theme);
+  }
+}

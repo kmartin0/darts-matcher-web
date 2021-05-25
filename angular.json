@@ -22,23 +22,27 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "aot": true,
             "assets": [
               "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
               "src/styles.scss",
-              "src/custom-theme.scss"
+              "src/theme/app-theme.scss"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "src",
-                "src/styles",
-                "src/styles/component-themes"
+                "src/theme/config",
+                "src/theme/custom-component-themes"
               ]
             },
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -99,7 +103,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/theme/app-theme.scss"
             ],
             "scripts": []
           }

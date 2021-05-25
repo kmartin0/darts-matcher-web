@@ -1,0 +1,66 @@
+@use 'sass:map';
+@use '~@angular/material/index' as mat;
+@use "devices" as devices;
+
+@mixin color($theme) {
+  // Get the color config from the theme.
+  $color-config: mat.get-color-config($theme);
+
+  // Get the primary color palette from the color-config.
+  $primary-palette: map.get($color-config, 'primary');
+  $background-palette: map.get($color-config, 'background');
+
+  .score-card-container {
+    background-color: mat.get-color-from-palette($background-palette, card);
+  }
+
+  .score-value.focused {
+    border-bottom-color: mat.get-color-from-palette($primary-palette);
+  }
+}
+
+@mixin typography($theme) {
+  // Get the typography config from the theme.
+  $typography-config: mat.get-typography-config($theme);
+
+  .score-title, .score-value {
+    @include devices.device(phone) {
+      @include mat.typography-level($typography-config, subheading-2);
+    }
+
+    @include devices.device(phablet) {
+      @include mat.typography-level($typography-config, subheading-2);
+      font-weight: 500;
+    }
+
+    @include devices.device(tablet, desktop, desktop-xl) {
+      @include mat.typography-level($typography-config, title);
+    }
+  }
+
+  .keyboard-input-button {
+    @include devices.device(phablet) {
+      font-size: 18px;
+    }
+
+    @include devices.device(tablet) {
+      font-size: 20px;
+    }
+
+    @include devices.device(desktop, desktop-xl) {
+      font-size: 24px;
+    }
+  }
+}
+
+@mixin theme($theme) {
+  $color-config: mat.get-color-config($theme);
+  @if $color-config != null {
+    @include color($theme);
+  }
+
+  $typography-config: mat.get-typography-config($theme);
+  @if $typography-config != null {
+    @include typography($theme);
+  }
+}

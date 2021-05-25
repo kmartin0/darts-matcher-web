@@ -1,0 +1,7 @@
+@use '~@angular/material/index' as mat;
+
+// Custom Typography.
+$typography-config: mat.define-typography-config(
+  $font-family: 'Roboto, sans serif',
+  $headline: mat.define-typography-level(32px, 48px, 700)
+);

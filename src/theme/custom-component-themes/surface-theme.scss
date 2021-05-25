@@ -1,0 +1,32 @@
+@use 'sass:map';
+@use '~@angular/material/index' as mat;
+
+@mixin color($theme) {
+  // Get the color config from the theme.
+  $color-config: mat.get-color-config($theme);
+
+  // Get the needed color palettes from the color-config.
+  $accent-palette: map.get($color-config, 'accent');
+  $background-palette: map.get($color-config, 'background');
+
+  .surface {
+    background-color: mat.get-color-from-palette($background-palette, card);
+    border-color: mat.get-color-from-palette($accent-palette, 0.5);
+  }
+
+}
+
+@mixin typography($theme) {
+}
+
+@mixin theme($theme) {
+  $color-config: mat.get-color-config($theme);
+  @if $color-config != null {
+    @include color($theme);
+  }
+
+  $typography-config: mat.get-typography-config($theme);
+  @if $typography-config != null {
+    @include typography($theme);
+  }
+}

@@ -1,0 +1,38 @@
+@use '~@angular/material/index' as mat;
+@use 'custom-color-palettes' as custom-color-palettes;
+@use 'typography' as custom-typograhy;
+
+//Custom color collection. Ref: https://stackoverflow.com/a/58165951
+$dark-theme-custom-color-collection: (
+  help : #FFFFFF,
+  success : #FFFFFF,
+  contrast: (
+    help: #181817,
+    success : #0a630f
+  )
+);
+
+// Custom color palette.
+$dark-theme-custom-palette: mat.define-palette($dark-theme-custom-color-collection, custom);
+
+// Primary palette.
+$dark-theme-primary: mat.define-palette(custom-color-palettes.$mat-light-teal);
+
+// Accent palette.
+$dark-theme-accent: mat.define-palette(custom-color-palettes.$mat-light-red);
+
+// Warn palette.
+$dark-theme-warn: mat.define-palette(custom-color-palettes.$mat-light-grey);
+
+// Create the dark theme.
+$dark-theme: mat.define-dark-theme((
+  color: (
+    primary: $dark-theme-primary,
+    accent: $dark-theme-accent,
+    warn: $dark-theme-warn
+  ),
+  typography: custom-typograhy.$typography-config
+));
+
+// Add custom color collection to the dark theme.
+$dark-theme: map_merge($dark-theme, (custom: $dark-theme-custom-palette));
