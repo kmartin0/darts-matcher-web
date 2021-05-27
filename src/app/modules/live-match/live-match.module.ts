@@ -22,11 +22,13 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { X01MatchRecapComponent } from './pages/x01-match-recap/x01-match-recap.component';
+import {MatSliderModule} from '@angular/material/slider';
 
 
 
 @NgModule({
-  declarations: [LiveMatchComponent, X01MatchSheetComponent, KeyboardComponent],
+  declarations: [LiveMatchComponent, X01MatchSheetComponent, KeyboardComponent, X01MatchRecapComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -47,7 +49,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatSelectModule,
     MatDialogModule,
     MatToolbarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSliderModule
   ]
 })
 export class LiveMatchModule { }

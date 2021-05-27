@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {MatchService} from '../../../../shared/services/match.service';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {map, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
@@ -34,15 +34,19 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
   checkouts: Checkout[];
   error = new BehaviorSubject(null);
   isDarkTheme$ = this.themeService.isDarkTheme;
+  isScoreboard = false;
   match: X01Match;
   selectedRound: SelectedRound;
   @ViewChild('toggleThemeButton', {read: ElementRef}) toggleThemeButton: ElementRef;
+  @ViewChild('toggleScoreboardButton', {read: ElementRef}) toggleScoreboardButton: ElementRef;
+
 
   private liveMatchWebsocket: RxStomp;
   private unsubscribe$ = new Subject();
 
   constructor(private route: ActivatedRoute, private matchService: MatchService, private dialog: MatDialog,
-              private basicDialogService: BasicDialogService, private changeDetectorRef: ChangeDetectorRef, private themeService: ThemeService) {
+              private basicDialogService: BasicDialogService, private changeDetectorRef: ChangeDetectorRef,
+              private themeService: ThemeService, private router: Router) {
     this.initMatch();
   }
 
@@ -150,6 +154,12 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
     } else {
       this.publishScore(x01Throw);
     }
+  }
+
+  toggleScoreboard() {
+    this.isScoreboard = !this.isScoreboard;
+    this.toggleScoreboardButton.nativeElement.blur();
+    this.changeDetectorRef.detectChanges();
   }
 
   toggleTheme() {

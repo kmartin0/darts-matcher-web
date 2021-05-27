@@ -3,6 +3,7 @@
 @use 'custom-component-themes/keyboard-theme' as keyboard-theme;
 @use 'custom-component-themes/sidebar-theme' as sidebar-theme;
 @use 'custom-component-themes/x01-match-sheet-theme' as x01-match-sheet-theme;
+@use 'custom-component-themes/x01-match-recap-theme' as x01-match-recap-theme;
 @use 'light-theme' as light-theme;
 @use 'dark-theme' as dark-theme;
 
@@ -17,6 +18,7 @@
 @include keyboard-theme.theme(light-theme.$light-theme);
 @include sidebar-theme.theme(light-theme.$light-theme);
 @include x01-match-sheet-theme.theme(light-theme.$light-theme);
+@include x01-match-recap-theme.theme(light-theme.$light-theme);
 
 .theme-dark {
   // Set all material components colors to their dark theme.
@@ -27,4 +29,5 @@
   @include keyboard-theme.color(dark-theme.$dark-theme);
   @include sidebar-theme.color(dark-theme.$dark-theme);
   @include x01-match-sheet-theme.color(dark-theme.$dark-theme);
+  @include x01-match-recap-theme.color(dark-theme.$dark-theme);
 }

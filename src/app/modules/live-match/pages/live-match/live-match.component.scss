@@ -1,23 +1,29 @@
 .page-container {
   display: grid;
   grid-auto-flow: row;
-  grid-template-rows: max-content minmax(100px, 2fr) auto;
-  grid-gap: 8px;
-  padding-bottom: 8px;
+  grid-auto-rows: max-content minmax(0, 1fr);
+  width: 100vw;
 }
 
-app-x01-match-sheet, app-keyboard, mat-error {
-  padding: 0 6px;
+.match-sheet-container {
+  display: grid;
+  grid-auto-flow: row;
+  grid-gap: 8px;
+  padding: 8px 0;
+}
+
+app-x01-match-sheet, app-keyboard, mat-error, app-x01-match-recap {
+  padding: 0 8px;
   max-width: 1800px;
   margin: 0 auto;
 }
 
-app-x01-match-sheet, app-keyboard {
+app-x01-match-sheet, app-keyboard, app-x01-match-recap {
   width: 100%;
   height: 100%;
 }
 
-app-x01-match-sheet {
+app-x01-match-sheet, app-x01-match-recap {
   overflow-y: auto;
 }
 
@@ -29,13 +35,14 @@ app-keyboard {
   min-height: 1em;
 }
 
-.page-container.full {
-  grid-template-rows: max-content minmax(100px, 2fr) auto minmax(140px, 1fr);
+.match-sheet-container.full {
+  grid-template-rows: minmax(100px, 2fr) auto minmax(140px, 1fr);
 }
 
 .example-icon {
   padding: 0 14px;
 }
+
 .example-spacer {
   flex: 1 1 auto;
 }

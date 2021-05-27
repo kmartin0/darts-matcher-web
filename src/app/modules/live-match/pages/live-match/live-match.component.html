@@ -1,11 +1,15 @@
-<div class="page-container"
-     [ngClass]="{'full': selectedRound?.isLegInPlaySelected() && match?.matchStatus === 'IN_PLAY'}">
+<div class="page-container">
 
   <mat-toolbar [color]="(isDarkTheme$ | async) ? null : 'primary'">
 
     <mat-toolbar-row>
       <span>X01 Match</span>
       <span class="example-spacer"></span>
+
+      <button #toggleScoreboardButton mat-icon-button (click)="toggleScoreboard()" matTooltip="Toggle Scoreboard/Recap">
+        <mat-icon>{{isScoreboard ? 'analytics' : 'sports'}}</mat-icon>
+      </button>
+
       <button #toggleThemeButton mat-icon-button (click)="toggleTheme()" matTooltip="Toggle Theme">
         <mat-icon>{{(isDarkTheme$ | async) ? 'light_mode' : 'dark_mode'}}</mat-icon>
       </button>
@@ -13,16 +17,28 @@
 
   </mat-toolbar>
 
-  <app-x01-match-sheet
-    (editScore)="onScoreSubmit(createEditThrow($event))"
-    (deleteThrow)="publishDeleteThrow($event)" (deleteSet)="publishDeleteSet($event)"
-    (deleteLeg)="publishDeleteLeg($event)" [checkouts]="checkouts"
-    [match]="match"
-    [(selectedRound)]="selectedRound"></app-x01-match-sheet>
+  <ng-container *ngIf="isScoreboard; then scoreboard else recap">
+  </ng-container>
 
-  <mat-error class="match-error">{{error | async}}</mat-error>
+  <ng-template #scoreboard>
+    <div class="match-sheet-container" [ngClass]="{'full': selectedRound?.isLegInPlaySelected() && match?.matchStatus === 'IN_PLAY'}">
+      <app-x01-match-sheet
+        (editScore)="onScoreSubmit(createEditThrow($event))"
+        (deleteThrow)="publishDeleteThrow($event)" (deleteSet)="publishDeleteSet($event)"
+        (deleteLeg)="publishDeleteLeg($event)" [checkouts]="checkouts"
+        [match]="match"
+        [(selectedRound)]="selectedRound"></app-x01-match-sheet>
 
-  <app-keyboard *ngIf="selectedRound?.isLegInPlaySelected() && match?.matchStatus === 'IN_PLAY'"
-                (scoreOutput)="onScoreSubmit(createNewThrow($event))"></app-keyboard>
+      <mat-error class="match-error">{{error | async}}</mat-error>
+
+      <app-keyboard *ngIf="selectedRound?.isLegInPlaySelected() && match?.matchStatus === 'IN_PLAY'"
+                    (scoreOutput)="onScoreSubmit(createNewThrow($event))"></app-keyboard>
+    </div>
+
+  </ng-template>
+
+  <ng-template #recap>
+    <app-x01-match-recap [x01Match]="match"></app-x01-match-recap>
+  </ng-template>
 
 </div>

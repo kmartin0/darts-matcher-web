@@ -7,6 +7,7 @@ export const dashboardRoutes: Routes = [
     path: '',
     pathMatch: 'prefix',
     component: LiveMatchComponent,
+    data: {title: 'Live Match'}
   }
 ];
 

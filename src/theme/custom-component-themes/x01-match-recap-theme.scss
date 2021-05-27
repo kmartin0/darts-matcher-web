@@ -1,0 +1,59 @@
+@use 'sass:map';
+@use '~@angular/material/index' as mat;
+@use 'devices' as devices;
+
+@mixin color($theme) {
+  // Get the color config from the theme.
+  $color-config: mat.get-color-config($theme);
+
+}
+
+@mixin typography($theme) {
+  // Get the typography config from the theme.
+  $typography-config: mat.get-typography-config($theme);
+
+  .x01-match-recap-container {
+    .player-name {
+      @include mat.typography-level($typography-config, subheading-2);
+      font-weight: 500;
+
+      @include devices.device(desktop, desktop-xl) {
+        @include mat.typography-level($typography-config, title);
+      }
+    }
+
+    .stats-section-title {
+      @include mat.typography-level($typography-config, subheading-1);
+      font-weight: 500;
+
+      @include devices.device(desktop, desktop-xl) {
+        @include mat.typography-level($typography-config, subheading-2);
+        font-weight: 500;
+      }
+    }
+
+    .stat-title, .stat-value {
+      @include mat.typography-level($typography-config, body-1);
+
+      @include devices.device(desktop, desktop-xl) {
+        @include mat.typography-level($typography-config, subheading-1);
+      }
+    }
+
+    .stat-value {
+      font-weight: 500;
+    }
+  }
+}
+
+@mixin theme($theme) {
+  $color-config: mat.get-color-config($theme);
+  @if $color-config != null {
+    @include color($theme);
+  }
+
+  $typography-config: mat.get-typography-config($theme);
+  @if $typography-config != null {
+    @include typography($theme);
+  }
+}
