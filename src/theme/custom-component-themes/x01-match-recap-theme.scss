@@ -9,12 +9,16 @@
   $custom-palette: map.get($theme, custom);
 
   .x01-match-recap-container {
-    .win-or-draw {
-      color: mat.get-color-from-palette($custom-palette, 'win-or-draw-contrast');
-      background-color: mat.get-color-from-palette($custom-palette, 'win-or-draw');
+    .player-name {
+      background-color: mat.get-color-from-palette($background-palette, 'hover');
+
+      &.win-or-draw {
+        color: mat.get-color-from-palette($custom-palette, 'win-or-draw-contrast');
+        background-color: mat.get-color-from-palette($custom-palette, 'win-or-draw');
+      }
     }
 
-    .stats-section-title, .player-name {
+    .stats-section-title {
       background-color: mat.get-color-from-palette($background-palette, 'hover');
     }
   }
