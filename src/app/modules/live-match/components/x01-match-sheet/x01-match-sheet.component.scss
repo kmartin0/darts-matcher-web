@@ -20,10 +20,12 @@
   border-bottom-width: 0;
 }
 
-.players-information-container, .players-remaining-container {
+// Also defines the timeline table columns so that they are aligned.
+.players-information-container, .players-remaining-container, .timeline-header-row, .timeline-data-row {
+  margin: auto;
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(112px, 1fr);
+  grid-auto-columns: minmax(112px, 750px);
   grid-gap: 6px;
   text-align: center;
   word-break: break-all;
@@ -43,12 +45,12 @@
   align-items: center;
   margin: auto;
 
-  @include device(phone, phablet, tablet) {
-    width: 90%;
-  }
-
   .average-container-label {
     border-bottom: 1px solid;
+  }
+
+  @include device(phone, phablet, tablet) {
+    width: 90%;
   }
 
   @include device(desktop) {
@@ -96,6 +98,7 @@
   min-height: 2em;
   max-height: 2em;
   overflow-y: auto;
+  border-radius: 8px;
 }
 
 // ===== REMAINING SECTION =====
@@ -117,18 +120,6 @@
   align-items: center;
 }
 
-.player-information-middle-container, .player-remaining-middle-container, .timeline-cell-header.timeline-darts-header, .timeline-cell-value.timeline-darts-value {
-  @include device(desktop-xl) {
-    grid-column: span 1;
-  }
-}
-
-.player-information-container, .player-remaining-container, .timeline-cell-header, .timeline-cell-value {
-  @include device(desktop-xl) {
-    grid-column: span 2;
-  }
-}
-
 .player-information-container, .player-remaining-container, .player-information-middle-container, .player-remaining-middle-container {
   border-style: solid;
   border-width: 2px;
@@ -148,21 +139,9 @@
 // ===== TIMELINE SECTION =====
 .timeline-container {
   height: 100%;
+  margin: auto;
   min-height: 185px;
-  width: 100%;
-  overflow-y: scroll;
-}
-
-.timeline-container::-webkit-scrollbar {
-  display: none;
-}
-
-.timeline-header-row, .timeline-data-row {
-  width: 100%;
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
-  word-break: break-all;
+  overflow-y: auto;
 }
 
 .timeline-cell-header, .timeline-cell-value {

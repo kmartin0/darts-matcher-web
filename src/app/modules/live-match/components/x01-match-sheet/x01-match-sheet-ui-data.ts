@@ -24,6 +24,7 @@ export class X01MatchSheetUiData {
   players?: {
     playerId?: string;
     playerName?: string;
+    winOrDraw?: boolean;
     wonSets?: number;
     wonLegs?: number;
     average?: number;
@@ -48,13 +49,15 @@ export class X01MatchSheetUiData {
 
     match.players.forEach(player => {
       const stats = match.statistics.find(_stats => _stats.playerId === player.playerId);
+      const playerResult = match.result.find(_playerResult => _playerResult.playerId === player.playerId);
 
       this.players.push({
         playerId: player.playerId,
         playerName: player.playerType === PlayerType.REGISTERED ? `${player.firstName} ${player.lastName}` : player.playerId,
         average: stats.averageStats.average,
         averageFirstNine: stats.averageStats.averageFirstNine,
-        remaining: match.x01
+        remaining: match.x01,
+        winOrDraw: playerResult?.result === ResultType.WIN || playerResult?.result === ResultType.DRAW
       });
     });
 
@@ -64,11 +67,9 @@ export class X01MatchSheetUiData {
     this.initWonLegs(set);
 
     const leg = (set && set.legs) ? set.legs.find(_leg => _leg.leg === legNumber) : null;
-
-    this.currentThrower = match.currentThrower;
-
     this.initRoundsTableData(leg, match.x01, checkouts);
 
+    this.currentThrower = match.currentThrower;
     this.timelineInNumbers = this.createTimelineInNumbers(match);
   }
 

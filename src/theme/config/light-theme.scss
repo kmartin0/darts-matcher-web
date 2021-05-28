@@ -4,11 +4,9 @@
 
 // Custom color collection. Ref: https://stackoverflow.com/a/58165951
 $light-theme-custom-color-collection: (
-  help : #181817,
-  success : #0a630f,
+  win-or-draw : #4caf50,
   contrast: (
-    success : #FFFFFF,
-    help: #FFFFFF
+    win-or-draw : #000000,
   )
 );
 

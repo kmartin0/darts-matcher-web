@@ -10,6 +10,12 @@
   $primary-palette: map.get($color-config, 'primary');
   $accent-palette: map.get($color-config, 'accent');
   $background-palette: map.get($color-config, 'background');
+  $custom-palette: map.get($theme, 'custom');
+
+  .win-or-draw {
+    color:  mat.get-color-from-palette($custom-palette, 'win-or-draw-contrast');
+    background-color:  mat.get-color-from-palette($custom-palette, 'win-or-draw');
+  }
 
   .player-information-container, .player-remaining-container, .player-information-middle-container, .player-remaining-middle-container {
     border-color: transparent;

@@ -14,7 +14,7 @@
         </div>
       </div>
 
-      <p class="name">{{player.playerName}}</p>
+      <p class="name" [class.win-or-draw]="player.winOrDraw">{{player.playerName}}</p>
 
       <div class="average-container" @blockInitialRenderAnimation>
 

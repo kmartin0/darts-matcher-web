@@ -1,4 +1,4 @@
-@use 'devices' as devices;
+@use 'src/theme/config/devices' as devices;
 
 .x01-match-recap-container {
   width: 100%;
@@ -13,11 +13,18 @@
 }
 
 .statistics-container {
+  width: fit-content;
   padding: 8px;
   display: grid;
+  margin: auto;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(112px, 1fr);
+  grid-auto-columns: minmax(112px, 750px);
   grid-gap: 6px;
+  align-items: center;
+}
+
+.player-card {
+
 }
 
 .player-name {
@@ -26,6 +33,7 @@
   height: 3.5em;
   overflow-y: auto;
   word-break: break-all;
+  border-radius: 8px;
 }
 
 .stats-section-container {

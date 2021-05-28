@@ -26,7 +26,6 @@ import {ThemeService} from '../../../../shared/services/theme/theme-service';
 import {range} from '../../../../shared/helpers/utility';
 import {getLeg} from '../../../../shared/models/x01-match/set/x01-set';
 import {getRemaining} from '../../../../shared/models/x01-match/leg/x01-leg';
-import {MatchStatus} from '../../../../shared/models/match/match-status';
 
 @Component({
   selector: 'app-live-match',

@@ -6,8 +6,11 @@
 
       <div *ngIf="recapUiData" class="statistics-container">
 
-        <mat-card *ngFor="let dataSource of recapUiData.statisticsDatasource">
-          <p class="player-name">{{dataSource.playerName}}</p>
+        <mat-card *ngFor="let dataSource of recapUiData.statisticsDatasource" class="player-card">
+          <p class="player-name"
+             [class.win-or-draw]="dataSource.result === resultType.WIN || dataSource.result === resultType.DRAW">
+            {{dataSource.playerName}}
+          </p>
 
           <!--     RESULT_SECTION     -->
           <div class="stats-section-container">
@@ -73,20 +76,22 @@
           <div class="stats-section-container">
             <p class="stats-section-title">Checkout</p>
 
-            <div class="stat-container">
-              <span class="stat-title">Percentage:</span>
-              <span class="stat-value">{{dataSource.statistics.checkoutStats.checkoutPercentage}} %</span>
-            </div>
+            <ng-container *ngIf="x01Match.trackDoubles">
+              <div class="stat-container">
+                <span class="stat-title">Percentage:</span>
+                <span class="stat-value">{{dataSource.statistics.checkoutStats.checkoutPercentage}} %</span>
+              </div>
 
-            <div class="stat-container">
-              <span class="stat-title">Hit:</span>
-              <span class="stat-value">{{dataSource.statistics.checkoutStats.checkoutsHit}}</span>
-            </div>
+              <div class="stat-container">
+                <span class="stat-title">Hit:</span>
+                <span class="stat-value">{{dataSource.statistics.checkoutStats.checkoutsHit}}</span>
+              </div>
 
-            <div class="stat-container">
-              <span class="stat-title">Missed:</span>
-              <span class="stat-value">{{dataSource.statistics.checkoutStats.checkoutsMissed}}</span>
-            </div>
+              <div class="stat-container">
+                <span class="stat-title">Missed:</span>
+                <span class="stat-value">{{dataSource.statistics.checkoutStats.checkoutsMissed}}</span>
+              </div>
+            </ng-container>
 
             <div class="stat-container">
               <span class="stat-title">Highest:</span>
