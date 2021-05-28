@@ -4,7 +4,6 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {ThemeService} from '../../shared/services/theme/theme-service';
 
 // TODO: Some sort of summary with stats tab and overview scoring timeline, access through icon in match toolbar.
-// TODO: Create a lose focus after click directive.
 
 // TODO: Api Error Handling.
 // TODO: Api Unauthorized handling (refresh token, forbidden etc.)

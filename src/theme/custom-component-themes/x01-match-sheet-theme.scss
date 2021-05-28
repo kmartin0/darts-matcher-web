@@ -13,9 +13,13 @@
   $custom-palette: map.get($theme, 'custom');
 
   .x01-match-sheet-container {
-    .win-or-draw {
-      color: mat.get-color-from-palette($custom-palette, 'win-or-draw-contrast');
-      background-color: mat.get-color-from-palette($custom-palette, 'win-or-draw');
+    .name {
+      background-color: mat.get-color-from-palette($background-palette, 'hover');
+
+      &.win-or-draw {
+        color: mat.get-color-from-palette($custom-palette, 'win-or-draw-contrast');
+        background-color: mat.get-color-from-palette($custom-palette, 'win-or-draw');
+      }
     }
 
     .player-information-container, .player-remaining-container, .player-information-middle-container, .player-remaining-middle-container {
