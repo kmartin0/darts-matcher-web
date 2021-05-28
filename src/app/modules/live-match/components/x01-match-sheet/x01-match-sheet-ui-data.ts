@@ -200,7 +200,7 @@ export class X01MatchSheetUiData {
     } else { // The number of legs won equals the player set score.
       set.result.forEach(playerResult => {
         const player = this.players.find(_player => _player.playerId === playerResult.playerId);
-        player.wonLegs = playerResult.score;
+        player.wonLegs = playerResult.legsWon;
       });
     }
   }
@@ -217,12 +217,7 @@ export class X01MatchSheetUiData {
 
     match.result.forEach(playerResult => {
       const player = this.players.find(_player => _player.playerId === playerResult.playerId);
-
-      if (match.bestOf.sets > 1) { // When it's a best of more than 1 set, then the number of sets won equals the player match score.
-        player.wonSets = playerResult.score;
-      } else { // When it's a best of 1 set, each player with a match result of win or draw has 1 point and a loss is 0 points.
-        player.wonSets = playerResult.result === ResultType.WIN || playerResult.result === ResultType.DRAW ? 1 : 0;
-      }
+      player.wonSets = playerResult.setsWon;
     });
   }
 

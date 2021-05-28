@@ -3,7 +3,6 @@ import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ThemeService} from '../../shared/services/theme/theme-service';
 
-// TODO: Api move score from result and add legsWon + setsWon in statistics.
 // TODO: Some sort of summary with stats tab and overview scoring timeline, access through icon in match toolbar.
 // TODO: Create a lose focus after click directive.
 

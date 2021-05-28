@@ -42,39 +42,17 @@ export class X01MatchRecapUiData {
       tmpSource.push(playerData);
     });
 
-    const playersResult = this.getPlayerResult(x01Match);
+    // const playersResult = this.getPlayerResult(x01Match);
 
     tmpSource.forEach(playerStatisticsData => {
       const playerId = playerStatisticsData.playerId;
-      playerStatisticsData.setsWon = playersResult[playerId].setsWon ?? 0;
-      playerStatisticsData.legsWon = playersResult[playerId].legsWon ?? 0;
+      const playerResult = x01Match.result.find(_playerResult => _playerResult.playerId === playerId);
+
+      playerStatisticsData.setsWon = playerResult?.setsWon ?? 0;
+      playerStatisticsData.legsWon = playerResult?.legsWon ?? 0;
     });
 
     this.statisticsDatasource = tmpSource;
   }
-
-  private getPlayerResult(x01Match: X01Match): { [playerId: string]: { setsWon: number, legsWon: number } } {
-    const players: { [playerId: string]: { setsWon: number, legsWon: number } } = {};
-    x01Match.players.forEach(player => players[player.playerId] = {setsWon: 0, legsWon: 0});
-
-    x01Match.timeline.forEach(x01Set => {
-      x01Set.result?.forEach(playerResult => {
-        if (playerResult.result === ResultType.WIN || playerResult.result === ResultType.DRAW) {
-          const tmpSetsWon = players[playerResult.playerId].setsWon;
-          players[playerResult.playerId].setsWon = tmpSetsWon + 1;
-        }
-      });
-
-      x01Set.legs?.forEach(x01Leg => {
-        if (x01Leg.winner) {
-          const tmpLegsWon = players[x01Leg.winner].legsWon ?? 0;
-          players[x01Leg.winner].legsWon = tmpLegsWon + 1;
-        }
-      });
-    });
-
-    return players;
-  }
-
 
 }

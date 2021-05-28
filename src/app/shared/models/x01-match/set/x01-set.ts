@@ -1,9 +1,10 @@
 import {X01Leg} from '../leg/x01-leg';
 import {X01PlayerResult} from '../player-result/x01-player-result';
+import {X01SetPlayerResult} from './x01-set-player-result';
 
 export interface X01Set {
   set: number;
-  result: X01PlayerResult[];
+  result: X01SetPlayerResult[];
   legs: X01Leg[];
 }
 
