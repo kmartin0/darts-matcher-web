@@ -1,6 +1,9 @@
 export interface X01ScoresStatistics {
+  fortyPlus: number;
+  sixtyPlus: number;
+  eightyPlus: number;
   tonPlus: number;
-  tonForty: number;
+  tonFortyPlus: number;
   tonEighty: number;
 }
 
