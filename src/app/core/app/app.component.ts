@@ -5,8 +5,8 @@ import {ThemeService} from '../../shared/services/theme/theme-service';
 
 // TODO: Some sort of summary with stats tab and overview scoring timeline, access through icon in match toolbar.
 // TODO: Add green color background in player name when player is winner or draw.
-// TODO: Remove the registered players cache in match sheet and use the first+last name from match if registered player.
 // TODO: Doubles Tracking.
+// TODO: Create a lose focus after click directive.
 // TODO: Make the component container prefix their component name so theme selectors can use that as parent selector like recap.
 // TODO: Api Error Handling.
 // TODO: Api Unauthorized handling (refresh token, forbidden etc.)

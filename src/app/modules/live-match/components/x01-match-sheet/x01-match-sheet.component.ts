@@ -16,14 +16,12 @@ import {
 } from '@angular/core';
 import {getSet, getSetInPlay, X01Match} from '../../../../shared/models/x01-match/x01-match';
 import {UserService} from '../../../../shared/services/user.service';
-import {User} from '../../../../shared/models/user';
 import {X01MatchSheetUiData} from './x01-match-sheet-ui-data';
-import {PlayerType} from '../../../../shared/models/match/player-type';
 import {getLeg, getLegInPlay} from '../../../../shared/models/x01-match/set/x01-set';
 import {getRoundInPlay} from '../../../../shared/models/x01-match/leg/x01-leg';
 import {FormControl} from '@angular/forms';
-import {Observable, of, Subject, zip} from 'rxjs';
-import {takeUntil, tap} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
 import {
   EditThrowDialogActions,
@@ -54,8 +52,6 @@ import {ThemeService} from '../../../../shared/services/theme/theme-service';
   animations: [expandCollapseTrigger, blockInitialTrigger]
 })
 export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
-
-  private registeredPlayers: User[] = [];
 
   @Input() checkouts: Checkout[];
   @Input() match: X01Match;
@@ -92,10 +88,8 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.match && changes.match.currentValue) {
-      this.updateRegisteredPlayers().subscribe(() => {
-        this.updateMatchUiData();
-        this.scrollContentIntoView();
-      });
+      this.updateMatchUiData();
+      this.scrollContentIntoView();
     }
   }
 
@@ -268,7 +262,7 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
 
     this.updateSelectedRound(newSelectedRound);
 
-    this.matchUiData = new X01MatchSheetUiData(this.match, this.registeredPlayers, newSelectedRound.set.set, newSelectedRound.legInPlay.leg, this.checkouts, newSelectedRound.isLegInPlaySelected());
+    this.matchUiData = new X01MatchSheetUiData(this.match, newSelectedRound.set.set, newSelectedRound.legInPlay.leg, this.checkouts, newSelectedRound.isLegInPlaySelected());
 
     this.legSelectionFormControl.setValue({set: newSelectedRound.set.set, leg: newSelectedRound.leg.leg});
   }
@@ -277,19 +271,4 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
     this.selectedRound = selectedRound;
     this.selectedRoundChange.emit(this.selectedRound);
   }
-
-  private updateRegisteredPlayers(): Observable<User[]> {
-    const registeredMatchPlayerIds = this.match.players.filter(value => value.playerType === PlayerType.REGISTERED)?.map(value => value.playerId);
-    const registeredMatchPlayerIdsCache = this.registeredPlayers?.map(value => value.id);
-
-    if (registeredMatchPlayerIds.length === registeredMatchPlayerIdsCache.length && registeredMatchPlayerIds.every((value, index) => value === registeredMatchPlayerIdsCache[index])) {
-      return of(this.registeredPlayers);
-    } else {
-      const getUsers$ = registeredMatchPlayerIds.map(playerId => this.userService.getUserById(playerId));
-      return zip(...getUsers$).pipe(takeUntil(this.unsubscribe$), tap(registeredUsers => {
-        this.registeredPlayers = registeredUsers;
-      }));
-    }
-  }
-
 }

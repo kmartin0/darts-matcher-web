@@ -1,5 +1,4 @@
 import {X01Match} from '../../../../shared/models/x01-match/x01-match';
-import {User} from '../../../../shared/models/user';
 import {PlayerType} from '../../../../shared/models/match/player-type';
 import {ResultType} from '../../../../shared/models/match/result-type';
 import {X01Set} from '../../../../shared/models/x01-match/set/x01-set';
@@ -33,7 +32,6 @@ export class X01MatchSheetUiData {
     checkoutHint?: Checkout;
     lastThrow?: number;
   }[];
-  registeredPlayers: User[];
   throwsFirstInLeg?: string;
 
   // Used for timeline table.
@@ -41,20 +39,19 @@ export class X01MatchSheetUiData {
   roundsDataSource: BehaviorSubject<RoundDataSource[]> = new BehaviorSubject([]);
   timelineInNumbers: Map<number, number[]>;
 
-  constructor(match: X01Match, registeredPlayers: User[], setNumber: number, legNumber: number, checkouts: Checkout[], isLegInPlay: boolean) {
+  constructor(match: X01Match, setNumber: number, legNumber: number, checkouts: Checkout[], isLegInPlay: boolean) {
     if (!match) return;
 
     this.bestOf = {...match.bestOf, isBestOfSets: match.bestOf.sets > 1, x01: match.x01};
     this.isLegInPlay = isLegInPlay;
     this.players = [];
-    this.registeredPlayers = registeredPlayers;
 
     match.players.forEach(player => {
       const stats = match.statistics.find(_stats => _stats.playerId === player.playerId);
 
       this.players.push({
         playerId: player.playerId,
-        playerName: this.getPlayerName(player.playerId, player.playerType),
+        playerName: player.playerType === PlayerType.REGISTERED ? `${player.firstName} ${player.lastName}` : player.playerId,
         average: stats.averageStats.average,
         averageFirstNine: stats.averageStats.averageFirstNine,
         remaining: match.x01
@@ -103,18 +100,6 @@ export class X01MatchSheetUiData {
 
     return timeline;
 
-  }
-
-  private getPlayerName(playerId: string, playerType: string): string {
-    if (playerType === PlayerType.REGISTERED) {
-      if (!this.registeredPlayers) return null;
-
-      const user = this.registeredPlayers.find(player => player.id === playerId);
-
-      if (!user) return null;
-      return user.firstName.concat(' ', user.lastName);
-    }
-    return playerId;
   }
 
   private createDisplayedColumns(): string[] {
