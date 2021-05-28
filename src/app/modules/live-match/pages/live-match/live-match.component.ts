@@ -5,11 +5,11 @@ import {BehaviorSubject, Subject} from 'rxjs';
 import {map, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
 import {X01Throw} from '../../../../shared/models/x01-throw';
 import {IRxStompPublishParams, RxStomp} from '@stomp/rx-stomp';
-import {X01Match} from '../../../../shared/models/x01-match/x01-match';
+import {getSet, X01Match} from '../../../../shared/models/x01-match/x01-match';
 import {
-  FinalThrowDialogComponent,
-  FinalThrowDialogData
-} from '../../../../shared/components/final-throw-dialog/final-throw-dialog.component';
+  NumOfDartsDialogComponent,
+  NumOfDartsDialogData
+} from '../../../../shared/components/num-of-darts-dialog/num-of-darts-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {X01DeleteThrow} from '../../../../shared/models/x01-delete-throw';
 import {X01DeleteSet} from '../../../../shared/models/x01-delete-set';
@@ -23,6 +23,10 @@ import {PlayerType} from '../../../../shared/models/match/player-type';
 import {SelectedRound} from '../../components/x01-match-sheet/selected-round';
 import {X01DartBotThrow} from '../../../../shared/models/x01-match/x01-dart-bot/x01-dart-bot-throw';
 import {ThemeService} from '../../../../shared/services/theme/theme-service';
+import {range} from '../../../../shared/helpers/utility';
+import {getLeg} from '../../../../shared/models/x01-match/set/x01-set';
+import {getRemaining} from '../../../../shared/models/x01-match/leg/x01-leg';
+import {MatchStatus} from '../../../../shared/models/match/match-status';
 
 @Component({
   selector: 'app-live-match',
@@ -34,12 +38,11 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
   checkouts: Checkout[];
   error = new BehaviorSubject(null);
   isDarkTheme$ = this.themeService.isDarkTheme;
-  isScoreboard = false;
+  isScoreboard = true;
   match: X01Match;
   selectedRound: SelectedRound;
   @ViewChild('toggleThemeButton', {read: ElementRef}) toggleThemeButton: ElementRef;
   @ViewChild('toggleScoreboardButton', {read: ElementRef}) toggleScoreboardButton: ElementRef;
-
 
   private liveMatchWebsocket: RxStomp;
   private unsubscribe$ = new Subject();
@@ -145,13 +148,32 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
 
   }
 
+  // Remaining is remaining at the start of the throw.
   onScoreSubmit(x01Throw: X01Throw) {
+
+    // Get the remaining at the start of this round.
+    const set = getSet(this.match, x01Throw.set);
+    const leg = getLeg(set, x01Throw.leg);
+    const remaining = getRemaining(leg, x01Throw.playerId, this.match.x01);
+
+    // Get the possible checkout.
+    const checkout = this.checkouts.find(value => value.checkout === remaining);
+
+    // When this is the final throw, first open de doubles missed then the final throw dialog.
     if (this.isFinalThrow(x01Throw, this.match)) {
-      this.openFinalThrowDialog(x01Throw.score, dartsUsed => {
-        x01Throw.dartsUsed = dartsUsed;
+      this.openDoublesMissedDialog(checkout, this.match.trackDoubles, doublesMissed => {
+        x01Throw.doublesMissed = doublesMissed;
+        this.openFinalThrowDialog(checkout, dartsUsed => {
+          x01Throw.dartsUsed = dartsUsed;
+          this.publishScore(x01Throw);
+        });
+      });
+    } else if (checkout) { // When a checkout could have been scored open the doubles missed dialog.
+      this.openDoublesMissedDialog(checkout, this.match.trackDoubles, doublesMissed => {
+        x01Throw.doublesMissed = doublesMissed;
         this.publishScore(x01Throw);
       });
-    } else {
+    } else { // When no checkout could have been scored publish the score.
       this.publishScore(x01Throw);
     }
   }
@@ -267,18 +289,46 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
     return match.x01 - (playerScore + x01Throw.score) === 0;
   }
 
-  private openFinalThrowDialog(checkout: number, onSubmit: (dartsUsed: number) => void) {
+  private openFinalThrowDialog(checkout: Checkout, onSubmit: (dartsUsed: number) => void) {
     if (!this.dialog.openDialogs || !this.dialog.openDialogs.length) {
 
-      const dialogData: FinalThrowDialogData = {
-        minDarts: this.checkouts.find(value => value.checkout === checkout)?.minDarts
+      if (!checkout) {
+        onSubmit(3);
+        return;
+      }
+
+      const dialogData: NumOfDartsDialogData = {
+        title: 'Darts used final throw',
+        options: range(checkout.minDarts, 3)
       };
 
-      this.dialog.open(FinalThrowDialogComponent, {data: dialogData})
+      this.dialog.open(NumOfDartsDialogComponent, {data: dialogData})
         .afterClosed()
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(dartsUsed => {
-          if (dartsUsed) onSubmit(dartsUsed);
+          if (dartsUsed !== undefined) onSubmit(dartsUsed);
+        });
+    }
+  }
+
+  private openDoublesMissedDialog(checkout: Checkout, doublesTracking: boolean, onSubmit: (doublesMissed: number) => void) {
+    if (!this.dialog.openDialogs || !this.dialog.openDialogs.length) {
+
+      if (!doublesTracking || !checkout) {
+        onSubmit(0);
+        return;
+      }
+
+      const dialogData: NumOfDartsDialogData = {
+        title: 'Double(s) checkout missed',
+        options: range(0, 3)
+      };
+
+      this.dialog.open(NumOfDartsDialogComponent, {data: dialogData})
+        .afterClosed()
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(doublesMissed => {
+          if (doublesMissed !== undefined) onSubmit(doublesMissed);
         });
     }
   }

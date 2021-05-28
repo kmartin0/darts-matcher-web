@@ -16,6 +16,7 @@ export interface X01Match {
   currentThrower: string;
   matchType: MatchType;
   x01: number;
+  trackDoubles: boolean;
   matchStatus: MatchStatus;
   bestOf: X01BestOf;
   result: X01PlayerResult[];

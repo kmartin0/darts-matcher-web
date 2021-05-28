@@ -27,3 +27,8 @@ export function getRoundInPlay(leg: X01Leg, currentThrower: string): X01LegRound
   // Return the first unfinished round.
   return unfinishedRounds.reduce((previousValue, currentValue) => (currentValue.round < previousValue.round) ? currentValue : previousValue);
 }
+
+export function getRemaining(x01Leg: X01Leg, playerId: string, x01: number): number {
+  const playerScores = x01Leg?.rounds?.map(legRound => legRound.playerScores.find(legRoundScore => legRoundScore.playerId === playerId)?.score);
+  return playerScores?.reduce((previousValue, currentValue) => currentValue ? previousValue - currentValue : previousValue, x01);
+}

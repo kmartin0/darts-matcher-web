@@ -19,7 +19,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {CreateMatchFormComponent} from './components/create-match-form/create-match-form.component';
 import {CreateMatchComponent} from './components/create-match/create-match.component';
 import {MatRadioModule} from '@angular/material/radio';
-import { FinalThrowDialogComponent } from './components/final-throw-dialog/final-throw-dialog.component';
+import { NumOfDartsDialogComponent } from './components/num-of-darts-dialog/num-of-darts-dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { EditThrowDialogComponent } from './components/edit-throw-dialog/edit-throw-dialog.component';
 import {MatSelectModule} from '@angular/material/select';
@@ -27,6 +27,7 @@ import { EditSetLegDialogComponent } from './components/edit-set-leg-dialog/edit
 import { BasicDialogComponent } from './components/basic-dialog/basic-dialog.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSliderModule} from '@angular/material/slider';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,7 @@ import {MatSliderModule} from '@angular/material/slider';
     LoadingComponent,
     CreateMatchFormComponent,
     CreateMatchComponent,
-    FinalThrowDialogComponent,
+    NumOfDartsDialogComponent,
     EditThrowDialogComponent,
     EditSetLegDialogComponent,
     BasicDialogComponent
@@ -59,7 +60,8 @@ import {MatSliderModule} from '@angular/material/slider';
     MatDialogModule,
     MatSelectModule,
     MatCheckboxModule,
-    MatSliderModule
+    MatSliderModule,
+    MatSlideToggleModule
   ],
   exports: [
     LoginFormComponent,
@@ -72,7 +74,7 @@ import {MatSliderModule} from '@angular/material/slider';
     LoadingComponent,
     CreateMatchFormComponent,
     CreateMatchComponent,
-    FinalThrowDialogComponent,
+    NumOfDartsDialogComponent,
     EditThrowDialogComponent,
     EditSetLegDialogComponent,
     BasicDialogComponent

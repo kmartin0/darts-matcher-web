@@ -22,6 +22,7 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
       legs: ['1', [Validators.min(1), Validators.required]],
       sets: ['1', [Validators.min(1), Validators.required]],
     }),
+    trackCheckouts: [true, Validators.required],
     players: this.fb.array([
       this.fb.group({
         playerId: ['', Validators.required],
@@ -78,6 +79,7 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
       currentThrower: undefined,
       matchType: MatchType.X01,
       x01: 501,
+      trackDoubles: form.get('trackCheckouts').value,
       matchStatus: MatchStatus.IN_PLAY,
       bestOf: {
         sets: form.get('bestOf.sets').value,

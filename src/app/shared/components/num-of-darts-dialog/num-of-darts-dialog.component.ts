@@ -3,44 +3,39 @@ import {FormControl} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {MatRadioGroup} from '@angular/material/radio';
 
-export interface FinalThrowDialogData {
-  minDarts: number;
+export interface NumOfDartsDialogData {
+  title: string;
+  options: number[];
 }
 
 @Component({
   selector: 'app-final-throw-dialog-component',
-  templateUrl: './final-throw-dialog.component.html',
-  styleUrls: ['./final-throw-dialog.component.scss']
+  templateUrl: './num-of-darts-dialog.component.html',
+  styleUrls: ['./num-of-darts-dialog.component.scss']
 })
-export class FinalThrowDialogComponent {
+export class NumOfDartsDialogComponent {
 
-  dartsUsedFormControl = new FormControl();
-  dartsUsedOptions = [1, 2, 3];
+  dartsOptionsFormControl = new FormControl();
+  dartsOptions: number[]; // Default options if no options are given.
+  title: string;
   @ViewChild(MatRadioGroup) radioGroup!: MatRadioGroup;
 
-  constructor(public dialogRef: MatDialogRef<FinalThrowDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: FinalThrowDialogData) {
+  constructor(public dialogRef: MatDialogRef<NumOfDartsDialogComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: NumOfDartsDialogData) {
 
     // Remove darts used options if they are not possible.
-    if (data && data.minDarts) {
-      switch (data.minDarts) {
-        case 2: {
-          this.dartsUsedOptions = [2, 3];
-          break;
-        }
-        case 3: {
-          this.dartsUsedOptions = [3];
-          break;
-        }
-      }
-    }
-    this.dartsUsedFormControl.setValue(this.dartsUsedOptions[0]);
+    this.dartsOptions = data.options;
+    this.dartsOptionsFormControl.setValue(this.dartsOptions[0]);
+
+    // Set the title
+    this.title = data.title;
   }
 
   onSubmit() {
-    this.dialogRef.close(this.dartsUsedFormControl.value);
+    this.dialogRef.close(this.dartsOptionsFormControl.value);
   }
 
+  // TODO
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
     switch (event.key) {
@@ -56,11 +51,11 @@ export class FinalThrowDialogComponent {
   }
 
   private updateDartsUsed(dartsUsed: number) {
-    if (this.dartsUsedOptions.includes(dartsUsed)) {
+    if (this.dartsOptions.includes(dartsUsed)) {
       const radioButton = this.radioGroup._radios.find(item => item.value === dartsUsed);
 
       // Change the selected radio button by changing form control value and move focus to the new radio button.
-      this.dartsUsedFormControl.setValue(dartsUsed);
+      this.dartsOptionsFormControl.setValue(dartsUsed);
       radioButton._inputElement.nativeElement.focus();
     }
   }
