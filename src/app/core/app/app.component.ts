@@ -6,7 +6,7 @@ import {ThemeService} from '../../shared/services/theme/theme-service';
 // TODO: Api move score from result and add legsWon + setsWon in statistics.
 // TODO: Some sort of summary with stats tab and overview scoring timeline, access through icon in match toolbar.
 // TODO: Create a lose focus after click directive.
-// TODO: Make the component container prefix their component name so theme selectors can use that as parent selector like recap.
+
 // TODO: Api Error Handling.
 // TODO: Api Unauthorized handling (refresh token, forbidden etc.)
 // TODO: Dart bot tooltip (info bot will average each leg + avg to darts conversion table)

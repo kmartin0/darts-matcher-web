@@ -10,45 +10,48 @@
   $primary-palette: map.get($color-config, 'primary');
   $background-palette: map.get($color-config, 'background');
 
-  .score-card-container {
-    background-color: mat.get-color-from-palette($background-palette, card);
-  }
+  .keyboard-container {
+    .score-card-container {
+      background-color: mat.get-color-from-palette($background-palette, card);
+    }
 
-  .score-value.focused {
-    border-bottom-color: mat.get-color-from-palette($primary-palette);
+    .score-value.focused {
+      border-bottom-color: mat.get-color-from-palette($primary-palette);
+    }
   }
 }
 
 @mixin typography($theme) {
   // Get the typography config from the theme.
   $typography-config: mat.get-typography-config($theme);
+  .keyboard-container {
+    .score-title, .score-value {
+      @include devices.device(phone) {
+        @include mat.typography-level($typography-config, subheading-2);
+      }
 
-  .score-title, .score-value {
-    @include devices.device(phone) {
-      @include mat.typography-level($typography-config, subheading-2);
+      @include devices.device(phablet) {
+        @include mat.typography-level($typography-config, subheading-2);
+        font-weight: 500;
+      }
+
+      @include devices.device(tablet, desktop, desktop-xl) {
+        @include mat.typography-level($typography-config, title);
+      }
     }
 
-    @include devices.device(phablet) {
-      @include mat.typography-level($typography-config, subheading-2);
-      font-weight: 500;
-    }
+    .keyboard-input-button {
+      @include devices.device(phablet) {
+        font-size: 18px;
+      }
 
-    @include devices.device(tablet, desktop, desktop-xl) {
-      @include mat.typography-level($typography-config, title);
-    }
-  }
+      @include devices.device(tablet) {
+        font-size: 20px;
+      }
 
-  .keyboard-input-button {
-    @include devices.device(phablet) {
-      font-size: 18px;
-    }
-
-    @include devices.device(tablet) {
-      font-size: 20px;
-    }
-
-    @include devices.device(desktop, desktop-xl) {
-      font-size: 24px;
+      @include devices.device(desktop, desktop-xl) {
+        font-size: 24px;
+      }
     }
   }
 }
