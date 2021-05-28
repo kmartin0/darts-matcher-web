@@ -6,11 +6,11 @@
       <span>X01 Match</span>
       <span class="example-spacer"></span>
 
-      <button #toggleScoreboardButton mat-icon-button (click)="toggleScoreboard()" matTooltip="Toggle Scoreboard/Recap">
+      <button appLoseFocusAfterClick mat-icon-button (click)="toggleScoreboard()" matTooltip="Toggle Scoreboard/Recap">
         <mat-icon>{{isScoreboard ? 'analytics' : 'sports'}}</mat-icon>
       </button>
 
-      <button #toggleThemeButton mat-icon-button (click)="toggleTheme()" matTooltip="Toggle Theme">
+      <button appLoseFocusAfterClick mat-icon-button (click)="toggleTheme()" matTooltip="Toggle Theme">
         <mat-icon>{{(isDarkTheme$ | async) ? 'light_mode' : 'dark_mode'}}</mat-icon>
       </button>
     </mat-toolbar-row>

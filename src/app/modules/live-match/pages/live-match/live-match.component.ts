@@ -40,15 +40,13 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
   isScoreboard = true;
   match: X01Match;
   selectedRound: SelectedRound;
-  @ViewChild('toggleThemeButton', {read: ElementRef}) toggleThemeButton: ElementRef;
-  @ViewChild('toggleScoreboardButton', {read: ElementRef}) toggleScoreboardButton: ElementRef;
 
   private liveMatchWebsocket: RxStomp;
   private unsubscribe$ = new Subject();
 
   constructor(private route: ActivatedRoute, private matchService: MatchService, private dialog: MatDialog,
               private basicDialogService: BasicDialogService, private changeDetectorRef: ChangeDetectorRef,
-              private themeService: ThemeService, private router: Router) {
+              private themeService: ThemeService) {
     this.initMatch();
   }
 
@@ -179,13 +177,11 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
 
   toggleScoreboard() {
     this.isScoreboard = !this.isScoreboard;
-    this.toggleScoreboardButton.nativeElement.blur();
     this.changeDetectorRef.detectChanges();
   }
 
   toggleTheme() {
     this.themeService.toggleTheme();
-    this.toggleThemeButton.nativeElement.blur();
   }
 
   private checkDartBotTurn() {

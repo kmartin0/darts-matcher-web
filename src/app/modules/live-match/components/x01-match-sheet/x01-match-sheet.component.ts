@@ -66,8 +66,6 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
   @ViewChild('container') container: ElementRef;
   @ViewChildren('playerInformationContainer', {read: ElementRef}) playerInformationContainers: QueryList<ElementRef>;
   @ViewChild('timelineTableContainer', {read: ElementRef}) timelineTableContainer: ElementRef;
-  @ViewChild('toggleAverageButton', {read: ElementRef}) toggleAverageButton: ElementRef;
-  @ViewChild('toggleEditButton', {read: ElementRef}) toggleEditButton: ElementRef;
 
   isDarkMode$: Observable<boolean> = this.themeService.isDarkTheme;
   matchUiData: X01MatchSheetUiData;
@@ -142,12 +140,10 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
 
   toggleAverage() {
     this.showAverages = !this.showAverages;
-    this.toggleAverageButton.nativeElement.blur();
   }
 
   toggleEditMode() {
     this.modeEdit = !this.modeEdit;
-    this.toggleEditButton.nativeElement.blur();
   }
 
   private openEditSetLegDialog(dialogData: EditSetLegDialogData) {

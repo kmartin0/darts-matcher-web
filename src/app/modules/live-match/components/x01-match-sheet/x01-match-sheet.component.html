@@ -20,7 +20,7 @@
 
         <p class="average-container-label">
           Avg.
-          <button #toggleAverageButton mat-icon-button (click)="toggleAverage()">
+          <button appLoseFocusAfterClick mat-icon-button (click)="toggleAverage()">
             <mat-icon *ngIf="showAverages">add</mat-icon>
             <mat-icon *ngIf="!showAverages">remove</mat-icon>
           </button>
@@ -45,7 +45,8 @@
         <div>X01:<span class="best-of-value">{{matchUiData.bestOf.x01}}</span></div>
       </div>
 
-      <button #toggleEditButton class="edit-score-button" mat-flat-button color="primary" (click)="toggleEditMode()">
+      <button appLoseFocusAfterClick class="edit-score-button" mat-flat-button color="primary"
+              (click)="toggleEditMode()">
         Edit Mode
       </button>
     </mat-card>
@@ -83,13 +84,14 @@
               [ngStyle]="{order: middleOrder}">
 
       <div class="leg-select-header-container">
-        <button @expandCollapseAnimation (click)="onEditSetLegClick()" mat-icon-button *ngIf="modeEdit">
+        <button appLoseFocusAfterClick @expandCollapseAnimation (click)="onEditSetLegClick()" mat-icon-button
+                *ngIf="modeEdit">
           <mat-icon>edit</mat-icon>
         </button>
         <span *ngIf="matchUiData.bestOf.isBestOfSets">Set {{legSelectionFormControl.value.set}}</span>
       </div>
 
-      <mat-form-field appearance="standard">
+      <mat-form-field appLoseFocusAfterClick appearance="standard">
         <mat-label>Select Leg</mat-label>
         <mat-select [formControl]="legSelectionFormControl" [compareWith]="matchUiData.compareSelectedLeg">
           <mat-optgroup *ngFor="let set of matchUiData.timelineInNumbers | keyvalue" label="Set {{set.key}}">
@@ -135,7 +137,8 @@
           </div>
 
           <ng-template #playerRowValue>
-            <button (click)="onEditScoreClick(round.round, column, round['playerScores'][column]?.scored)"
+            <button appLoseFocusAfterClick
+                    (click)="onEditScoreClick(round.round, column, round['playerScores'][column]?.scored)"
                     mat-icon-button
                     *ngIf="modeEdit && column !== 'darts'">
               <mat-icon>edit</mat-icon>

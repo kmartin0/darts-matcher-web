@@ -28,6 +28,7 @@ import { BasicDialogComponent } from './components/basic-dialog/basic-dialog.com
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { LoseFocusAfterClickDirective } from './components/lose-focus-after-click-directive/lose-focus-after-click.directive';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     NumOfDartsDialogComponent,
     EditThrowDialogComponent,
     EditSetLegDialogComponent,
-    BasicDialogComponent
+    BasicDialogComponent,
+    LoseFocusAfterClickDirective
   ],
   imports: [
     CommonModule,
@@ -77,7 +79,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     NumOfDartsDialogComponent,
     EditThrowDialogComponent,
     EditSetLegDialogComponent,
-    BasicDialogComponent
+    BasicDialogComponent,
+    LoseFocusAfterClickDirective
   ],
 
 })
