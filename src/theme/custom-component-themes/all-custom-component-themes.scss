@@ -1,0 +1,28 @@
+@use '~@angular/material/index' as mat;
+@use 'sass:map';
+@use 'surface-theme';
+@use 'keyboard-theme';
+@use 'dashboard-theme';
+@use 'x01-match-sheet-theme';
+@use 'x01-match-recap-theme';
+@use 'x01-statistics-theme';
+
+@mixin all-custom-component-themes($theme) {
+  @include surface-theme.theme($theme);
+  @include keyboard-theme.theme($theme);
+  @include dashboard-theme.theme($theme);
+  @include x01-match-sheet-theme.theme($theme);
+  @include x01-match-recap-theme.theme($theme);
+  @include x01-statistics-theme.theme($theme);
+}
+
+@mixin all-custom-component-colors($theme) {
+  $color-config: mat.get-color-config($theme);
+
+  @include all-custom-component-themes((
+    color: $color-config,
+    typography: null,
+    density: null,
+  ))
+}
+

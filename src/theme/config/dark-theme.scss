@@ -1,6 +1,7 @@
 @use '~@angular/material/index' as mat;
 @use 'custom-color-palettes' as custom-color-palettes;
 @use 'typography' as custom-typograhy;
+@use 'sass:map';
 
 //Custom color collection. Ref: https://stackoverflow.com/a/58165951
 $dark-theme-custom-color-collection: (
@@ -33,4 +34,7 @@ $dark-theme: mat.define-dark-theme((
 ));
 
 // Add custom color collection to the dark theme.
-$dark-theme: map_merge($dark-theme, (custom: $dark-theme-custom-palette));
+$color-config: mat.get-color-config($dark-theme, color);
+$color-config: map.merge($color-config, (custom: $dark-theme-custom-palette));
+
+$dark-theme: map.merge($dark-theme, (color: $color-config));

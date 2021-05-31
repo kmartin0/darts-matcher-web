@@ -12,7 +12,7 @@ export interface PlayerStatisticsData {
   setsWon: number;
 }
 
-export class X01MatchRecapUiData {
+export class X01StatisticsUiData {
 
   statisticsDatasource: PlayerStatisticsData[];
 

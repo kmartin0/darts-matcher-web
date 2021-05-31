@@ -7,7 +7,8 @@
       <span class="example-spacer"></span>
 
       <button appLoseFocusAfterClick mat-icon-button (click)="toggleScoreboard()" matTooltip="Toggle Scoreboard/Recap">
-        <mat-icon>{{isScoreboard ? 'analytics' : 'sports'}}</mat-icon>
+        <mat-icon *ngIf="isScoreboard">analytics</mat-icon>
+        <mat-icon *ngIf="!isScoreboard" svgIcon="darts"></mat-icon>
       </button>
 
       <button appLoseFocusAfterClick mat-icon-button (click)="toggleTheme()" matTooltip="Toggle Theme">
@@ -21,7 +22,8 @@
   </ng-container>
 
   <ng-template #scoreboard>
-    <div class="match-sheet-container" [ngClass]="{'full': selectedRound?.isLegInPlaySelected() && match?.matchStatus === 'IN_PLAY'}">
+    <div class="match-sheet-container"
+         [ngClass]="{'full': selectedRound?.isLegInPlaySelected() && match?.matchStatus === 'IN_PLAY'}">
       <app-x01-match-sheet
         (editScore)="onScoreSubmit(createEditThrow($event))"
         (deleteThrow)="publishDeleteThrow($event)" (deleteSet)="publishDeleteSet($event)"

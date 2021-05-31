@@ -1,0 +1,66 @@
+@use 'devices' as devices;
+
+.x01-statistics-container {
+  height: 100%;
+  overflow-x: auto;
+  padding: 8px;
+  width: fit-content;
+  display: grid;
+  margin: auto;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(112px, 750px);
+  grid-gap: 6px;
+  align-items: center;
+}
+
+.tab-group-container {
+  height: 100%;
+  width: 100%;
+}
+
+.player-card {
+
+}
+
+.player-name {
+  text-align: center;
+  max-lines: 2;
+  height: 3.5em;
+  overflow-y: auto;
+  word-break: break-all;
+  border-radius: 8px;
+}
+
+.stats-section-container {
+}
+
+.stats-section-title {
+  margin-top: 4px;
+  text-align: center;
+}
+
+.stat-container {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: auto 1fr;
+
+  @include devices.device(phone, phablet, tablet) {
+    grid-auto-flow: row;
+    margin: 4px 0;
+  }
+}
+
+.stat-title {
+  @include devices.device(phone, phablet, tablet) {
+    text-align: center;
+    margin-bottom: 2px;
+  }
+}
+
+.stat-value {
+  text-align: end;
+
+  @include devices.device(phone, phablet, tablet) {
+    text-align: center;
+  }
+}

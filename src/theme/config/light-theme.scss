@@ -1,6 +1,7 @@
 @use '~@angular/material/index' as mat;
 @use 'custom-color-palettes' as custom-color-palettes;
 @use 'typography' as custom-typograhy;
+@use 'sass:map';
 
 // Custom color collection. Ref: https://stackoverflow.com/a/58165951
 $light-theme-custom-color-collection: (
@@ -27,10 +28,13 @@ $light-theme: mat.define-light-theme((
   color: (
     primary: $light-theme-primary,
     accent: $light-theme-accent,
-    warn: $light-theme-warn
+    warn: $light-theme-warn,
   ),
   typography: custom-typograhy.$typography-config
 ));
 
 // Add custom color collection to the light theme.
-$light-theme: map_merge($light-theme, (custom: $light-theme-custom-palette));
+$color-config: mat.get-color-config($light-theme, color);
+$color-config: map.merge($color-config, (custom: $light-theme-custom-palette));
+
+$light-theme: map.merge($light-theme, (color: $color-config));

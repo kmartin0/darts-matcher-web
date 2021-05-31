@@ -1,0 +1,118 @@
+<div class="x01-statistics-container" *ngIf="recapUiData">
+
+    <mat-card *ngFor="let dataSource of recapUiData.statisticsDatasource" class="player-card">
+      <p class="player-name"
+         [class.win-or-draw]="dataSource.result === resultType.WIN || dataSource.result === resultType.DRAW">
+        {{dataSource.playerName}}
+      </p>
+
+      <!--     RESULT_SECTION     -->
+      <div class="stats-section-container">
+        <p class="stats-section-title">Result</p>
+
+        <div class="stat-container">
+          <span class="stat-title">Sets:</span>
+          <span class="stat-value">{{dataSource.setsWon}}</span>
+        </div>
+
+        <div class="stat-container">
+          <span class="stat-title">Legs:</span>
+          <span class="stat-value">{{dataSource.legsWon}}</span>
+        </div>
+      </div>
+
+      <!--     SCORE_SECTION     -->
+      <div class="stats-section-container">
+        <p class="stats-section-title">Score</p>
+
+        <div class="stat-container">
+          <span class="stat-title">40+:</span>
+          <span class="stat-value">{{dataSource.statistics.scoresStats.fortyPlus}}</span>
+        </div>
+
+        <div class="stat-container">
+          <span class="stat-title">60+:</span>
+          <span class="stat-value">{{dataSource.statistics.scoresStats.sixtyPlus}}</span>
+        </div>
+
+        <div class="stat-container">
+          <span class="stat-title">80+:</span>
+          <span class="stat-value">{{dataSource.statistics.scoresStats.eightyPlus}}</span>
+        </div>
+
+        <div class="stat-container">
+          <span class="stat-title">100+:</span>
+          <span class="stat-value">{{dataSource.statistics.scoresStats.tonPlus}}</span>
+        </div>
+
+        <div class="stat-container">
+          <span class="stat-title">140+:</span>
+          <span class="stat-value">{{dataSource.statistics.scoresStats.tonFortyPlus}}</span>
+        </div>
+
+        <div class="stat-container">
+          <span class="stat-title">180+:</span>
+          <span class="stat-value">{{dataSource.statistics.scoresStats.tonEighty}}</span>
+        </div>
+
+        <div class="stat-container">
+          <span class="stat-title">Points Thrown:</span>
+          <span class="stat-value">{{dataSource.statistics.averageStats.pointsThrown}}</span>
+        </div>
+
+        <div class="stat-container">
+          <span class="stat-title">Darts Thrown:</span>
+          <span class="stat-value">{{dataSource.statistics.averageStats.dartsThrown}}</span>
+        </div>
+      </div>
+
+      <!--     AVERAGE_SECTION     -->
+      <div class="stats-section-container">
+        <p class="stats-section-title">Average</p>
+
+        <div class="stat-container">
+          <span class="stat-title">3-Dart:</span>
+          <span class="stat-value">{{dataSource.statistics.averageStats.average}}</span>
+        </div>
+
+        <div class="stat-container">
+          <span class="stat-title">First 9:</span>
+          <span class="stat-value">{{dataSource.statistics.averageStats.averageFirstNine}}</span>
+        </div>
+      </div>
+
+      <!--     CHECKOUT_SECTION     -->
+      <div class="stats-section-container">
+        <p class="stats-section-title">Checkout</p>
+
+        <ng-container *ngIf="x01Match.trackDoubles">
+          <div class="stat-container">
+            <span class="stat-title">Percentage:</span>
+            <span class="stat-value">{{dataSource.statistics.checkoutStats.checkoutPercentage}} %</span>
+          </div>
+
+          <div class="stat-container">
+            <span class="stat-title">Hit:</span>
+            <span class="stat-value">{{dataSource.statistics.checkoutStats.checkoutsHit}}</span>
+          </div>
+
+          <div class="stat-container">
+            <span class="stat-title">Missed:</span>
+            <span class="stat-value">{{dataSource.statistics.checkoutStats.checkoutsMissed}}</span>
+          </div>
+        </ng-container>
+
+        <div class="stat-container">
+          <span class="stat-title">Highest:</span>
+          <span class="stat-value">{{dataSource.statistics.checkoutStats.checkoutHighest}}</span>
+        </div>
+
+        <div class="stat-container">
+          <span class="stat-title">100+:</span>
+          <span class="stat-value">{{dataSource.statistics.checkoutStats.checkoutTonPlus}}</span>
+        </div>
+      </div>
+
+    </mat-card>
+
+  </div>

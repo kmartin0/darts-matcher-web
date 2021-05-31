@@ -1,33 +1,21 @@
 @use '~@angular/material/index' as mat;
-@use 'custom-component-themes/surface-theme' as surface-theme;
-@use 'custom-component-themes/keyboard-theme' as keyboard-theme;
-@use 'custom-component-themes/dashboard-theme' as sidebar-theme;
-@use 'custom-component-themes/x01-match-sheet-theme' as x01-match-sheet-theme;
-@use 'custom-component-themes/x01-match-recap-theme' as x01-match-recap-theme;
-@use 'light-theme' as light-theme;
-@use 'dark-theme' as dark-theme;
+@use 'all-custom-component-themes';
+@use 'light-theme';
+@use 'dark-theme';
 
 // Include mat-core (Note: Must be imported exactly once.)
 @include mat.core();
 
-// Set the material component to light theme as default.
+// Set the material component themes to light theme as default.
 @include mat.all-component-themes(light-theme.$light-theme);
 
-// Set all custom components theme.
-@include surface-theme.theme(light-theme.$light-theme);
-@include keyboard-theme.theme(light-theme.$light-theme);
-@include sidebar-theme.theme(light-theme.$light-theme);
-@include x01-match-sheet-theme.theme(light-theme.$light-theme);
-@include x01-match-recap-theme.theme(light-theme.$light-theme);
+// Set the custom component themes to light theme as default.
+@include all-custom-component-themes.all-custom-component-themes(light-theme.$light-theme);
 
 .theme-dark {
-  // Set all material components colors to their dark theme.
+  // Set all material components color themes to their dark theme.
   @include mat.all-component-colors(dark-theme.$dark-theme);
 
-  // Set all custom components colors to their dark theme.
-  @include surface-theme.color(dark-theme.$dark-theme);
-  @include keyboard-theme.color(dark-theme.$dark-theme);
-  @include sidebar-theme.color(dark-theme.$dark-theme);
-  @include x01-match-sheet-theme.color(dark-theme.$dark-theme);
-  @include x01-match-recap-theme.color(dark-theme.$dark-theme);
+  // Set all custom components color themes to their dark theme.
+  @include all-custom-component-themes.all-custom-component-colors(dark-theme.$dark-theme)
 }

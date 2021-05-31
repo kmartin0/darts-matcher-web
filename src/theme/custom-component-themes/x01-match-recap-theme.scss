@@ -9,18 +9,7 @@
   $custom-palette: map.get($theme, custom);
 
   .x01-match-recap-container {
-    .player-name {
-      background-color: mat.get-color-from-palette($background-palette, 'hover');
 
-      &.win-or-draw {
-        color: mat.get-color-from-palette($custom-palette, 'win-or-draw-contrast');
-        background-color: mat.get-color-from-palette($custom-palette, 'win-or-draw');
-      }
-    }
-
-    .stats-section-title {
-      background-color: mat.get-color-from-palette($background-palette, 'hover');
-    }
   }
 }
 
@@ -29,37 +18,7 @@
   $typography-config: mat.get-typography-config($theme);
 
   .x01-match-recap-container {
-    .player-name {
-      @include mat.typography-level($typography-config, subheading-2);
-      font-weight: 500;
 
-      @include devices.device(desktop, desktop-xl) {
-        @include mat.typography-level($typography-config, headline);
-        font-weight: 500;
-      }
-    }
-
-    .stats-section-title {
-      @include mat.typography-level($typography-config, subheading-1);
-      font-weight: 500;
-
-      @include devices.device(desktop, desktop-xl) {
-        @include mat.typography-level($typography-config, title);
-        font-weight: 500;
-      }
-    }
-
-    .stat-title, .stat-value {
-      @include mat.typography-level($typography-config, body-1);
-
-      @include devices.device(desktop, desktop-xl) {
-        @include mat.typography-level($typography-config, subheading-2);
-      }
-    }
-
-    .stat-value {
-      font-weight: 500;
-    }
   }
 }
 
