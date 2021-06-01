@@ -7,7 +7,6 @@
   $color-config: mat.get-color-config($theme);
 
   // Get the primary color palette from the color-config.
-  $primary-palette: map.get($color-config, 'primary');
   $accent-palette: map.get($color-config, 'accent');
   $background-palette: map.get($color-config, 'background');
   $custom-palette: map.get($color-config, 'custom');
@@ -33,56 +32,6 @@
     .starts-leg {
       background-color: mat.get-color-from-palette($accent-palette);
     }
-
-    .timeline-cell-value, .timeline-cell-header {
-      border-color: mat.get-color-from-palette($background-palette, background);
-    }
-
-    // Default table with lighter hue.
-    .timeline-container {
-      .timeline-data-row:nth-child(even) {
-        & > .timeline-cell-value {
-          background-color: mat.get-color-from-palette($primary-palette, 200);
-          color: mat.get-color-from-palette($primary-palette, '200-contrast');
-        }
-      }
-
-      .timeline-data-row:nth-child(odd) {
-        & > .timeline-cell-value {
-          background-color: mat.get-color-from-palette($primary-palette, 400);
-          color: mat.get-color-from-palette($primary-palette, '400-contrast');
-        }
-      }
-
-      .timeline-cell-header {
-        background-color: mat.get-color-from-palette($primary-palette, 600);
-        color: mat.get-color-from-palette($primary-palette, '600-contrast');
-      }
-    }
-
-    // Darker table with darker hue
-    .timeline-container {
-      &.dark {
-        .timeline-data-row:nth-child(even) {
-          & > .timeline-cell-value {
-            background-color: mat.get-color-from-palette($primary-palette, 600);
-            color: mat.get-color-from-palette($primary-palette, '600-contrast');
-          }
-        }
-
-        .timeline-data-row:nth-child(odd) {
-          & > .timeline-cell-value {
-            background-color: mat.get-color-from-palette($primary-palette, 800);
-            color: mat.get-color-from-palette($primary-palette, '800-contrast');
-          }
-        }
-
-        .timeline-cell-header {
-          background-color: mat.get-color-from-palette($primary-palette, 900);
-          color: mat.get-color-from-palette($primary-palette, '900-contrast');
-        }
-      }
-    }
   }
 }
 
@@ -91,7 +40,7 @@
   $typography-config: mat.get-typography-config($theme);
 
   .x01-match-sheet-container {
-    .players-information-container, .players-remaining-container, .timeline-cell-value, .timeline-cell-header, .match-error {
+    .players-information-container, .players-remaining-container, .match-error {
       @include devices.device(phone, phablet) {
         @include mat.typography-level($typography-config, subheading-2);
       }

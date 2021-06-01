@@ -6,6 +6,8 @@
 @use 'x01-match-sheet-theme';
 @use 'x01-match-recap-theme';
 @use 'x01-statistics-theme';
+@use "custom-table-theme";
+@use 'x01-summary-theme';
 
 @mixin all-custom-component-themes($theme) {
   @include surface-theme.theme($theme);
@@ -14,6 +16,8 @@
   @include x01-match-sheet-theme.theme($theme);
   @include x01-match-recap-theme.theme($theme);
   @include x01-statistics-theme.theme($theme);
+  @include custom-table-theme.theme($theme);
+  @include x01-summary-theme.theme($theme);
 }
 
 @mixin all-custom-component-colors($theme) {

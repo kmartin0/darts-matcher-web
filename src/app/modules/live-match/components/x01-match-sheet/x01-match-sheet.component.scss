@@ -16,19 +16,18 @@
   word-wrap: break-word;
 }
 
-.mat-row {
-  border-bottom-width: 0;
-}
-
 // Also defines the timeline table columns so that they are aligned.
-.players-information-container, .players-remaining-container, .timeline-header-row, .timeline-data-row {
+.players-information-container, .players-remaining-container {
   margin: auto;
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(112px, 750px);
   grid-gap: 6px;
   text-align: center;
   word-break: break-all;
+}
+
+.players-information-container, .players-remaining-container, mat-header-row, mat-row {
+  grid-auto-columns: minmax(112px, 750px);
 }
 
 .player-information-container {
@@ -139,41 +138,6 @@
 // ===== TIMELINE SECTION =====
 .timeline-container {
   height: 100%;
-  margin: auto;
   min-height: 185px;
   overflow-y: auto;
-}
-
-.timeline-cell-header, .timeline-cell-value {
-  height: 100%;
-  padding: 8px;
-  margin: 0;
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
-  justify-items: center;
-  background-clip: padding-box;
-}
-
-.timeline-cell-value, .timeline-cell-header {
-  border-left-width: 1px;
-  border-left-style: solid;
-  border-right-width: 1px;
-  border-right-style: solid;
-}
-
-.timeline-cell-value:last-child, .timeline-cell-header:last-child {
-  border-right-width: 0;
-}
-
-.timeline-cell-value:first-child, .timeline-cell-header:first-child {
-  border-left-width: 0;
-}
-
-.timeline-cell-header > *, .timeline-cell-value > * {
-  padding: 4px;
-}
-
-mat-footer-row::after, mat-header-row::after, mat-row::after {
-  display: none;
 }

@@ -1,0 +1,90 @@
+@use 'sass:map';
+@use '~@angular/material/index' as mat;
+@use "devices" as devices;
+
+@mixin color($theme) {
+  // Get the color config from the theme.
+  $color-config: mat.get-color-config($theme);
+
+  // Get the primary color palette from the color-config.
+  $primary-palette: map.get($color-config, 'primary');
+  $accent-palette: map.get($color-config, 'accent');
+  $background-palette: map.get($color-config, 'background');
+  $custom-palette: map.get($color-config, 'custom');
+
+  // Default table with lighter hue.
+  .custom-mat-table {
+    mat-cell, mat-header-cell {
+      border-color: mat.get-color-from-palette($background-palette, background);
+    }
+
+    mat-row:nth-child(even) {
+      & > mat-cell {
+        background-color: mat.get-color-from-palette($accent-palette, 200);
+        color: mat.get-color-from-palette($accent-palette, '200-contrast');
+      }
+    }
+
+    mat-row:nth-child(odd) {
+      & > mat-cell {
+        background-color: mat.get-color-from-palette($accent-palette, 400);
+        color: mat.get-color-from-palette($accent-palette, '400-contrast');
+      }
+    }
+
+    mat-header-cell {
+      background-color: mat.get-color-from-palette($accent-palette, 600);
+      color: mat.get-color-from-palette($accent-palette, '600-contrast');
+    }
+
+    // Darker table with darker hue
+    &.dark {
+      mat-row:nth-child(even) {
+        & > mat-cell {
+          background-color: mat.get-color-from-palette($accent-palette, 600);
+          color: mat.get-color-from-palette($accent-palette, '600-contrast');
+        }
+      }
+
+      mat-row:nth-child(odd) {
+        & > mat-cell {
+          background-color: mat.get-color-from-palette($accent-palette, 800);
+          color: mat.get-color-from-palette($accent-palette, '800-contrast');
+        }
+      }
+
+      mat-header-cell {
+        background-color: mat.get-color-from-palette($accent-palette, 900);
+        color: mat.get-color-from-palette($accent-palette, '900-contrast');
+      }
+    }
+  }
+}
+
+@mixin typography($theme) {
+  // Get the typography config from the theme.
+  $typography-config: mat.get-typography-config($theme);
+  .custom-mat-table {
+    mat-cell, mat-header-cell {
+      @include devices.device(phone, phablet) {
+        @include mat.typography-level($typography-config, subheading-2);
+      }
+
+      @include devices.device(tablet, desktop, desktop-xl) {
+        @include mat.typography-level($typography-config, title);
+      }
+    }
+  }
+}
+
+@mixin theme($theme) {
+  $color-config: mat.get-color-config($theme);
+  @if $color-config != null {
+    @include color($theme);
+  }
+
+  $typography-config: mat.get-typography-config($theme);
+  @if $typography-config != null {
+    @include typography($theme);
+  }
+}

@@ -7,3 +7,7 @@ export interface MatchPlayer {
   lastName?: string;
   playerType: PlayerType;
 }
+
+export function getMatchPlayerDisplayName(matchPlayer: MatchPlayer): string { // TODO: Use this in match sheet.
+  return matchPlayer.playerType === PlayerType.REGISTERED ? `${matchPlayer.firstName} ${matchPlayer.lastName}` : matchPlayer.playerId;
+}

@@ -25,11 +25,12 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { X01MatchRecapComponent } from './components/x01-match-recap/x01-match-recap.component';
 import {MatSliderModule} from '@angular/material/slider';
 import { X01StatisticsComponent } from './components/x01-statistics/x01-statistics.component';
+import { X01SummaryComponent } from './components/x01-summary/x01-summary.component';
 
 
 
 @NgModule({
-  declarations: [LiveMatchComponent, X01MatchSheetComponent, KeyboardComponent, X01MatchRecapComponent, X01StatisticsComponent],
+  declarations: [LiveMatchComponent, X01MatchSheetComponent, KeyboardComponent, X01MatchRecapComponent, X01StatisticsComponent, X01SummaryComponent],
   imports: [
     CommonModule,
     SharedModule,

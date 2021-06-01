@@ -1,0 +1,60 @@
+<div class="x01-summary-container" *ngIf="summaryUiData?.dataSource | async">
+  <mat-table [dataSource]="(summaryUiData.dataSource | async).legs" class="custom-mat-table borderless gap"
+             [ngClass]="{'dark': (isDarkMode$ | async)}">
+
+    <ng-container *ngFor="let column of (summaryUiData.dataSource|async).columns; index as i"
+                  [matColumnDef]="column">
+
+      <mat-header-cell *matHeaderCellDef>
+
+        <ng-template *ngIf="column !== 'first-column'; then playerHeader else firstColumnHeader">
+        </ng-template>
+
+        <ng-template #playerHeader>
+          <p class="player-name">{{column}}</p>
+          <div class="column-headers">
+            <span>3DA</span>
+            <span>Left</span>
+            <span></span>
+          </div>
+        </ng-template>
+
+        <ng-template #firstColumnHeader>
+          <div class="column-headers" style="align-content: end">
+            <span class="sub-header">Leg</span>
+            <span class="sub-header">Darts</span>
+          </div>
+        </ng-template>
+
+      </mat-header-cell>
+
+      <mat-cell *matCellDef="let round">
+
+        <div *ngIf="column !== 'first-column'; then playerValue else firstColumnValue">
+        </div>
+
+        <ng-template #playerValue>
+          <span>{{round['players'][column]?.avg}}</span>
+          <span>{{round['players'][column]?.remaining}}</span>
+          <span style="display: grid; grid-template-columns: repeat(2, 1fr)">
+            <mat-icon *ngIf="round['players'][column]?.legResult === resultType.WIN">check</mat-icon>
+            <mat-icon
+              *ngIf="round['players'][column]?.setResult === resultType.WIN || round['players'][column]?.setResult === resultType.DRAW">emoji_events</mat-icon>
+          </span>
+        </ng-template>
+
+        <ng-template #firstColumnValue>
+          <span>{{round?.leg}}</span>
+          <span>{{round?.darts ? round?.darts : '-'}}</span>
+        </ng-template>
+
+      </mat-cell>
+
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="(summaryUiData.dataSource|async).columns sticky: true"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: (summaryUiData.dataSource|async).columns;"></mat-row>
+
+  </mat-table>
+
+</div>

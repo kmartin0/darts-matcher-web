@@ -44,14 +44,14 @@
   grid-auto-flow: column;
   grid-auto-columns: auto 1fr;
 
-  @include devices.device(phone, phablet, tablet) {
+  @include devices.device(phone) {
     grid-auto-flow: row;
     margin: 4px 0;
   }
 }
 
 .stat-title {
-  @include devices.device(phone, phablet, tablet) {
+  @include devices.device(phone) {
     text-align: center;
     margin-bottom: 2px;
   }
@@ -60,7 +60,8 @@
 .stat-value {
   text-align: end;
 
-  @include devices.device(phone, phablet, tablet) {
+  @include devices.device(phone) {
     text-align: center;
+    border-bottom: 1px solid;
   }
 }

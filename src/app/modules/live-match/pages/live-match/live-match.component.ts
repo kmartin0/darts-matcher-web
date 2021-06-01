@@ -1,5 +1,12 @@
-import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 import {MatchService} from '../../../../shared/services/match.service';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {map, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
@@ -32,7 +39,7 @@ import {getRemaining} from '../../../../shared/models/x01-match/leg/x01-leg';
   templateUrl: './live-match.component.html',
   styleUrls: ['./live-match.component.scss']
 })
-export class LiveMatchComponent implements OnInit, OnDestroy {
+export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
 
   checkouts: Checkout[];
   error = new BehaviorSubject(null);
@@ -178,16 +185,21 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
   toggleScoreboard() {
     this.isScoreboard = !this.isScoreboard;
     this.changeDetectorRef.detectChanges();
+    if (this.isScoreboard) this.checkDartBotTurn();
   }
 
   toggleTheme() {
     this.themeService.toggleTheme();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    console.log(changes);
+  }
+
   private checkDartBotTurn() {
     const currentThrower = this.match.players.find(matchPlayer => matchPlayer.playerId === this.match.currentThrower);
 
-    if (currentThrower?.playerType === PlayerType.DART_BOT) {
+    if (currentThrower?.playerType === PlayerType.DART_BOT && this.selectedRound) {
       setTimeout(() => {
         this.publishDartBotThrow({
           dartBotId: currentThrower.playerId,
@@ -378,7 +390,7 @@ export class LiveMatchComponent implements OnInit, OnDestroy {
       this.match = match;
       this.error.next(null);
       this.changeDetectorRef.detectChanges();
-      this.checkDartBotTurn();
+      if (this.isScoreboard) this.checkDartBotTurn();
 
     }, error => {
       console.log(error);

@@ -1,0 +1,43 @@
+@use 'sass:map';
+@use '~@angular/material/index' as mat;
+@use "devices" as devices;
+
+@mixin color($theme) {
+  // Get the color config from the theme.
+  $color-config: mat.get-color-config($theme);
+
+  // Get the primary color palette from the color-config.
+  $primary-palette: map.get($color-config, 'primary');
+  $accent-palette: map.get($color-config, 'accent');
+  $background-palette: map.get($color-config, 'background');
+  $foreground-palette: map.get($color-config, 'foreground');
+  $custom-palette: map.get($color-config, 'custom');
+
+  // Default table with lighter hue.
+  .x01-summary-container {
+    .player-name {
+      background-color: rgba(mat.get-color-from-palette($background-palette, card), .35);
+      color: mat.get-color-from-palette($foreground-palette, base);
+    }
+  }
+}
+
+@mixin typography($theme) {
+  // Get the typography config from the theme.
+  $typography-config: mat.get-typography-config($theme);
+  .x01-summary-container {
+
+  }
+}
+
+@mixin theme($theme) {
+  $color-config: mat.get-color-config($theme);
+  @if $color-config != null {
+    @include color($theme);
+  }
+
+  $typography-config: mat.get-typography-config($theme);
+  @if $typography-config != null {
+    @include typography($theme);
+  }
+}

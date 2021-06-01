@@ -105,13 +105,14 @@
     </mat-card>
   </div>
 
-  <div #timelineTableContainer class="timeline-container" [ngClass]="{'dark': (isDarkMode$ | async)}">
-    <mat-table class="timeline-table" [dataSource]="matchUiData.roundsDataSource">
+  <div #timelineTableContainer class="timeline-container">
+    <mat-table class="custom-mat-table borderless gap" [dataSource]="matchUiData.roundsDataSource"
+               [ngClass]="{'dark': (isDarkMode$ | async)}">
 
       <ng-container *ngFor="let column of matchUiData.displayedColumns; index as i"
                     [matColumnDef]="column">
 
-        <mat-header-cell *matHeaderCellDef class="timeline-cell-header"
+        <mat-header-cell *matHeaderCellDef
                          [ngClass]="{'timeline-darts-header': column === 'darts'}">
 
           <div *ngIf="column !== 'darts' && column !== 'round'; then playerHeader else dartsHeader">
@@ -129,10 +130,10 @@
 
         </mat-header-cell>
 
-        <mat-cell class="timeline-cell-value" [ngClass]="{'timeline-darts-value': column === 'darts'}"
+        <mat-cell [ngClass]="{'timeline-darts-value': column === 'darts'}"
                   *matCellDef="let round">
 
-          <div *ngIf="column !== 'darts' && column !== 'round'; then playerRowValue else dartsRowValue">
+          <div *ngIf="column !== 'darts'; then playerRowValue else dartsRowValue">
 
           </div>
 
@@ -155,9 +156,9 @@
 
       </ng-container>
 
-      <mat-header-row class="timeline-header-row"
-                      *matHeaderRowDef="matchUiData.displayedColumns; sticky: true"></mat-header-row>
-      <mat-row class="timeline-data-row" *matRowDef="let row; columns: matchUiData.displayedColumns;"></mat-row>
+      <mat-header-row
+        *matHeaderRowDef="matchUiData.displayedColumns; sticky: true"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: matchUiData.displayedColumns;"></mat-row>
     </mat-table>
   </div>
 </div>
