@@ -1,3 +1,5 @@
+@use "devices";
+
 html, body {
   width: 100%;
   height: 100%;
@@ -105,6 +107,55 @@ mat-form-field {
   &.gap {
     mat-header-row, mat-row {
       grid-gap: 6px;
+    }
+  }
+}
+
+//===========================
+//INFORMATION_CARD
+//===========================
+.information-card {
+
+  .information-card-title {
+    text-align: center;
+    max-lines: 2;
+    height: 3.5em;
+    overflow-y: auto;
+    word-break: break-all;
+    border-radius: 8px;
+  }
+
+  .information-category-container {
+    .information-category-title {
+      margin-top: 4px;
+      text-align: center;
+    }
+
+    .information-container {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: auto 1fr;
+      padding-bottom: 8px;
+
+      @include devices.device(phone) {
+        grid-auto-flow: row;
+        margin: 4px 0;
+      }
+
+      .information-title {
+        @include devices.device(phone) {
+          text-align: center;
+          margin-bottom: 2px;
+        }
+      }
+
+      .information-value {
+        text-align: end;
+
+        @include devices.device(phone) {
+          text-align: center;
+        }
+      }
     }
   }
 }

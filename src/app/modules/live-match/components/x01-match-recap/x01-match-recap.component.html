@@ -2,6 +2,10 @@
 
   <mat-tab-group mat-align-tabs="center" class="tab-group-container">
 
+    <mat-tab label="Information">
+      <app-x01-match-information [x01Match]="x01Match"></app-x01-match-information>
+    </mat-tab>
+
     <mat-tab label="Statistics">
       <app-x01-statistics [x01Match]="x01Match"></app-x01-statistics>
     </mat-tab>

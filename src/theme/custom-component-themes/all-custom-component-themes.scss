@@ -8,6 +8,7 @@
 @use 'x01-statistics-theme';
 @use "custom-table-theme";
 @use 'x01-summary-theme';
+@use 'information-card-theme';
 
 @mixin all-custom-component-themes($theme) {
   @include surface-theme.theme($theme);
@@ -18,6 +19,7 @@
   @include x01-statistics-theme.theme($theme);
   @include custom-table-theme.theme($theme);
   @include x01-summary-theme.theme($theme);
+  @include information-card-theme.theme($theme);
 }
 
 @mixin all-custom-component-colors($theme) {

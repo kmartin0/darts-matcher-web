@@ -1,0 +1,89 @@
+<div class="x01-match-information-container" *ngIf="matchInformationUiData">
+
+  <mat-card class="information-card">
+    <p class="information-card-title">Match Information</p>
+
+    <!--  RESULT SECTION  -->
+    <div class="information-category-container">
+      <p class="information-category-title">Result</p>
+
+      <div class="information-container" *ngFor="let playerResult of matchInformationUiData.result">
+        <span class="information-title">{{playerResult.playerName}}</span>
+        <span class="information-value">{{playerResult.result}} ({{playerResult.score}})</span>
+      </div>
+    </div>
+
+    <!--  RULES SECTION  -->
+    <div class="information-category-container">
+      <p class="information-category-title">Rules</p>
+
+      <div class="information-container">
+        <span class="information-title">Goal:</span>
+        <span class="information-value">{{matchInformationUiData.rules.goal}}</span>
+      </div>
+
+      <div class="information-container">
+        <span class="information-title">Sets:</span>
+        <span class="information-value">{{matchInformationUiData.rules.sets}}</span>
+      </div>
+
+      <div class="information-container">
+        <span class="information-title">Legs:</span>
+        <span class="information-value">{{matchInformationUiData.rules.legs}}</span>
+      </div>
+
+      <div class="information-container">
+        <span class="information-title">X01:</span>
+        <span class="information-value">{{matchInformationUiData.rules.x01}}</span>
+      </div>
+
+      <div class="information-container">
+        <span class="information-title">Type:</span>
+        <span class="information-value">SIDO</span>
+      </div>
+    </div>
+
+    <!--  DATE SECTION  -->
+    <div class="information-category-container">
+      <p class="information-category-title">Date</p>
+
+      <div class="information-container">
+        <span class="information-title">Start:</span>
+        <span class="information-value">{{matchInformationUiData.date.startDate | date: 'E. MM-dd-yyyy @ HH:mm O'}}</span>
+      </div>
+
+      <div class="information-container">
+        <span class="information-title">End:</span>
+        <span class="information-value">{{matchInformationUiData.date.endDate | date:'E. MM-dd-yyyy @ HH:mm O'}}</span>
+      </div>
+
+      <div class="information-container">
+        <span class="information-title">Match Time:</span>
+        <span class="information-value">{{matchInformationUiData.date.duration}}</span>
+      </div>
+    </div>
+
+    <!--  TRIVIA SECTION  -->
+    <div class="information-category-container">
+      <p class="information-category-title">Trivia</p>
+
+      <div class="information-container">
+        <span class="information-title">Sets Played:</span>
+        <span class="information-value">{{matchInformationUiData.trivia.setsPlayed}}</span>
+      </div>
+
+      <div class="information-container">
+        <span class="information-title">Legs Played:</span>
+        <span class="information-value">{{matchInformationUiData.trivia.legsPlayed}}</span>
+      </div>
+
+      <div class="information-container">
+        <span class="information-title">Match Id:</span>
+        <span class="information-value">{{matchInformationUiData.trivia.matchId}}</span>
+      </div>
+    </div>
+
+  </mat-card>
+
+</div>
+

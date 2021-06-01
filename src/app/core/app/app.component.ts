@@ -3,7 +3,6 @@ import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ThemeService} from '../../shared/services/theme/theme-service';
 
-// TODO: Match Information (e.g. players, SIDO, X01, Best Of (Sets, Legs).
 // TODO: Dart Bot separate averages for each bot.
 // TODO: Api Error Handling.
 // TODO: Api Unauthorized handling (refresh token, forbidden etc.)

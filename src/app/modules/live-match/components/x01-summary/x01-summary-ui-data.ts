@@ -47,7 +47,6 @@ export class X01SummaryUiData {
     newSource.legs.push(...this.createMatchSummary(x01Match.timeline, x01Match.x01));
 
     this.dataSource.next(newSource);
-    console.log(newSource);
   }
 
   private createColumnKeys(matchPlayers: MatchPlayer[]): string[] {
