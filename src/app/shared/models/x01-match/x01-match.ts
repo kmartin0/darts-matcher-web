@@ -12,7 +12,6 @@ export interface X01Match {
   startDate: Date;
   endDate: Date;
   throwFirst: string;
-  dartBotSettings: X01DartBotSettings;
   currentThrower: string;
   matchType: MatchType;
   x01: number;

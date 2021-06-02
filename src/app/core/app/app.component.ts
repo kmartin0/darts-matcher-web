@@ -3,8 +3,7 @@ import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ThemeService} from '../../shared/services/theme/theme-service';
 
-// TODO: Dart Bot separate averages for each bot.
-// TODO: Api Error Handling.
+// TODO: Api Global (Default) Error Handling.
 // TODO: Api Unauthorized handling (refresh token, forbidden etc.)
 // TODO: Dart bot tooltip (info bot will average each leg + avg to darts conversion table)
 // TODO: Redirect buttons should be able to ctrl+click to open in new tab

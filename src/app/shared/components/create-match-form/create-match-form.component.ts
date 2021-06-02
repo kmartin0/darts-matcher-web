@@ -67,6 +67,7 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
       x01Players.push({
         playerId: player.playerId,
         playerType: player.bot ? PlayerType.DART_BOT : PlayerType.ANONYMOUS,
+        dartBotSettings: player.bot ? {expectedThreeDartAverage: player.botAvg} : null
       });
     });
 
@@ -75,7 +76,6 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
       startDate: new Date(),
       endDate: undefined,
       throwFirst: x01Players[0].playerId,
-      dartBotSettings: dartBotSetting,
       currentThrower: undefined,
       matchType: MatchType.X01,
       x01: 501,
@@ -94,13 +94,6 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
 
   removePlayer(index: number) {
     this.players.removeAt(index);
-  }
-
-  test() {
-    const test: MatchPlayer = {
-      playerId: '',
-      playerType: undefined
-    };
   }
 
 }
