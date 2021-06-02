@@ -29,6 +29,9 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { LoseFocusAfterClickDirective } from './components/lose-focus-after-click-directive/lose-focus-after-click.directive';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { DartBotInfoDialogComponent } from './components/dart-bot-info-dialog/dart-bot-info-dialog.component';
+import {MatTableModule} from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -46,7 +49,8 @@ import { LoseFocusAfterClickDirective } from './components/lose-focus-after-clic
     EditThrowDialogComponent,
     EditSetLegDialogComponent,
     BasicDialogComponent,
-    LoseFocusAfterClickDirective
+    LoseFocusAfterClickDirective,
+    DartBotInfoDialogComponent
   ],
   imports: [
     CommonModule,
@@ -63,7 +67,9 @@ import { LoseFocusAfterClickDirective } from './components/lose-focus-after-clic
     MatSelectModule,
     MatCheckboxModule,
     MatSliderModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatTooltipModule,
+    MatTableModule
   ],
   exports: [
     LoginFormComponent,

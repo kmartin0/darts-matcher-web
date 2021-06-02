@@ -1,0 +1,35 @@
+<h2>Dart Bot Information</h2>
+
+<mat-dialog-content>
+  <p class="mat-body">A dart bot will attempt to checkout each leg with the configured average.
+    The table below shows the averages and the rounds it will take to checkout (outliers may occur).</p>
+
+  <mat-table [dataSource]="dataSource" style="max-width: 400px; margin: auto">
+    <!-- Average Definition -->
+    <ng-container matColumnDef="Average">
+      <mat-header-cell *matHeaderCellDef>Average</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.average}} </mat-cell>
+    </ng-container>
+
+    <!-- Rounds (Darts) Definition -->
+    <ng-container matColumnDef="Rounds">
+      <mat-header-cell *matHeaderCellDef>Rounds</mat-header-cell>
+      <mat-cell class="rounds-cell" *matCellDef="let row">
+        <div class="round-row" *ngFor="let round of row.rounds">
+          <span>{{round.round}} </span>
+          <span>({{round.probability}}%)</span>
+        </div>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Header and Row Declarations -->
+    <mat-header-row *matHeaderRowDef="displayColumns sticky: true"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayColumns"></mat-row>
+  </mat-table>
+
+</mat-dialog-content>
+
+
+<div mat-dialog-actions>
+  <button type="button" mat-button color="warn" [mat-dialog-close]>Ok</button>
+</div>

@@ -7,6 +7,8 @@ import {MatchType} from '../../models/match/match-type';
 import {MatchPlayer} from '../../models/match/match-player';
 import {PlayerType} from '../../models/match/player-type';
 import {X01DartBotSettings} from '../../models/x01-match/x01-dart-bot/x01-dart-bot-settings';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {DartBotInfoDialogComponent} from '../dart-bot-info-dialog/dart-bot-info-dialog.component';
 
 @Component({
   selector: 'app-create-match-form',
@@ -26,7 +28,7 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
     players: this.fb.array([
       this.fb.group({
         playerId: ['', Validators.required],
-        bot: [false, Validators.required],
+        bot: [true, Validators.required],
         botAvg: [40, [Validators.min(1), Validators.max(180), Validators.required]]
       })
     ])
@@ -40,7 +42,7 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
     return this.form.get('players') as FormArray;
   }
 
-  constructor(fb: FormBuilder) {
+  constructor(fb: FormBuilder, private matDialog: MatDialog) {
     super(fb);
   }
 
@@ -94,6 +96,10 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
 
   removePlayer(index: number) {
     this.players.removeAt(index);
+  }
+
+  openDartBotInfoDialog() {
+    this.matDialog.open(DartBotInfoDialogComponent);
   }
 
 }
