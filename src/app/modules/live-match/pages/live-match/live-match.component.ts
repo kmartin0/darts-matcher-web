@@ -24,7 +24,7 @@ import {X01DeleteLeg} from '../../../../shared/models/x01-delete-leg';
 import {Checkout} from '../../../../shared/models/x01-match/checkout/checkout';
 import {WebsocketErrorBody} from '../../../../api/error/websocket-error-body';
 import {ApiErrorEnum} from '../../../../api/error/api-error.enum';
-import {BasicDialogService} from '../../../../shared/services/basic-dialog-service';
+import {BasicDialogService} from '../../../../shared/services/basic-dialog.service';
 import {TargetErrors} from '../../../../api/error/api-error-body';
 import {PlayerType} from '../../../../shared/models/match/player-type';
 import {SelectedRound} from '../../components/x01-match-sheet/selected-round';

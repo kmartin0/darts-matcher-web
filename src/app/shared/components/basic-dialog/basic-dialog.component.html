@@ -1,3 +1,8 @@
+<div *ngIf="data?.svgIcon || data?.matIcon" class="icon-container">
+  <mat-icon *ngIf="data?.svgIcon" [svgIcon]="data.svgIcon" class="icon"></mat-icon>
+  <mat-icon *ngIf="data?.matIcon" class="icon">{{data.matIcon}}</mat-icon>
+</div>
+
 <p class="mat-title">{{data?.title}}</p>
 <p class="mat-subheading-2">{{data?.subtitle}}</p>
 

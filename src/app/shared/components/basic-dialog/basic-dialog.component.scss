@@ -1,3 +1,12 @@
-.mat-dialog-actions {
-  justify-content: flex-end;
+.icon-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
 }

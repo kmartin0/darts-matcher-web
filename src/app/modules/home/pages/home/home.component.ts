@@ -40,6 +40,10 @@ export class HomeComponent implements OnDestroy {
   }
 
   authenticateUser(authentication: UserAuthentication) {
+    // this.userService.test().pipe(withLoading(this.loginLoading$)).subscribe(value => {
+    //   console.log(value);
+    // }, error => console.log(error));
+
     this.userService.loginUser(authentication).pipe(
       withLoading(this.loginLoading$),
       takeUntil(this.unsubscribe$))

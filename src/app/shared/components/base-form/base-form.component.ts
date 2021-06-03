@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, NgForm} from '@angular/forms';
-import {ApiErrorBody, isApiErrorBody} from '../../../api/error/api-error-body';
+import {ApiErrorBody} from '../../../api/error/api-error-body';
 
 @Component({
   template: ''
@@ -18,7 +18,7 @@ export abstract class BaseFormComponent<T> {
   abstract get form(): FormGroup;
 
   handleApiError(apiError: ApiErrorBody) {
-    if (!isApiErrorBody(apiError)) this.setError('', 'An unknown error occurred');
+    if (!apiError) this.setError('', 'An unknown error occurred');
   }
 
   onSubmitForm() {

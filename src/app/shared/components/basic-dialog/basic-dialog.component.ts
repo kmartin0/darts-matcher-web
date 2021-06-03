@@ -7,6 +7,8 @@ export interface BasicDialogData {
   content: string;
   ok?: string;
   cancel?: string;
+  svgIcon?: string;
+  matIcon?: string;
 }
 
 @Component({

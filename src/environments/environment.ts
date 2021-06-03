@@ -10,7 +10,6 @@ export const environment = {
   dartsMatcherWebsocketUrl: 'ws://localhost:8080',
   clientId: 'darts-matcher-dev-client',
   clientSecret: 'secret',
-  testString: 'DEV TEST STRING'
 };
 
 /*

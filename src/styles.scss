@@ -30,6 +30,10 @@ body {
   border-style: solid;
 }
 
+.mat-dialog-actions {
+  justify-content: flex-end;
+}
+
 .vertical-form {
   display: flex;
   flex-direction: column;

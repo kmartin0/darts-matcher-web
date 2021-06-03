@@ -39,6 +39,16 @@ export class UserService {
     return this.apiService.makePostFormUrlEncoded<Oauth2Credentials>(LOGIN, body);
   }
 
+  refreshToken(): Observable<Oauth2Credentials> {
+    const body = new HttpParams()
+      .set('grant_type', 'refresh_token')
+      .set('refresh_token', this.getLoggedInUserOAuth2().refresh_token);
+
+    return this.apiService.makePostFormUrlEncoded<Oauth2Credentials>(LOGIN, body).pipe(
+      tap(credentials => this.persistOAuth2Credentials(credentials))
+    );
+  }
+
   persistOAuth2Credentials(oauth2Credentials: Oauth2Credentials) {
     if (!oauth2Credentials.access_token.startsWith('Bearer')) {
       oauth2Credentials.access_token = `Bearer ${oauth2Credentials.access_token}`;

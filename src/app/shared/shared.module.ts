@@ -32,6 +32,7 @@ import { LoseFocusAfterClickDirective } from './components/lose-focus-after-clic
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { DartBotInfoDialogComponent } from './components/dart-bot-info-dialog/dart-bot-info-dialog.component';
 import {MatTableModule} from '@angular/material/table';
+import { LoginFormDialogComponent } from './components/login-form-dialog/login-form-dialog.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import {MatTableModule} from '@angular/material/table';
     EditSetLegDialogComponent,
     BasicDialogComponent,
     LoseFocusAfterClickDirective,
-    DartBotInfoDialogComponent
+    DartBotInfoDialogComponent,
+    LoginFormDialogComponent
   ],
   imports: [
     CommonModule,

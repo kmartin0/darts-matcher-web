@@ -8,30 +8,20 @@
   // Get the primary color palette from the color-config.
   $primary-palette: map.get($color-config, 'primary');
   $accent-palette: map.get($color-config, 'accent');
+  $foreground-palette: map.get($color-config, 'foreground');
+  $background-palette: map.get($color-config, 'background');
 
   .dashboard-container {
-    .dashboard-sidenav {
-      background-color: mat.get-color-from-palette($accent-palette);
-    }
-
     .dashboard-sidenav a {
-      color: mat.get-color-from-palette($accent-palette, default-contrast);
-    }
-
-    .dashboard-sidenav li:hover a {
-      color: mat.get-color-from-palette($primary-palette, default-contrast);
+      color: mat.get-color-from-palette($foreground-palette, 'text');
     }
 
     .dashboard-sidenav li:hover {
-      background-color: mat.get-color-from-palette($primary-palette, .75);
+      background-color: mat.get-color-from-palette($background-palette, 'hover');
     }
 
     li.active-nav {
-      border-left-color: mat.get-color-from-palette($accent-palette, 900);
-    }
-
-    li.active-nav:hover {
-      border-left-color: mat.get-color-from-palette($primary-palette, 900);
+      background-color: mat.get-color-from-palette($background-palette, 'hover');
     }
   }
 }

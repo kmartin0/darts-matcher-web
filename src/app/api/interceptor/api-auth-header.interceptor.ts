@@ -22,7 +22,6 @@ export class ApiAuthHeaderInterceptor implements HttpInterceptor {
 
       return next.handle(authReq);
     }
-
     // Add bearer authorization for logged in users.
     const loggedInUser = this.userService.getLoggedInUserOAuth2();
     if (loggedInUser) {

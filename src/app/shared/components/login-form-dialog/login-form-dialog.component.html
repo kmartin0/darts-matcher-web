@@ -1,0 +1,10 @@
+<p class="mat-title">Please login again.</p>
+
+<mat-dialog-content>
+  <app-form-login [loading$]="loading$" (validForm)="onValidForm($event)"></app-form-login>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+<!--  <button mat-button [mat-dialog-close]>Cancel</button>-->
+  <button mat-button (click)="onLogout()">Logout</button>
+</mat-dialog-actions>

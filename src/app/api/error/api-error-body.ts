@@ -5,7 +5,7 @@ export interface TargetErrors {
 }
 
 export interface ApiErrorBody {
-  error: ApiErrorEnum;
+  error: ApiErrorEnum | string;
   description?: string;
   error_description?: string;
   code: number;
@@ -14,5 +14,6 @@ export interface ApiErrorBody {
 
 export function isApiErrorBody(object): object is ApiErrorBody {
   const apiErrorBody = object as ApiErrorBody;
-  return apiErrorBody.error !== undefined && (apiErrorBody.description || apiErrorBody.error_description) !== undefined;
+  console.log(apiErrorBody);
+  return apiErrorBody?.error !== undefined && (apiErrorBody?.description || apiErrorBody?.error_description) !== undefined;
 }

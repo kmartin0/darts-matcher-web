@@ -5,7 +5,6 @@ import {ThemeService} from '../../shared/services/theme/theme-service';
 
 // TODO: Api Global (Default) Error Handling.
 // TODO: Api Unauthorized handling (refresh token, forbidden etc.)
-// TODO: Dart bot tooltip (info bot will average each leg + avg to darts conversion table)
 // TODO: Redirect buttons should be able to ctrl+click to open in new tab
 @Component({
   selector: 'app-root',

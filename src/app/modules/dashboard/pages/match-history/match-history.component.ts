@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-match-history',
@@ -6,8 +6,6 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./match-history.component.scss']
 })
 export class MatchHistoryComponent implements OnInit {
-
-  constructor() { }
 
   ngOnInit(): void {
   }

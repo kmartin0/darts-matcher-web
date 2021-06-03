@@ -28,7 +28,7 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
     players: this.fb.array([
       this.fb.group({
         playerId: ['', Validators.required],
-        bot: [true, Validators.required],
+        bot: [false, Validators.required],
         botAvg: [40, [Validators.min(1), Validators.max(180), Validators.required]]
       })
     ])
