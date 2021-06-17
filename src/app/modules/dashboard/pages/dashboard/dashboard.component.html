@@ -4,6 +4,7 @@
       <mat-icon>menu</mat-icon>
     </button>
     <span>{{title}}</span>
+    <span style="margin-left: auto">{{(loggedInUser | async)?.userName}}</span>
   </mat-toolbar>
 
   <mat-sidenav-container class="sidenav-container">
@@ -18,9 +19,9 @@
           </li>
 
           <li [routerLinkActive]="['active-nav']">
-            <a [routerLink]="navRoutes.matchHistory">
-              <mat-icon svgIcon="darts"></mat-icon>
-              <span>X01Match history</span>
+            <a [routerLink]="navRoutes.friends">
+              <mat-icon>people</mat-icon>
+              <span>Friends</span>
             </a>
           </li>
 

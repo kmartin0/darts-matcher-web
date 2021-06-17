@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {MatchService} from '../../../../shared/services/match.service';
-import {BehaviorSubject, Subject} from 'rxjs';
-import {map, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
+import {BehaviorSubject, merge, Subject} from 'rxjs';
+import {map, switchMap, takeUntil} from 'rxjs/operators';
 import {X01Throw} from '../../../../shared/models/x01-throw';
 import {IRxStompPublishParams, RxStomp} from '@stomp/rx-stomp';
 import {getSet, X01Match} from '../../../../shared/models/x01-match/x01-match';
@@ -33,6 +33,12 @@ import {ThemeService} from '../../../../shared/services/theme/theme-service';
 import {range} from '../../../../shared/helpers/utility';
 import {getLeg} from '../../../../shared/models/x01-match/set/x01-set';
 import {getRemaining} from '../../../../shared/models/x01-match/leg/x01-leg';
+import {
+  ERROR_QUEUE,
+  X01_DELETE_LEG_TOPIC,
+  X01_DELETE_SET_TOPIC, X01_DELETE_THROW_TOPIC, X01_MATCH_TOPIC_REQUEST_REPLY, X01_MATCH_TOPIC_SUBSCRIPTION,
+  X01_THROW_DART_BOT_TOPIC, X01_UPDATE_MATCH_TOPIC
+} from '../../../../api/web-socket-endpoints';
 
 @Component({
   selector: 'app-live-match',
@@ -87,7 +93,7 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
 
       const publishParams: IRxStompPublishParams = {
         body: JSON.stringify(x01DeleteLeg),
-        destination: `/topic/matches/${x01DeleteLeg.matchId}:delete-leg`
+        destination: X01_DELETE_LEG_TOPIC(x01DeleteLeg.matchId)
       };
 
       this.liveMatchWebsocket.publish(publishParams);
@@ -103,7 +109,7 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
 
       const publishParams: IRxStompPublishParams = {
         body: JSON.stringify(x01DartBotThrow),
-        destination: `/topic/matches/${x01DartBotThrow.matchId}:throw-dart-bot`
+        destination: X01_THROW_DART_BOT_TOPIC(x01DartBotThrow.matchId)
       };
 
       this.liveMatchWebsocket.publish(publishParams);
@@ -118,7 +124,7 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
 
       const publishParams: IRxStompPublishParams = {
         body: JSON.stringify(x01DeleteSet),
-        destination: `/topic/matches/${x01DeleteSet.matchId}:delete-set`
+        destination: X01_DELETE_SET_TOPIC(x01DeleteSet.matchId)
       };
 
       this.liveMatchWebsocket.publish(publishParams);
@@ -133,7 +139,7 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
 
       const publishParams: IRxStompPublishParams = {
         body: JSON.stringify(x01DeleteThrow),
-        destination: `/topic/matches/${x01DeleteThrow.matchId}:delete-throw`
+        destination: X01_DELETE_THROW_TOPIC(x01DeleteThrow.matchId)
       };
 
       this.liveMatchWebsocket.publish(publishParams);
@@ -347,7 +353,7 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
 
       const publishParams: IRxStompPublishParams = {
         body: JSON.stringify(x01Throw),
-        destination: `/topic/matches/${x01Throw.matchId}:update`
+        destination: X01_UPDATE_MATCH_TOPIC(x01Throw.matchId)
       };
 
       this.liveMatchWebsocket.publish(publishParams);
@@ -358,7 +364,7 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
 
   private subscribeErrorQueue() {
     // Subscribe to error queue.
-    this.liveMatchWebsocket.watch(`/user/queue/errors`)
+    this.liveMatchWebsocket.watch(ERROR_QUEUE)
       .pipe(
         takeUntil(this.unsubscribe$),
         map(value => JSON.parse(value.body) as WebsocketErrorBody)
@@ -376,10 +382,16 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
         this.checkouts = checkouts;
 
         return this.route.params.pipe(
-          mergeMap(params => {
-            return this.liveMatchWebsocket.watch(`/topic/matches/${params.id}`).pipe(
-              takeUntil(this.unsubscribe$),
-              map(value => JSON.parse(value.body) as X01Match)
+          switchMap(params => {
+            return merge(
+              this.liveMatchWebsocket.watch(X01_MATCH_TOPIC_REQUEST_REPLY(params.id)).pipe(
+                takeUntil(this.unsubscribe$),
+                map(value => JSON.parse(value.body) as X01Match)
+              ),
+              this.liveMatchWebsocket.watch(X01_MATCH_TOPIC_SUBSCRIPTION(params.id)).pipe(
+                takeUntil(this.unsubscribe$),
+                map(value => JSON.parse(value.body) as X01Match)
+              )
             );
           }),
         );

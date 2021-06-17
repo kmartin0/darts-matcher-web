@@ -33,6 +33,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { DartBotInfoDialogComponent } from './components/dart-bot-info-dialog/dart-bot-info-dialog.component';
 import {MatTableModule} from '@angular/material/table';
 import { LoginFormDialogComponent } from './components/login-form-dialog/login-form-dialog.component';
+import { SearchUserFormComponent } from './components/search-user-form/search-user-form.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,8 @@ import { LoginFormDialogComponent } from './components/login-form-dialog/login-f
     BasicDialogComponent,
     LoseFocusAfterClickDirective,
     DartBotInfoDialogComponent,
-    LoginFormDialogComponent
+    LoginFormDialogComponent,
+    SearchUserFormComponent
   ],
   imports: [
     CommonModule,
@@ -71,7 +74,8 @@ import { LoginFormDialogComponent } from './components/login-form-dialog/login-f
     MatSliderModule,
     MatSlideToggleModule,
     MatTooltipModule,
-    MatTableModule
+    MatTableModule,
+    MatAutocompleteModule
   ],
   exports: [
     LoginFormComponent,
@@ -88,7 +92,8 @@ import { LoginFormDialogComponent } from './components/login-form-dialog/login-f
     EditThrowDialogComponent,
     EditSetLegDialogComponent,
     BasicDialogComponent,
-    LoseFocusAfterClickDirective
+    LoseFocusAfterClickDirective,
+    SearchUserFormComponent
   ],
 
 })

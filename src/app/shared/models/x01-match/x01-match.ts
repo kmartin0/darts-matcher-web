@@ -5,7 +5,6 @@ import {MatchPlayer} from '../match/match-player';
 import {X01PlayerResult} from './player-result/x01-player-result';
 import {X01Set} from './set/x01-set';
 import {X01PlayerStatistics} from './statistics/x01-player-statistics';
-import {X01DartBotSettings} from './x01-dart-bot/x01-dart-bot-settings';
 
 export interface X01Match {
   id: string;

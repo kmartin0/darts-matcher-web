@@ -1,0 +1,50 @@
+@use "devices" as devices;
+
+.friends-component-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  margin: auto;
+
+  @include devices.device(phone) {
+    width: 100%;
+  }
+  @include devices.device(tablet) {
+    width: 100%;
+  }
+  @include devices.device(phablet) {
+    width: 100%;
+  }
+
+  @include devices.device(desktop) {
+    width: 100%;
+  }
+
+  @include devices.device(desktop-xl) {
+    width: 50%;
+  }
+}
+
+h1 {
+  margin-top: 8px;
+  width: fit-content;
+}
+
+.friends-table {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+mat-expansion-panel, mat-accordion {
+  margin-bottom: 18px;
+}
+
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+  padding: 4px;
+}
+
+td.mat-cell {
+  word-break: break-all;
+}
+
+

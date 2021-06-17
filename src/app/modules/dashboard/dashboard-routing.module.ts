@@ -3,7 +3,7 @@ import {NgModule} from '@angular/core';
 import {DashboardComponent} from './pages/dashboard/dashboard.component';
 import {AuthGuard} from '../../core/guard/auth.guard';
 import {CreateMatchComponent} from '../../shared/components/create-match/create-match.component';
-import {MatchHistoryComponent} from './pages/match-history/match-history.component';
+import {FriendsComponent} from './pages/friends/friends.component';
 
 export const dashboardRoutes: Routes = [
   {
@@ -28,9 +28,9 @@ export const dashboardRoutes: Routes = [
             data: {title: 'Create X01Match'}
           },
           {
-            path: 'match-history',
-            component: MatchHistoryComponent,
-            data: {title: 'X01Match History'}
+            path: 'friends',
+            component: FriendsComponent,
+            data: {title: 'Friends'}
           },
         ]
       }

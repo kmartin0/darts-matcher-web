@@ -2,7 +2,12 @@ import {Injectable} from '@angular/core';
 import {ApiService} from './api.service';
 import {User} from '../models/user';
 import {Observable} from 'rxjs';
-import {GET_AUTHENTICATED_USER, GET_USER_BY_ID, LOGIN, SAVE_USER} from '../../api/api-endpoints';
+import {
+  GET_AUTHENTICATED_USER,
+  GET_USER_BY_ID,
+  LOGIN,
+  SAVE_USER, SEARCH_USERS
+} from '../../api/api-endpoints';
 import {UserAuthentication} from '../models/user-authentication';
 import {Oauth2Credentials} from '../models/oauth2-credentials';
 import {tap} from 'rxjs/operators';
@@ -73,6 +78,11 @@ export class UserService {
   getUserById(id: string): Observable<User> {
     return this.apiService.makeGet(GET_USER_BY_ID(id));
   }
+
+  searchUsers(query: string): Observable<User[]> {
+    return this.apiService.makeGet(SEARCH_USERS(query));
+  }
+
 }
 
 export const STORAGE_OAUTH2_CREDENTIALS_KEY = 'logged_in_user_oauth2';

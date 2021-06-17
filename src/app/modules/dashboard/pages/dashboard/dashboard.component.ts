@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {DASHBOARD_CREATE_MATCH, MATCH_HISTORY} from '../../../../shared/constants/web-endpoints';
+import {DASHBOARD_CREATE_MATCH, FRIENDS} from '../../../../shared/constants/web-endpoints';
 import {UserService} from '../../../../shared/services/user.service';
 import {Subject} from 'rxjs';
 import {ActivatedRoute, ChildActivationEnd, Router} from '@angular/router';
@@ -13,12 +13,14 @@ import {getActivatedRouteTitle} from '../../../../shared/helpers/routing.helper'
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 
+  loggedInUser = this.userService.getLoggedInUser();
+
   navRoutes = {
     createMatch: DASHBOARD_CREATE_MATCH,
-    matchHistory: MATCH_HISTORY
+    friends: FRIENDS
   };
 
-  title = 'Live Match';
+  title = '';
 
   private unsubscribe$ = new Subject();
 

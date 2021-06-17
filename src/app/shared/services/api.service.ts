@@ -34,11 +34,12 @@ export class ApiService {
   }
 
   makeWebsocket(url: string): RxStomp {
+    const rxStomp = new RxStomp();
+
     const rxStompConfig = new RxStompConfig();
     rxStompConfig.reconnectDelay = 2000;
     rxStompConfig.brokerURL = url;
 
-    const rxStomp = new RxStomp();
     rxStomp.configure(rxStompConfig);
 
     return rxStomp;

@@ -1,0 +1,28 @@
+<form [formGroup]="form" (ngSubmit)="onSubmitForm()" #formDirective=ngForm>
+  <div class="search-form">
+    <mat-form-field class="example-full-width">
+      <mat-label>Search User</mat-label>
+      <input matInput
+             aria-label="User"
+             [matAutocomplete]="auto"
+             formControlName="query">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+        <mat-option *ngFor="let user of users$ | async" [value]="user">
+          <span>{{user.firstName}} {{user.lastName}}</span> |
+          <small>{{user.userName}}</small>
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>
+        <ng-template appFormControlError [control]="form.get('query')"></ng-template>
+      </mat-error>
+    </mat-form-field>
+
+    <button class="submit-button" type="submit" matSuffix mat-flat-button color="primary">
+      {{submitTitle}}
+    </button>
+  </div>
+
+  <mat-error>
+    <ng-template appFormControlError [control]="form"></ng-template>
+  </mat-error>
+</form>

@@ -1,0 +1,117 @@
+<div class="page-container friends-component-container">
+
+  <mat-accordion multi="true">
+    <h1 [matBadge]="(friendsTopic$ | async)?.length">Friends</h1>
+    <mat-expansion-panel #friendsExpansionPanel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{friendsExpansionPanel.expanded ? 'Hide' : 'Show'}} Friends
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <table mat-table class="friends-table" [dataSource]="friendsTopic$ | async">
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name</th>
+          <td mat-cell *matCellDef="let row"> {{row.firstName}} {{row.lastName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef> User Name</th>
+          <td mat-cell *matCellDef="let row"> {{row.userName}}
+          <td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-icon-button matTooltip="Remove Friend" (click)="publishDeleteFriend(row)">
+              <mat-icon>remove_circle_outline</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['name', 'username', 'actions']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['name', 'username', 'actions']"></tr>
+
+      </table>
+
+    </mat-expansion-panel>
+
+    <h1 [matBadge]="(friendRequestsTopic$ | async)?.length">Friend Requests</h1>
+    <mat-expansion-panel #friendRequestsExpansionPanel>
+
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{friendRequestsExpansionPanel.expanded ? 'Hide' : 'Show'}} Friend Requests
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <table mat-table class="friends-table" [dataSource]="friendRequestsTopic$ | async">
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name</th>
+          <td mat-cell *matCellDef="let row" [ngSwitch]="row.type">
+            <span
+              *ngSwitchCase="friendRequestTypeEnum.SENT">{{row?.receiver?.firstName}} {{row?.receiver?.lastName}}</span>
+            <span
+              *ngSwitchCase="friendRequestTypeEnum.RECEIVED">{{row?.sender?.firstName}} {{row?.sender?.lastName}}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef> User Name</th>
+          <td mat-cell *matCellDef="let row" [ngSwitch]="row.type">
+            <span *ngSwitchCase="friendRequestTypeEnum.SENT">{{row?.receiver?.userName}} </span>
+            <span *ngSwitchCase="friendRequestTypeEnum.RECEIVED">{{row?.sender?.userName}}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef> Date</th>
+          <td mat-cell *matCellDef="let row"> {{row.date | date: 'short'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row" [ngSwitch]="row.type">
+            <mat-icon *ngSwitchCase="friendRequestTypeEnum.SENT" matTooltip="Sent">call_made</mat-icon>
+            <mat-icon *ngSwitchCase="friendRequestTypeEnum.RECEIVED" matTooltip="Received">call_received</mat-icon>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="decline">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-icon-button (click)="publishUpdateFriendRequest(row, friendRequestStatusEnum.DECLINED)"
+                    matTooltip="Revoke / Decline">
+              <mat-icon>remove_circle_outline</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="accept">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row">
+            <button *ngIf="row.type === friendRequestTypeEnum.RECEIVED"
+                    (click)="publishUpdateFriendRequest(row, friendRequestStatusEnum.ACCEPTED)" mat-icon-button
+                    matTooltip="Accept">
+              <mat-icon>add_task</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['name', 'username', 'date', 'type', 'decline', 'accept']"></tr>
+        <tr mat-row *matRowDef="let row; columns: [ 'name', 'username', 'date', 'type', 'decline', 'accept']"></tr>
+
+      </table>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <h1>Send Friend Request</h1>
+  <div style="width: 50%">
+    <app-search-user-form submitTitle="Send"
+                          (validForm)="publishCreateFriendRequest($event)"></app-search-user-form>
+  </div>
+</div>

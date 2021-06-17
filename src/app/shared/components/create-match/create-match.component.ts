@@ -8,6 +8,7 @@ import {Router} from '@angular/router';
 import {LIVE_MATCH} from '../../constants/web-endpoints';
 import {CreateMatchFormComponent} from '../create-match-form/create-match-form.component';
 
+// TODO: Bugfix: after sliding bot average match gets created instantly.
 @Component({
   selector: 'app-create-match',
   templateUrl: './create-match.component.html',
