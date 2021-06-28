@@ -22,3 +22,36 @@ mat-radio-button {
   width: 100%;
   margin-top: 12px
 }
+
+.player-item {
+  border-bottom: solid 1px black;
+  word-break: break-all;
+  height: auto !important;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 6px;
+}
+
+.user-type-icon {
+  margin-right: 6px;
+}
+
+.edit-button {
+  margin-left: auto;
+}
+
+.player-list {
+  width: 100%;
+  border: solid 1px black;
+  border-radius: 4px;
+}
+
+.player-item:last-child {
+  border: none;
+}
+
+.player-list:empty {
+  border: none
+}
+

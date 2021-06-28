@@ -1,6 +1,6 @@
 import {
   ChangeDetectorRef,
-  Component,
+  Component, Input,
   OnChanges,
   OnDestroy,
   OnInit,
@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {MatchService} from '../../../../shared/services/match.service';
-import {BehaviorSubject, merge, Subject} from 'rxjs';
-import {map, switchMap, takeUntil} from 'rxjs/operators';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {switchMap, takeUntil} from 'rxjs/operators';
 import {X01Throw} from '../../../../shared/models/x01-throw';
 import {IRxStompPublishParams, RxStomp} from '@stomp/rx-stomp';
 import {getSet, X01Match} from '../../../../shared/models/x01-match/x01-match';
@@ -27,17 +27,14 @@ import {ApiErrorEnum} from '../../../../api/error/api-error.enum';
 import {BasicDialogService} from '../../../../shared/services/basic-dialog.service';
 import {TargetErrors} from '../../../../api/error/api-error-body';
 import {PlayerType} from '../../../../shared/models/match/player-type';
-import {SelectedRound} from '../../components/x01-match-sheet/selected-round';
+import {SelectedRound} from '../x01-match-sheet/selected-round';
 import {X01DartBotThrow} from '../../../../shared/models/x01-match/x01-dart-bot/x01-dart-bot-throw';
 import {ThemeService} from '../../../../shared/services/theme/theme-service';
 import {range} from '../../../../shared/helpers/utility';
 import {getLeg} from '../../../../shared/models/x01-match/set/x01-set';
 import {getRemaining} from '../../../../shared/models/x01-match/leg/x01-leg';
 import {
-  ERROR_QUEUE,
-  X01_DELETE_LEG_TOPIC,
-  X01_DELETE_SET_TOPIC, X01_DELETE_THROW_TOPIC, X01_MATCH_TOPIC_REQUEST_REPLY, X01_MATCH_TOPIC_SUBSCRIPTION,
-  X01_THROW_DART_BOT_TOPIC, X01_UPDATE_MATCH_TOPIC
+  X01_DELETE_LEG_TOPIC, X01_DELETE_SET_TOPIC, X01_DELETE_THROW_TOPIC, X01_THROW_DART_BOT_TOPIC, X01_UPDATE_MATCH_TOPIC
 } from '../../../../api/web-socket-endpoints';
 
 @Component({
@@ -54,13 +51,15 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
   match: X01Match;
   selectedRound: SelectedRound;
 
-  private liveMatchWebsocket: RxStomp;
+  @Input() liveMatchWebsocket: RxStomp;
+  @Input() match$: Observable<X01Match>;
+  @Input() websocketError$: Observable<WebsocketErrorBody>;
+
   private unsubscribe$ = new Subject();
 
   constructor(private route: ActivatedRoute, private matchService: MatchService, private dialog: MatDialog,
               private basicDialogService: BasicDialogService, private changeDetectorRef: ChangeDetectorRef,
               private themeService: ThemeService) {
-    this.initMatch();
   }
 
   createEditThrow(editScore: { playerId: string, round: number, score: number }): X01Throw {
@@ -151,11 +150,10 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-    if (this.liveMatchWebsocket) this.liveMatchWebsocket.deactivate();
   }
 
   ngOnInit(): void {
-
+    this.initSubscriptions();
   }
 
   // Remaining is remaining at the start of the throw.
@@ -279,12 +277,9 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
     this.error.next(error);
   }
 
-  private initMatch() {
-    this.liveMatchWebsocket = this.matchService.getLiveMatchWebsocket();
-    this.liveMatchWebsocket.activate();
-
-    this.subscribeErrorQueue();
-    this.subscribeMatchTopic();
+  private initSubscriptions() {
+    this.subscribeWebSocketError();
+    this.subscribeMatch();
   }
 
   private isFinalThrow(x01Throw: X01Throw, match: X01Match): boolean {
@@ -362,50 +357,27 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  private subscribeErrorQueue() {
-    // Subscribe to error queue.
-    this.liveMatchWebsocket.watch(ERROR_QUEUE)
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        map(value => JSON.parse(value.body) as WebsocketErrorBody)
-      )
-      .subscribe(websocketErrorBody => {
-        this.handleErrorQueue(websocketErrorBody);
-      }, error => console.log(error));
+  private subscribeWebSocketError() {
+    this.websocketError$.pipe(
+      takeUntil(this.unsubscribe$),
+    ).subscribe(websocketErrorBody => {
+      this.handleErrorQueue(websocketErrorBody);
+    }, error => console.log(error));
   }
 
-  private subscribeMatchTopic() {
-    // Subscribe to match topic.
+  private subscribeMatch() {
     this.matchService.getCheckouts().pipe(
       takeUntil(this.unsubscribe$),
       switchMap(checkouts => {
         this.checkouts = checkouts;
 
-        return this.route.params.pipe(
-          switchMap(params => {
-            return merge(
-              this.liveMatchWebsocket.watch(X01_MATCH_TOPIC_REQUEST_REPLY(params.id)).pipe(
-                takeUntil(this.unsubscribe$),
-                map(value => JSON.parse(value.body) as X01Match)
-              ),
-              this.liveMatchWebsocket.watch(X01_MATCH_TOPIC_SUBSCRIPTION(params.id)).pipe(
-                takeUntil(this.unsubscribe$),
-                map(value => JSON.parse(value.body) as X01Match)
-              )
-            );
-          }),
-        );
-      }),
-    ).subscribe(match => {
-      console.log(match);
-
-      this.match = match;
+        return this.match$;
+      })
+    ).subscribe(value => {
+      this.match = value;
       this.error.next(null);
       this.changeDetectorRef.detectChanges();
       if (this.isScoreboard) this.checkDartBotTurn();
-
-    }, error => {
-      console.log(error);
-    });
+    }, error1 => console.log(error1));
   }
 }

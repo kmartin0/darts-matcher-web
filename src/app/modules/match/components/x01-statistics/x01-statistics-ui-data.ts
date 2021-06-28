@@ -26,7 +26,7 @@ export class X01StatisticsUiData {
     x01Match.statistics.forEach(playerStats => {
 
       const player = x01Match.players.find(value => value.playerId === playerStats.playerId);
-      const _playerId = player.playerId;
+      const _playerId = player?.playerId;
       const _result = x01Match.result.find(value => value.playerId === playerStats.playerId)?.result;
       const _playerName = player.playerType === PlayerType.REGISTERED ? `${player.firstName} ${player.lastName}` : player.playerId;
 

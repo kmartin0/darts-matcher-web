@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../shared/shared.module';
-import {LiveMatchComponent} from './pages/live-match/live-match.component';
+import {LiveMatchComponent} from './components/live-match/live-match.component';
 import {LiveMatchRoutingModule} from './live-match-routing.module';
 import {X01MatchSheetComponent} from './components/x01-match-sheet/x01-match-sheet.component';
 import {BidiModule} from '@angular/cdk/bidi';
@@ -27,6 +27,8 @@ import {MatSliderModule} from '@angular/material/slider';
 import {X01StatisticsComponent} from './components/x01-statistics/x01-statistics.component';
 import {X01SummaryComponent} from './components/x01-summary/x01-summary.component';
 import {X01MatchInformationComponent} from './components/x01-match-information/x01-match-information.component';
+import { LobbyComponent } from './components/lobby/lobby.component';
+import { MatchComponent } from './pages/match/match.component';
 
 
 @NgModule({
@@ -37,7 +39,9 @@ import {X01MatchInformationComponent} from './components/x01-match-information/x
     X01MatchRecapComponent,
     X01StatisticsComponent,
     X01SummaryComponent,
-    X01MatchInformationComponent
+    X01MatchInformationComponent,
+    LobbyComponent,
+    MatchComponent
   ],
   imports: [
     CommonModule,

@@ -1,21 +1,26 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BaseFormComponent} from '../base-form/base-form.component';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {X01Match} from '../../models/x01-match/x01-match';
 import {MatchStatus} from '../../models/match/match-status';
 import {MatchType} from '../../models/match/match-type';
 import {MatchPlayer} from '../../models/match/match-player';
-import {PlayerType} from '../../models/match/player-type';
-import {X01DartBotSettings} from '../../models/x01-match/x01-dart-bot/x01-dart-bot-settings';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {DartBotInfoDialogComponent} from '../dart-bot-info-dialog/dart-bot-info-dialog.component';
+import {ConfigureMatchPlayerDialogComponent} from '../configure-match-player-dialog/configure-match-player-dialog.component';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
+// TODO: Override handleApiError (use cases for anonymous and dart bot)
+// TODO: Commit when above + lobby with only start button for anonymous and bot.
 @Component({
   selector: 'app-create-match-form',
   templateUrl: './create-match-form.component.html',
   styleUrls: ['./create-match-form.component.scss']
 })
-export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
+export class CreateMatchFormComponent extends BaseFormComponent<X01Match> implements OnInit, OnDestroy {
+
+  private unsubscribe$ = new Subject();
 
   matchForm = this.fb.group({
     matchType: ['MATCH_501', Validators.required],
@@ -25,13 +30,7 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
       sets: ['1', [Validators.min(1), Validators.required]],
     }),
     trackCheckouts: [true, Validators.required],
-    players: this.fb.array([
-      this.fb.group({
-        playerId: ['', Validators.required],
-        bot: [false, Validators.required],
-        botAvg: [40, [Validators.min(1), Validators.max(180), Validators.required]]
-      })
-    ])
+    players: this.fb.array([])
   });
 
   get form(): FormGroup {
@@ -44,34 +43,40 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
 
   constructor(fb: FormBuilder, private matDialog: MatDialog) {
     super(fb);
+    this.addPlayer();
+  }
+
+  ngOnInit() {
   }
 
   addPlayer() {
-    this.players.push(this.fb.group({
-      playerId: ['', Validators.required],
-      bot: [false, Validators.required],
-      botAvg: [40, [Validators.min(1), Validators.max(180), Validators.required]]
-    }));
+    this.matDialog.open(ConfigureMatchPlayerDialogComponent)
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(matchPlayer => {
+        if (matchPlayer) {
+          console.log(matchPlayer);
+          this.players.push(this.fb.control(matchPlayer));
+        }
+      });
+  }
+
+  editPlayer(player: MatchPlayer) {
+    this.matDialog.open(ConfigureMatchPlayerDialogComponent, {data: player})
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(matchPlayer => {
+        if (matchPlayer) {
+          console.log(matchPlayer);
+          this.players.push(this.fb.control(matchPlayer));
+        }
+      });
   }
 
   createFormResult(): X01Match {
     const form = this.form;
 
-    const x01Players: MatchPlayer[] = [];
-
-    const formArrayPlayers = form.get('players') as FormArray;
-    let dartBotSetting: X01DartBotSettings;
-
-    (formArrayPlayers.value).forEach(player => {
-
-      if (player.bot) dartBotSetting = {expectedThreeDartAverage: player.botAvg};
-
-      x01Players.push({
-        playerId: player.playerId,
-        playerType: player.bot ? PlayerType.DART_BOT : PlayerType.ANONYMOUS,
-        dartBotSettings: player.bot ? {expectedThreeDartAverage: player.botAvg} : null
-      });
-    });
+    const x01Players: MatchPlayer[] = (form.get('players') as FormArray).value;
 
     return {
       id: undefined,
@@ -82,7 +87,7 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
       matchType: MatchType.X01,
       x01: 501,
       trackDoubles: form.get('trackCheckouts').value,
-      matchStatus: MatchStatus.IN_PLAY,
+      matchStatus: MatchStatus.LOBBY,
       bestOf: {
         sets: form.get('bestOf.sets').value,
         legs: form.get('bestOf.legs').value,
@@ -100,6 +105,11 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> {
 
   openDartBotInfoDialog() {
     this.matDialog.open(DartBotInfoDialogComponent);
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
 }

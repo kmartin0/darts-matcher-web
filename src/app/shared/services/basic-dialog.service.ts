@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {BasicDialogComponent, BasicDialogData} from '../components/basic-dialog/basic-dialog.component';
 
 @Injectable({
@@ -10,11 +10,11 @@ export class BasicDialogService {
   public constructor(private matDialog: MatDialog) {
   }
 
-  public createBasicDialog(dialogData: BasicDialogData, stackable: boolean = false) {
+  public createBasicDialog(dialogData: BasicDialogData, stackable: boolean = false): MatDialogRef<BasicDialogComponent> {
     if (!stackable && !this.isDialogOpen()) {
-      this.matDialog.open(BasicDialogComponent, {data: dialogData});
+      return this.matDialog.open(BasicDialogComponent, {data: dialogData});
     } else if (stackable) {
-      this.matDialog.open(BasicDialogComponent, {data: dialogData});
+      return this.matDialog.open(BasicDialogComponent, {data: dialogData});
     }
   }
 

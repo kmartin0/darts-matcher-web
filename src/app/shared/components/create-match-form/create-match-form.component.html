@@ -58,51 +58,40 @@
       </button>
     </div>
 
-    <div *ngFor="let player of players.controls; let i=index" [formGroup]="$any(player)">
-      <mat-form-field appearance="outline">
-        <mat-label>Player</mat-label>
-        <input matInput
-               type="text"
-               placeholder="John Doe"
-               formControlName="playerId">
+    <div class="player-list">
 
-        <mat-checkbox formControlName="bot" matSuffix>Dart Bot</mat-checkbox>
+      <div class="player-item" *ngFor="let player of players.controls; let i=index"
+           [formGroup]="$any(player)" [ngSwitch]="player.value.playerType">
 
-        <!--        <button title="Login" tabindex="-1" mat-icon-button matSuffix>-->
-        <!--          <mat-icon>login</mat-icon>-->
-        <!--        </button>-->
+        <ng-container *ngSwitchCase="'DART_BOT'">
+          <mat-icon class="user-type-icon" matTooltip="Dart Bot">smart_toy</mat-icon>
+          <span>{{player.value.playerId}} ({{player.value.dartBotSettings.expectedThreeDartAverage}} avg)</span>
+        </ng-container>
 
-        <button title="Remove Player" tabindex="-1" *ngIf="players.controls.length > 1" type="button" mat-icon-button
-                matSuffix (click)="removePlayer(i)">
-          <mat-icon>remove_circle</mat-icon>
+        <ng-container *ngSwitchCase="'ANONYMOUS'">
+          <mat-icon class="user-type-icon" matTooltip="Anonymous Player">no_accounts</mat-icon>
+          <span>{{player.value.playerId}}</span>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'REGISTERED'">
+          <mat-icon class="user-type-icon" matTooltip="Registered Player">account_circle</mat-icon>
+          <span>{{player.value.firstName}} {{player.value.lastName}} ({{player.value.userName}})</span>
+        </ng-container>
+
+        <button mat-icon-button type="button" matTooltip="Edit" class="edit-button" (click)="editPlayer(player.value)">
+          <mat-icon>edit</mat-icon>
         </button>
-
-        <mat-error>
-          <ng-template appFormControlError [control]="player.get('playerId')"></ng-template>
-        </mat-error>
-      </mat-form-field>
-
-      <div *ngIf="player.get('bot')?.value">
-
-        <mat-label>Dart Bot Average: {{player.get('botAvg')?.value}}</mat-label>
-
-        <button mat-icon-button (click)="openDartBotInfoDialog()">
-          <mat-icon>info</mat-icon>
-        </button>
-
-        <mat-slider class="avg-slider" formControlName="botAvg" thumbLabel min="1" max="180"
-                    step="1"></mat-slider>
-        <mat-error>
-          <ng-template appFormControlError [control]="player.get('botAvg')"></ng-template>
-        </mat-error>
       </div>
 
     </div>
+
   </div>
+
 
   <mat-error>
     <ng-template appFormControlError [control]="form"></ng-template>
   </mat-error>
 
-  <button [disabled]="loading$ | async" mat-flat-button color="primary" type="submit">Create</button>
+  <button style="margin-top: 8px" [disabled]="loading$ | async" mat-flat-button color="primary" type="submit">Create
+  </button>
 </form>

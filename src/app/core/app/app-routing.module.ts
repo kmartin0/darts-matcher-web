@@ -12,8 +12,8 @@ export const appRoutes: Routes = [
     canLoad: [AuthGuard]
   },
   {
-    path: 'live-match/:id',
-    loadChildren: () => import('../../modules/live-match/live-match.module').then(m => m.LiveMatchModule)
+    path: 'matches/:id',
+    loadChildren: () => import('../../modules/match/live-match.module').then(m => m.LiveMatchModule)
   },
   {
     path: '',

@@ -1,12 +1,13 @@
 import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
-import {LiveMatchComponent} from './pages/live-match/live-match.component';
+import {LiveMatchComponent} from './components/live-match/live-match.component';
+import {MatchComponent} from './pages/match/match.component';
 
 export const dashboardRoutes: Routes = [
   {
     path: '',
     pathMatch: 'prefix',
-    component: LiveMatchComponent,
+    component: MatchComponent,
     data: {title: 'Live Match'}
   }
 ];

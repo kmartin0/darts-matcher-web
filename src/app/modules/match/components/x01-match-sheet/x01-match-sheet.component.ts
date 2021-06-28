@@ -75,7 +75,6 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
   showAverages = true;
   unsubscribe$ = new Subject();
 
-
   get middleOrder(): number {
     if (!this.match || !this.match.players) return null;
     return Math.floor((this.match.players.length - 1) / 2);
@@ -258,9 +257,9 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
 
     this.updateSelectedRound(newSelectedRound);
 
-    this.matchUiData = new X01MatchSheetUiData(this.match, newSelectedRound.set.set, newSelectedRound.legInPlay.leg, this.checkouts, newSelectedRound.isLegInPlaySelected());
+    this.matchUiData = new X01MatchSheetUiData(this.match, newSelectedRound.set?.set, newSelectedRound.legInPlay?.leg, this.checkouts, newSelectedRound.isLegInPlaySelected());
 
-    this.legSelectionFormControl.setValue({set: newSelectedRound.set.set, leg: newSelectedRound.leg.leg});
+    this.legSelectionFormControl.setValue({set: newSelectedRound.set?.set, leg: newSelectedRound.leg?.leg});
   }
 
   private updateSelectedRound(selectedRound: SelectedRound) {

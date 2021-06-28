@@ -7,6 +7,7 @@ export const GET_DARTS_MATCHER_WEBSOCKET = `${BASE_URL_WEBSOCKET}/darts-matcher-
 export const ERROR_QUEUE = `/user/queue/errors`;
 
 // Live Match Topics
+export const X01_START_MATCH_TOPIC = (matchId: string) => `/app/topic/matches/${matchId}:start`;
 export const X01_UPDATE_MATCH_TOPIC = (matchId: string) => `/app/topic/matches/${matchId}:update`;
 export const X01_DELETE_THROW_TOPIC = (matchId: string) => `/app/topic/matches/${matchId}:delete-throw`;
 export const X01_DELETE_LEG_TOPIC = (matchId: string) => `/app/topic/matches/${matchId}:delete-leg`;

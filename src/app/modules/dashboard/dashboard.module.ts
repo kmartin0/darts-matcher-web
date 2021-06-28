@@ -15,6 +15,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatBadgeModule} from '@angular/material/badge';
+import {MatStepperModule} from '@angular/material/stepper';
+import {CdkStepperModule} from '@angular/cdk/stepper';
 
 @NgModule({
   declarations: [DashboardComponent, FriendsComponent],
@@ -36,7 +38,7 @@ import {MatBadgeModule} from '@angular/material/badge';
     MatExpansionModule,
     MatFormFieldModule,
     MatInputModule,
-    MatBadgeModule,
+    MatBadgeModule
   ]
 })
 export class DashboardModule { }

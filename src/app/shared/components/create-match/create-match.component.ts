@@ -17,7 +17,7 @@ import {CreateMatchFormComponent} from '../create-match-form/create-match-form.c
 export class CreateMatchComponent implements OnDestroy {
 
   loading$ = new BehaviorSubject<boolean>(false);
-  unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject();
 
   @ViewChild(CreateMatchFormComponent, {static: false}) private _createMatchFormComponent: CreateMatchFormComponent;
   get createMatchFormComponent(): CreateMatchFormComponent {

@@ -1,0 +1,9 @@
+<div class="page-container lobby-container">
+  <app-live-match
+    *ngIf="(x01Match$ | async)?.matchStatus === matchStatuses.IN_PLAY || (x01Match$ | async)?.matchStatus === matchStatuses.CONCLUDED"
+    [liveMatchWebsocket]="matchWebSocket"
+    [websocketError$]="webSocketError$" [match$]="x01Match$"></app-live-match>
+
+  <app-lobby *ngIf="(x01Match$ | async)?.matchStatus === matchStatuses.LOBBY" [liveMatchWebsocket]="matchWebSocket"
+             [websocketError$]="webSocketError$" [match$]="x01Match$"></app-lobby>
+</div>

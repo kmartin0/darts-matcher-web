@@ -1,0 +1,87 @@
+<p class="mat-title">Add Player</p>
+
+<mat-dialog-content>
+  <form #formDirective="ngForm" [formGroup]="form">
+    <mat-horizontal-stepper #stepper [linear]="true">
+
+      <mat-step [stepControl]="form.get('playerType')">
+        <ng-template matStepLabel>Select player type</ng-template>
+        <mat-radio-group
+          aria-labelledby="player-type-radio-group-label"
+          class="player-type-radio-group" formControlName="playerType">
+          <mat-radio-button class="player-type-radio-button" [value]="playerTypeEnum.REGISTERED" disabled>
+            Registered
+          </mat-radio-button>
+
+          <mat-radio-button class="player-type-radio-button" [value]="playerTypeEnum.DART_BOT">
+            Bot
+          </mat-radio-button>
+
+          <mat-radio-button class="player-type-radio-button" [value]="playerTypeEnum.ANONYMOUS">
+            Anonymous
+          </mat-radio-button>
+        </mat-radio-group>
+
+        <div>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </mat-step>
+
+      <mat-step [stepControl]="form.get('matchPlayer')"
+                formGroupName="matchPlayer">
+        <ng-template matStepLabel>Add player</ng-template>
+        <div class="add-player-container" [ngSwitch]="form.get('playerType').value">
+          <ng-container *ngSwitchCase="playerTypeEnum.REGISTERED">
+            Registered
+          </ng-container>
+
+          <ng-container *ngSwitchCase="playerTypeEnum.DART_BOT">
+            <mat-form-field appearance="outline">
+              <mat-label>Bot name</mat-label>
+              <input matInput
+                     type="text"
+                     placeholder="Dart Bot"
+                     formControlName="name">
+              <mat-error>
+                <ng-template appFormControlError [control]="form.get('matchPlayer').get('name')"></ng-template>
+              </mat-error>
+            </mat-form-field>
+
+            <mat-label>
+              Dart Bot Average: {{form.get('matchPlayer').get('avg')?.value}}
+              <button mat-icon-button (click)="openDartBotInfoDialog()">
+                <mat-icon>info</mat-icon>
+              </button>
+            </mat-label>
+
+            <mat-slider class="avg-slider" formControlName="avg" thumbLabel min="1" max="180"
+                        step="1"></mat-slider>
+
+            <mat-error>
+              <ng-template appFormControlError [control]="form.get('matchPlayer').get('avg')"></ng-template>
+            </mat-error>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="playerTypeEnum.ANONYMOUS">
+            <mat-form-field appearance="outline">
+              <mat-label>Player</mat-label>
+              <input matInput
+                     type="text"
+                     placeholder="John Doe"
+                     formControlName="name">
+              <mat-error>
+                <ng-template appFormControlError [control]="form.get('matchPlayer').get('name')"></ng-template>
+              </mat-error>
+            </mat-form-field>
+          </ng-container>
+        </div>
+
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="addPlayer()">Add Player</button>
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </form>
+
+</mat-dialog-content>

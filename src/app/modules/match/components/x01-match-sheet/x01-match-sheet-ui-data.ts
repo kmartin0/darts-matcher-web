@@ -79,7 +79,7 @@ export class X01MatchSheetUiData {
   }
 
   updateSelectedLeg(leg: X01Leg, x01: number, checkouts: Checkout[]) {
-    this.throwsFirstInLeg = leg.throwsFirst;
+    this.throwsFirstInLeg = leg?.throwsFirst;
 
     const datasource = this.createRoundsDataSource(leg, x01);
     this.roundsDataSource.next(datasource);
@@ -200,7 +200,7 @@ export class X01MatchSheetUiData {
     } else { // The number of legs won equals the player set score.
       set.result.forEach(playerResult => {
         const player = this.players.find(_player => _player.playerId === playerResult.playerId);
-        player.wonLegs = playerResult.legsWon;
+        if (player) player.wonLegs = playerResult.legsWon;
       });
     }
   }
@@ -217,7 +217,7 @@ export class X01MatchSheetUiData {
 
     match.result.forEach(playerResult => {
       const player = this.players.find(_player => _player.playerId === playerResult.playerId);
-      player.wonSets = playerResult.setsWon;
+      if (player) player.wonSets = playerResult.setsWon;
     });
   }
 

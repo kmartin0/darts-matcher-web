@@ -3,7 +3,7 @@ import {LoginFormComponent} from './components/login-form/login-form.component';
 import {UserFormComponent} from './components/user-form/user-form.component';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {HttpClientModule} from '@angular/common/http';
@@ -35,6 +35,10 @@ import {MatTableModule} from '@angular/material/table';
 import { LoginFormDialogComponent } from './components/login-form-dialog/login-form-dialog.component';
 import { SearchUserFormComponent } from './components/search-user-form/search-user-form.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { ConfigureMatchPlayerDialogComponent } from './components/configure-match-player-dialog/configure-match-player-dialog.component';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatListModule} from '@angular/material/list';
+import {MatCardModule} from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -55,7 +59,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     LoseFocusAfterClickDirective,
     DartBotInfoDialogComponent,
     LoginFormDialogComponent,
-    SearchUserFormComponent
+    SearchUserFormComponent,
+    ConfigureMatchPlayerDialogComponent
   ],
   imports: [
     CommonModule,
@@ -75,7 +80,11 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatSlideToggleModule,
     MatTooltipModule,
     MatTableModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    FormsModule,
+    MatStepperModule,
+    MatListModule,
+    MatCardModule
   ],
   exports: [
     LoginFormComponent,

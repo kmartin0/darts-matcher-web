@@ -1,0 +1,18 @@
+<div class="page-container lobby-container">
+
+  <mat-toolbar [color]="(isDarkTheme$ | async) ? null : 'primary'">
+
+    <mat-toolbar-row>
+      <span>X01 Match</span>
+      <span class="toolbar-spacer"></span>
+      <button appLoseFocusAfterClick mat-icon-button (click)="toggleTheme()" matTooltip="Toggle Theme">
+        <mat-icon>{{(isDarkTheme$ | async) ? 'light_mode' : 'dark_mode'}}</mat-icon>
+      </button>
+    </mat-toolbar-row>
+
+  </mat-toolbar>
+
+  <div class="lobby-content-container">
+    <button style="margin: auto; width: 50%; height: 100px" mat-flat-button color="primary" (click)="openStartMatchDialog()">Start</button>
+  </div>
+</div>
