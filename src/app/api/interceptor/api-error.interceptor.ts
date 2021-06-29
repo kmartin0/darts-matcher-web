@@ -82,7 +82,7 @@ export class ApiErrorInterceptor implements HttpInterceptor {
   }
 
   private retryLogin(req, next) {
-    const loginDialog = this.matDialog.open(LoginFormDialogComponent);
+    const loginDialog = this.matDialog.open(LoginFormDialogComponent, {disableClose: true});
 
     return loginDialog.afterClosed().pipe(
       switchMap(success => {

@@ -5,6 +5,7 @@ mat-radio-button {
 .best-of-input {
   max-width: 75px;
   margin-right: 12px;
+  margin-bottom: 12px;
 }
 
 .players-label-container {
@@ -28,9 +29,14 @@ mat-radio-button {
   word-break: break-all;
   height: auto !important;
   width: 100%;
-  display: flex;
-  align-items: center;
   padding: 6px;
+}
+
+.player-information-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
 }
 
 .user-type-icon {
@@ -54,4 +60,3 @@ mat-radio-button {
 .player-list:empty {
   border: none
 }
-

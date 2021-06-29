@@ -34,7 +34,7 @@ export class FormControlErrorDirective implements OnInit, OnDestroy {
 
     // Define array to store the error messages.
     const errors = new Array<string>();
-
+console.log(validationErrors);
     // Iterate through validationErrors, construct user readable messages and store in errors array.
     Object.keys(validationErrors).forEach(key => {
       const error = this.errors[key];
@@ -86,6 +86,7 @@ export const defaultErrors = {
   max: ({max, actual}) => `Must not exceed ${max}`,
   email: `This field requires a valid email`,
   confirmPassword: `Passwords must match`,
+  minLengthArray: ({min, actual}) => `This field requires at least ${min} items`,
   unknown: `An unknown error has occurred.`
 };
 

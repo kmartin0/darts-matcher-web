@@ -10,6 +10,9 @@ import {DartBotInfoDialogComponent} from '../dart-bot-info-dialog/dart-bot-info-
 import {ConfigureMatchPlayerDialogComponent} from '../configure-match-player-dialog/configure-match-player-dialog.component';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {CustomValidators} from '../../validators/custom-validators';
+import {ApiErrorBody} from '../../../api/error/api-error-body';
+import {ApiErrorEnum} from '../../../api/error/api-error.enum';
 
 // TODO: Override handleApiError (use cases for anonymous and dart bot)
 // TODO: Commit when above + lobby with only start button for anonymous and bot.
@@ -30,7 +33,7 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> implem
       sets: ['1', [Validators.min(1), Validators.required]],
     }),
     trackCheckouts: [true, Validators.required],
-    players: this.fb.array([])
+    players: this.fb.array([], CustomValidators.minLengthArray(1))
   });
 
   get form(): FormGroup {
@@ -55,20 +58,19 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> implem
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(matchPlayer => {
         if (matchPlayer) {
-          console.log(matchPlayer);
           this.players.push(this.fb.control(matchPlayer));
         }
       });
   }
 
-  editPlayer(player: MatchPlayer) {
+  editPlayer(player: MatchPlayer, index: number) {
     this.matDialog.open(ConfigureMatchPlayerDialogComponent, {data: player})
       .afterClosed()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(matchPlayer => {
         if (matchPlayer) {
           console.log(matchPlayer);
-          this.players.push(this.fb.control(matchPlayer));
+          this.players.at(index).patchValue(matchPlayer);
         }
       });
   }
@@ -82,7 +84,7 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> implem
       id: undefined,
       startDate: new Date(),
       endDate: undefined,
-      throwFirst: x01Players[0].playerId,
+      throwFirst: x01Players[0]?.playerId,
       currentThrower: undefined,
       matchType: MatchType.X01,
       x01: 501,
@@ -97,6 +99,33 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> implem
       players: x01Players,
       timeline: undefined
     };
+  }
+
+  handleApiError(apiError: ApiErrorBody) {
+    super.handleApiError(apiError);
+
+    switch (apiError?.error) {
+      case ApiErrorEnum.INVALID_ARGUMENTS: {
+        this.setError('matchType', apiError.details.x01);
+        this.setError('bestOf.type', apiError.details.type);
+        this.setError('bestOf.sets', apiError.details.sets);
+        this.setError('bestOf.legs', apiError.details.legs);
+        this.setError('players', apiError.details.players);
+
+        // Set the specific player errors.
+        const playerErrors: { [index: number]: [error: string] } = {};
+        Object.keys(apiError.details).filter(value => value.startsWith('players[')).forEach(key => {
+          const index = key.split('players[').pop().split(']')[0];
+          playerErrors[index] = apiError.details[key];
+        });
+
+        Object.keys(playerErrors).forEach(key => {
+          this.setError(`players.${key}`, playerErrors[key]);
+        });
+
+        break;
+      }
+    }
   }
 
   removePlayer(index: number) {

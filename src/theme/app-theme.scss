@@ -19,3 +19,7 @@
   // Set all custom components color themes to their dark theme.
   @include all-custom-component-themes.all-custom-component-colors(dark-theme.$dark-theme)
 }
+
+.mat-error > ng-component:not(:empty):before {
+  content: '\26A0 \0020';
+}

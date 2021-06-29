@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {confirmPasswordMatchValidator} from '../../validators/confirm-password-match.directive';
 import {User} from '../../models/user';
 import {BaseFormComponent} from '../base-form/base-form.component';
 import {ApiErrorBody, isApiErrorBody} from '../../../api/error/api-error-body';
 import {ApiErrorEnum} from '../../../api/error/api-error.enum';
+import {CustomValidators} from '../../validators/custom-validators';
 
 @Component({
   selector: 'app-form-user',
@@ -20,7 +20,7 @@ export class UserFormComponent extends BaseFormComponent<User> {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(24)]],
     confirmPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(24)]],
-  }, {validators: confirmPasswordMatchValidator});
+  }, {validators: CustomValidators.confirmPasswordMatchValidator});
 
   constructor(fb: FormBuilder) {
     super(fb);
