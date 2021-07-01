@@ -13,5 +13,6 @@ export const SEARCH_USERS = (query: string) => `${BASE_URL}/users:search?query=$
 
 // Matches endpoints
 export const CREATE_MATCH = `${BASE_URL}/matches`;
+export const UPDATE_MATCH = (id: string) => `${BASE_URL}/matches/${id}`;
 export const GET_MATCH = (id: string) => `${BASE_URL}/matches/${id}`;
 export const GET_CHECKOUTS = `${BASE_URL}/checkouts`;

@@ -14,9 +14,7 @@
 
   <div class="lobby-content-container">
     <mat-card class="information-card">
-      <p class="information-card-title">
-        Match Lobby
-      </p>
+      <p class="information-card-title">Match Lobby</p>
 
       <!--     RESULT_SECTION     -->
       <div class="information-category-container">
@@ -98,9 +96,15 @@
         </div>
       </div>
 
-      <button style="width: 100%; margin-top: 12px" mat-flat-button color="primary" (click)="openStartMatchDialog()">
-        Start
-      </button>
+      <div class="action-buttons-container">
+        <button mat-fab color="primary" matTooltip="Edit Match" (click)="onEditClick()">
+          <mat-icon>edit</mat-icon>
+        </button>
+
+        <button mat-fab color="primary" matTooltip="Start Match" (click)="openStartMatchDialog()">
+          <mat-icon>play_arrow</mat-icon>
+        </button>
+      </div>
 
     </mat-card>
 

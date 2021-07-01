@@ -4,7 +4,7 @@ import {ApiService} from './api.service';
 import {Observable} from 'rxjs';
 import {RxStomp} from '@stomp/rx-stomp';
 import {Checkout} from '../models/x01-match/checkout/checkout';
-import {CREATE_MATCH, GET_CHECKOUTS, GET_MATCH} from '../../api/api-endpoints';
+import {CREATE_MATCH, GET_CHECKOUTS, GET_MATCH, UPDATE_MATCH} from '../../api/api-endpoints';
 import {GET_DARTS_MATCHER_WEBSOCKET} from '../../api/web-socket-endpoints';
 
 @Injectable({
@@ -17,6 +17,10 @@ export class MatchService {
 
   createMatch(match: X01Match): Observable<X01Match> {
     return this.apiService.makePost(CREATE_MATCH, match);
+  }
+
+  updateMatch(match: X01Match): Observable<X01Match> {
+    return this.apiService.makePut(UPDATE_MATCH(match.id), match);
   }
 
   getMatch(id: string): Observable<X01Match> {

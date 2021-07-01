@@ -39,6 +39,7 @@ import { ConfigureMatchPlayerDialogComponent } from './components/configure-matc
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatListModule} from '@angular/material/list';
 import {MatCardModule} from '@angular/material/card';
+import { EditMatchFormDialogComponent } from './components/edit-match-form-dialog/edit-match-form-dialog.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import {MatCardModule} from '@angular/material/card';
     DartBotInfoDialogComponent,
     LoginFormDialogComponent,
     SearchUserFormComponent,
-    ConfigureMatchPlayerDialogComponent
+    ConfigureMatchPlayerDialogComponent,
+    EditMatchFormDialogComponent
   ],
   imports: [
     CommonModule,

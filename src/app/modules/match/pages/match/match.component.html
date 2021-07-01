@@ -1,4 +1,4 @@
-<div class="page-container lobby-container">
+<div class="page-container">
   <app-live-match
     *ngIf="(x01Match$ | async)?.matchStatus === matchStatuses.IN_PLAY || (x01Match$ | async)?.matchStatus === matchStatuses.CONCLUDED"
     [liveMatchWebsocket]="matchWebSocket"

@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseFormComponent} from '../base-form/base-form.component';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {X01Match} from '../../models/x01-match/x01-match';
@@ -22,10 +22,9 @@ import {ApiErrorEnum} from '../../../api/error/api-error.enum';
 export class MatchFormComponent extends BaseFormComponent<X01Match> implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject();
-  @Input() initialMatch: X01Match;
 
   matchForm = this.fb.group({
-    matchType: ['MATCH_501', Validators.required],
+    matchType: [501, Validators.required],
     bestOf: this.fb.group({
       type: ['SETS', Validators.required],
       legs: ['1', [Validators.min(1), Validators.required]],
@@ -43,23 +42,29 @@ export class MatchFormComponent extends BaseFormComponent<X01Match> implements O
     return this.form.get('players') as FormArray;
   }
 
-  constructor(fb: FormBuilder, private matDialog: MatDialog) {
+  constructor(fb: FormBuilder, private matDialog: MatDialog, private changeDetectorRef: ChangeDetectorRef) {
     super(fb);
   }
 
   ngOnInit() {
+
+  }
+
+  setFormData(x01Match: X01Match) {
     this.form.patchValue({
-      matchType: this.initialMatch.matchType,
+      matchType: x01Match.x01,
       bestOf: {
-        type: this.initialMatch.bestOf.sets > 1 ? 'SETS' : 'LEGS',
-        legs: this.initialMatch.bestOf.legs,
-        sets: this.initialMatch.bestOf.sets
+        type: x01Match.bestOf.sets > 1 ? 'SETS' : 'LEGS',
+        legs: x01Match.bestOf.legs,
+        sets: x01Match.bestOf.sets
       },
-      trackCheckouts: this.initialMatch.trackDoubles
+      trackCheckouts: x01Match.trackDoubles
     });
 
     this.players.clear();
-    this.initialMatch.players.map(value => this.fb.control(value)).forEach(value => this.players.push(value));
+    x01Match.players.map(value => this.fb.control(value)).forEach(value => this.players.push(value));
+
+    this.changeDetectorRef.detectChanges();
   }
 
   addPlayer() {
@@ -98,7 +103,7 @@ export class MatchFormComponent extends BaseFormComponent<X01Match> implements O
       throwFirst: x01Players[0]?.playerId,
       currentThrower: undefined,
       matchType: MatchType.X01,
-      x01: 501,
+      x01: form.get('matchType').value,
       trackDoubles: form.get('trackCheckouts').value,
       matchStatus: MatchStatus.LOBBY,
       bestOf: {

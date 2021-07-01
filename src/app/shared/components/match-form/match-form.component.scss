@@ -43,8 +43,10 @@ mat-radio-button {
   margin-right: 6px;
 }
 
-.edit-button {
+.player-action-buttons-container {
   margin-left: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .player-list {

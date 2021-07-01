@@ -2,7 +2,7 @@
       #formDirective="ngForm">
   <label style="margin-bottom: 4px">Select match type</label>
   <mat-radio-group formControlName="matchType">
-    <mat-radio-button value="MATCH_501">501</mat-radio-button>
+    <mat-radio-button [value]="501">501</mat-radio-button>
     <mat-error>
       <ng-template appFormControlError [control]="form.get('matchType')"></ng-template>
     </mat-error>
@@ -79,10 +79,18 @@
             <span>{{player.value.firstName}} {{player.value.lastName}} ({{player.value.userName}})</span>
           </ng-container>
 
-          <button mat-icon-button type="button" matTooltip="Edit" class="edit-button"
-                  (click)="editPlayer(player.value, i)">
-            <mat-icon>edit</mat-icon>
-          </button>
+<div class="player-action-buttons-container">
+  <button mat-icon-button type="button" matTooltip="Remove" class="edit-button"
+          (click)="removePlayer(i)">
+    <mat-icon>cancel</mat-icon>
+  </button>
+
+  <button mat-icon-button type="button" matTooltip="Edit" class="edit-button"
+          (click)="editPlayer(player.value, i)">
+    <mat-icon>edit</mat-icon>
+  </button>
+</div>
+
         </div>
         <mat-error style="width: 100%; flex-basis: 100%;">
           <ng-template appFormControlError [control]="player"></ng-template>
