@@ -34,7 +34,7 @@ import {range} from '../../../../shared/helpers/utility';
 import {getLeg} from '../../../../shared/models/x01-match/set/x01-set';
 import {getRemaining} from '../../../../shared/models/x01-match/leg/x01-leg';
 import {
-  X01_DELETE_LEG_TOPIC, X01_DELETE_SET_TOPIC, X01_DELETE_THROW_TOPIC, X01_THROW_DART_BOT_TOPIC, X01_UPDATE_MATCH_TOPIC
+  X01_DELETE_LEG_TOPIC, X01_DELETE_SET_TOPIC, X01_DELETE_THROW_TOPIC, X01_THROW_DART_BOT_TOPIC, X01_ADD_THROW_TOPIC
 } from '../../../../api/web-socket-endpoints';
 
 @Component({
@@ -348,7 +348,7 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
 
       const publishParams: IRxStompPublishParams = {
         body: JSON.stringify(x01Throw),
-        destination: X01_UPDATE_MATCH_TOPIC(x01Throw.matchId)
+        destination: X01_ADD_THROW_TOPIC(x01Throw.matchId)
       };
 
       this.liveMatchWebsocket.publish(publishParams);

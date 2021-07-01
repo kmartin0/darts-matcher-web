@@ -13,6 +13,96 @@
   </mat-toolbar>
 
   <div class="lobby-content-container">
-    <button style="margin: auto; width: 50%; height: 100px" mat-flat-button color="primary" (click)="openStartMatchDialog()">Start</button>
+    <mat-card class="information-card">
+      <p class="information-card-title">
+        Match Lobby
+      </p>
+
+      <!--     RESULT_SECTION     -->
+      <div class="information-category-container">
+        <p class="information-category-title">Type</p>
+
+        <div class="information-container">
+          <span class="information-title">Type:</span>
+          <span class="information-value">{{match.matchType}}</span>
+        </div>
+
+        <div class="information-container">
+          <span class="information-title">X01:</span>
+          <span class="information-value">{{match.x01}}</span>
+        </div>
+      </div>
+
+      <!--     RESULT_SECTION     -->
+      <div class="information-category-container">
+        <p class="information-category-title">Best Of</p>
+
+        <div class="information-container">
+          <span class="information-title">Sets:</span>
+          <span class="information-value">{{match.bestOf.sets}}</span>
+        </div>
+
+        <div class="information-container">
+          <span class="information-title">Legs:</span>
+          <span class="information-value">{{match.bestOf.legs}}</span>
+        </div>
+      </div>
+
+      <!--     RESULT_SECTION     -->
+      <div class="information-category-container">
+        <p class="information-category-title">Other</p>
+
+        <div class="information-container">
+          <span class="information-title">Track Doubles:</span>
+          <span class="information-value">{{match.trackDoubles ? 'Yes' : 'No'}}</span>
+        </div>
+      </div>
+
+      <div class="player-list information-category-container">
+        <p class="information-category-title">Players</p>
+
+        <div class="player-item" *ngFor="let player of match.players; let i=index">
+
+          <ng-container [ngSwitch]="player.playerType">
+            <ng-container *ngSwitchCase="'DART_BOT'">
+              <mat-icon class="user-type-icon" matTooltip="Dart Bot">smart_toy</mat-icon>
+              <span class="information-title">{{player.playerId}} ({{player.dartBotSettings.expectedThreeDartAverage}}
+                avg)</span>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'ANONYMOUS'">
+              <mat-icon class="user-type-icon" matTooltip="Anonymous Player">no_accounts</mat-icon>
+              <span class="information-title">{{player.playerId}}</span>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'REGISTERED'">
+              <mat-icon class="user-type-icon" matTooltip="Registered Player">account_circle</mat-icon>
+              <span class="information-title">{{player.firstName}} {{player.lastName}} ({{player.userName}})</span>
+            </ng-container>
+          </ng-container>
+
+          <ng-container [ngSwitch]="player.inviteStatus">
+            <ng-container *ngSwitchCase="'ACCEPTED'">
+              <mat-icon class="user-type-icon" matTooltip="Accepted">check_circle</mat-icon>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'DECLINED'">
+              <mat-icon class="user-type-icon" matTooltip="Declined">cancel_circle</mat-icon>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'PENDING'">
+              <mat-icon class="user-type-icon" matTooltip="Pending">pending</mat-icon>
+            </ng-container>
+          </ng-container>
+
+        </div>
+      </div>
+
+      <button style="width: 100%; margin-top: 12px" mat-flat-button color="primary" (click)="openStartMatchDialog()">
+        Start
+      </button>
+
+    </mat-card>
+
   </div>
 </div>

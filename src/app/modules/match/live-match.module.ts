@@ -64,7 +64,7 @@ import { MatchComponent } from './pages/match/match.component';
     MatDialogModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatSliderModule
+    MatSliderModule,
   ]
 })
 export class LiveMatchModule {

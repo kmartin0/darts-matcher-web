@@ -11,6 +11,8 @@ export abstract class BaseFormComponent<T> {
   @ViewChild('formDirective') protected formDirective: NgForm;
   @Input() loading$: Subject<boolean>;
   @Output() validForm = new EventEmitter<T>();
+  @Input() submitText = 'Submit';
+  @Input() showSubmitButton = true;
 
   protected constructor(protected fb: FormBuilder) {
   }

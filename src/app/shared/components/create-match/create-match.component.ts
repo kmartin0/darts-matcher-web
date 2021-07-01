@@ -6,7 +6,7 @@ import {UserService} from '../../services/user.service';
 import {withLoading} from '../../helpers/operators';
 import {Router} from '@angular/router';
 import {LIVE_MATCH} from '../../constants/web-endpoints';
-import {CreateMatchFormComponent} from '../create-match-form/create-match-form.component';
+import {MatchFormComponent} from '../match-form/match-form.component';
 
 // TODO: Bugfix: after sliding bot average match gets created instantly.
 @Component({
@@ -19,8 +19,8 @@ export class CreateMatchComponent implements OnDestroy {
   loading$ = new BehaviorSubject<boolean>(false);
   private unsubscribe$ = new Subject();
 
-  @ViewChild(CreateMatchFormComponent, {static: false}) private _createMatchFormComponent: CreateMatchFormComponent;
-  get createMatchFormComponent(): CreateMatchFormComponent {
+  @ViewChild(MatchFormComponent, {static: false}) private _createMatchFormComponent: MatchFormComponent;
+  get createMatchFormComponent(): MatchFormComponent {
     return this._createMatchFormComponent;
   }
 

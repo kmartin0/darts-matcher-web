@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseFormComponent} from '../base-form/base-form.component';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {X01Match} from '../../models/x01-match/x01-match';
@@ -14,16 +14,15 @@ import {CustomValidators} from '../../validators/custom-validators';
 import {ApiErrorBody} from '../../../api/error/api-error-body';
 import {ApiErrorEnum} from '../../../api/error/api-error.enum';
 
-// TODO: Override handleApiError (use cases for anonymous and dart bot)
-// TODO: Commit when above + lobby with only start button for anonymous and bot.
 @Component({
-  selector: 'app-create-match-form',
-  templateUrl: './create-match-form.component.html',
-  styleUrls: ['./create-match-form.component.scss']
+  selector: 'app-match-form',
+  templateUrl: './match-form.component.html',
+  styleUrls: ['./match-form.component.scss']
 })
-export class CreateMatchFormComponent extends BaseFormComponent<X01Match> implements OnInit, OnDestroy {
+export class MatchFormComponent extends BaseFormComponent<X01Match> implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject();
+  @Input() initialMatch: X01Match;
 
   matchForm = this.fb.group({
     matchType: ['MATCH_501', Validators.required],
@@ -46,10 +45,21 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> implem
 
   constructor(fb: FormBuilder, private matDialog: MatDialog) {
     super(fb);
-    this.addPlayer();
   }
 
   ngOnInit() {
+    this.form.patchValue({
+      matchType: this.initialMatch.matchType,
+      bestOf: {
+        type: this.initialMatch.bestOf.sets > 1 ? 'SETS' : 'LEGS',
+        legs: this.initialMatch.bestOf.legs,
+        sets: this.initialMatch.bestOf.sets
+      },
+      trackCheckouts: this.initialMatch.trackDoubles
+    });
+
+    this.players.clear();
+    this.initialMatch.players.map(value => this.fb.control(value)).forEach(value => this.players.push(value));
   }
 
   addPlayer() {
@@ -59,6 +69,7 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> implem
       .subscribe(matchPlayer => {
         if (matchPlayer) {
           this.players.push(this.fb.control(matchPlayer));
+          console.log(this.players);
         }
       });
   }
@@ -91,7 +102,7 @@ export class CreateMatchFormComponent extends BaseFormComponent<X01Match> implem
       trackDoubles: form.get('trackCheckouts').value,
       matchStatus: MatchStatus.LOBBY,
       bestOf: {
-        sets: form.get('bestOf.sets').value,
+        sets: form.get('bestOf.type').value === 'SETS' ? form.get('bestOf.sets').value : 1,
         legs: form.get('bestOf.legs').value,
       },
       result: undefined,

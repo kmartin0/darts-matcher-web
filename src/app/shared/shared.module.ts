@@ -16,7 +16,7 @@ import { FormControlErrorDirective } from './components/form-control-error/form-
 import { LoadingDirective } from './components/loading/loading.directive';
 import { LoadingComponent } from './components/loading/loading.component';
 import {MatIconModule} from '@angular/material/icon';
-import {CreateMatchFormComponent} from './components/create-match-form/create-match-form.component';
+import {MatchFormComponent} from './components/match-form/match-form.component';
 import {CreateMatchComponent} from './components/create-match/create-match.component';
 import {MatRadioModule} from '@angular/material/radio';
 import { NumOfDartsDialogComponent } from './components/num-of-darts-dialog/num-of-darts-dialog.component';
@@ -50,7 +50,7 @@ import {MatCardModule} from '@angular/material/card';
     FormControlErrorDirective,
     LoadingDirective,
     LoadingComponent,
-    CreateMatchFormComponent,
+    MatchFormComponent,
     CreateMatchComponent,
     NumOfDartsDialogComponent,
     EditThrowDialogComponent,
@@ -95,7 +95,7 @@ import {MatCardModule} from '@angular/material/card';
     FormControlErrorDirective,
     LoadingDirective,
     LoadingComponent,
-    CreateMatchFormComponent,
+    MatchFormComponent,
     CreateMatchComponent,
     NumOfDartsDialogComponent,
     EditThrowDialogComponent,

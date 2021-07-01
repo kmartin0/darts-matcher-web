@@ -83,6 +83,7 @@ export class MatchComponent implements OnDestroy {
         map(value => JSON.parse(value.body) as WebsocketErrorBody)
       )
       .subscribe(websocketErrorBody => {
+        console.log(websocketErrorBody);
         this.webSocketError$.next(websocketErrorBody);
       }, error => console.log(error));
   }

@@ -1,5 +1,41 @@
 .lobby-content-container {
   height: 100%;
   display: flex;
+  flex-flow: nowrap column;
   padding: 8px;
+}
+
+.player-item {
+  width: 100%;
+  border-bottom: solid 1px black;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+}
+
+.player-item:last-child {
+  border-style: none;
+}
+
+.player-item > *:first-child {
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+.player-item > *:nth-child(2) {
+  margin-right: 6px;
+}
+
+.player-item > *:last-child {
+  vertical-align: middle;
+  margin-left: auto;
+}
+
+.player-list {
+  word-break: break-all;
+}
+
+.information-card {
+  max-width: 750px;
+  align-self: center;
 }

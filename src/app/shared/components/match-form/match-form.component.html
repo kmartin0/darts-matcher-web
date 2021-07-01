@@ -101,6 +101,6 @@
     <ng-template appFormControlError [control]="form"></ng-template>
   </mat-error>
 
-  <button style="margin-top: 8px" [disabled]="loading$ | async" mat-flat-button color="primary" type="submit">Create
+  <button *ngIf="showSubmitButton" style="margin-top: 8px" [disabled]="loading$ | async" mat-flat-button color="primary" type="submit">{{submitText}}
   </button>
 </form>
