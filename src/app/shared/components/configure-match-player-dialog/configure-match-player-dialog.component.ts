@@ -30,7 +30,6 @@ export class ConfigureMatchPlayerDialogComponent extends BaseFormComponent<any> 
     super(fb);
 
     this.validForm.subscribe(value => {
-      console.log(`Valid Form: ${value}`);
       this.onValidForm();
     });
   }

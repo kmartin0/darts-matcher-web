@@ -140,4 +140,13 @@
   height: 100%;
   min-height: 185px;
   overflow-y: auto;
+  margin: auto;
+}
+
+mat-cell:last-of-type, mat-header-cell:last-of-type, mat-footer-cell:last-of-type {
+  padding-right: 0;
+}
+
+mat-cell:first-of-type, mat-header-cell:first-of-type, mat-footer-cell:first-of-type {
+  padding-left: 0;
 }
