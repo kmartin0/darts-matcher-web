@@ -64,24 +64,24 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
 
   createEditThrow(editScore: { playerId: string, round: number, score: number }): X01Throw {
     return {
-      leg: this.selectedRound?.leg.leg,
+      leg: this.selectedRound?.leg?.leg,
       matchId: this.match.id,
       playerId: editScore.playerId,
       round: editScore.round,
       score: editScore.score,
-      set: this.selectedRound?.set.set,
+      set: this.selectedRound?.set?.set,
       dartsUsed: 3
     };
   }
 
   createNewThrow(scored: number): X01Throw {
     return {
-      leg: this.selectedRound?.leg.leg,
+      leg: this.selectedRound?.leg?.leg,
       matchId: this.match.id,
       playerId: this.match.currentThrower,
-      round: this.selectedRound?.round.round,
+      round: this.selectedRound?.round?.round,
       score: scored,
-      set: this.selectedRound?.set.set,
+      set: this.selectedRound?.set?.set,
       dartsUsed: 3
     };
   }
@@ -207,10 +207,10 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
       setTimeout(() => {
         this.publishDartBotThrow({
           dartBotId: currentThrower.playerId,
-          leg: this.selectedRound.leg.leg,
+          leg: this.selectedRound.leg?.leg,
           matchId: this.match.id,
-          round: this.selectedRound.round.round,
-          set: this.selectedRound.set.set
+          round: this.selectedRound?.round?.round,
+          set: this.selectedRound?.set?.set
         });
       }, 300);
     }
@@ -246,6 +246,10 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
     const errorKey = Object.keys(details)[0];
 
     switch (errorKey) {
+      case 'playerId': {
+        error = `Player error: ${details[errorKey]}`;
+        break;
+      }
       case 'score': {
         error = `Scoring error: ${details[errorKey]}`;
         break;
@@ -283,7 +287,7 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private isFinalThrow(x01Throw: X01Throw, match: X01Match): boolean {
-    const leg = this.selectedRound.leg;
+    const leg = this.selectedRound?.leg;
 
     if (!leg) return false;
 
