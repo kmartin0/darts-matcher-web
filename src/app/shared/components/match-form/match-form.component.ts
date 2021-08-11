@@ -30,7 +30,7 @@ export class MatchFormComponent extends BaseFormComponent<X01Match> implements O
       legs: ['1', [Validators.min(1), Validators.required]],
       sets: ['1', [Validators.min(1), Validators.required]],
     }),
-    trackCheckouts: [true, Validators.required],
+    trackCheckouts: [false, Validators.required],
     players: this.fb.array([], CustomValidators.minLengthArray(1))
   });
 

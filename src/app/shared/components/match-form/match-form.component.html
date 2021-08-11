@@ -52,7 +52,8 @@
 
     <div class="players-label-container">
       <mat-label class="players-label-item">Players</mat-label>
-      <button class="players-label-item" *ngIf="players.controls.length < 4" type="button" mat-icon-button
+      <button appLoseFocusAfterClick class="players-label-item" *ngIf="players.controls.length < 4" type="button"
+              mat-icon-button
               color="accent" (click)="addPlayer()">
         <mat-icon>add_circle</mat-icon>
       </button>
@@ -79,17 +80,17 @@
             <span>{{player.value.firstName}} {{player.value.lastName}} ({{player.value.userName}})</span>
           </ng-container>
 
-<div class="player-action-buttons-container">
-  <button mat-icon-button type="button" matTooltip="Remove" class="edit-button"
-          (click)="removePlayer(i)">
-    <mat-icon>cancel</mat-icon>
-  </button>
+          <div class="player-action-buttons-container">
+            <button mat-icon-button type="button" matTooltip="Remove" class="edit-button"
+                    (click)="removePlayer(i)">
+              <mat-icon>cancel</mat-icon>
+            </button>
 
-  <button mat-icon-button type="button" matTooltip="Edit" class="edit-button"
-          (click)="editPlayer(player.value, i)">
-    <mat-icon>edit</mat-icon>
-  </button>
-</div>
+            <button mat-icon-button type="button" matTooltip="Edit" class="edit-button"
+                    (click)="editPlayer(player.value, i)">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
 
         </div>
         <mat-error style="width: 100%; flex-basis: 100%;">
@@ -101,14 +102,13 @@
     <mat-error>
       <ng-template appFormControlError [control]="form.get('players')"></ng-template>
     </mat-error>
-
   </div>
-
 
   <mat-error>
     <ng-template appFormControlError [control]="form"></ng-template>
   </mat-error>
 
-  <button *ngIf="showSubmitButton" style="margin-top: 8px" [disabled]="loading$ | async" mat-flat-button color="primary" type="submit">{{submitText}}
+  <button *ngIf="showSubmitButton" style="margin-top: 8px" [disabled]="loading$ | async" mat-flat-button color="primary"
+          type="submit">{{submitText}}
   </button>
 </form>
