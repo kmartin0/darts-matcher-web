@@ -12,6 +12,6 @@ export interface MatchPlayer {
   inviteStatus: MatchPlayerInviteStatus;
 }
 
-export function getMatchPlayerDisplayName(matchPlayer: MatchPlayer): string { // TODO: Use this in match sheet.
+export function getMatchPlayerDisplayName(matchPlayer: MatchPlayer): string {
   return matchPlayer.playerType === PlayerType.REGISTERED ? `${matchPlayer.firstName} ${matchPlayer.lastName}` : matchPlayer.playerId;
 }
