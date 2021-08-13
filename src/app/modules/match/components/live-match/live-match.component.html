@@ -6,6 +6,11 @@
       <span>X01 Match</span>
       <span class="toolbar-spacer"></span>
 
+      <button *ngIf="showScoreInput() && isScoreboard" appLoseFocusAfterClick mat-icon-button (click)="toggleNumpad()"
+              matTooltip="Toggle Numpad">
+        <mat-icon>keyboard</mat-icon>
+      </button>
+
       <button appLoseFocusAfterClick mat-icon-button (click)="toggleScoreboard()" matTooltip="Toggle Scoreboard/Recap">
         <mat-icon *ngIf="isScoreboard">analytics</mat-icon>
         <mat-icon *ngIf="!isScoreboard" svgIcon="darts"></mat-icon>
@@ -22,8 +27,7 @@
   </ng-container>
 
   <ng-template #scoreboard>
-    <div class="match-sheet-container"
-         [ngClass]="{'full': selectedRound?.isLegInPlaySelected() && match?.matchStatus === 'IN_PLAY'}">
+    <div class="match-sheet-container" [ngClass]="{'numpad': showNumpad(), 'score-input': showScoreInput()}">
       <app-x01-match-sheet
         (editScore)="onScoreSubmit(createEditThrow($event))"
         (deleteThrow)="publishDeleteThrow($event)" (deleteSet)="publishDeleteSet($event)"
@@ -33,10 +37,10 @@
 
       <mat-error class="match-error">{{error | async}}</mat-error>
 
-      <app-keyboard *ngIf="selectedRound?.isLegInPlaySelected() && match?.matchStatus === 'IN_PLAY'"
-                    (scoreOutput)="onScoreSubmit(createNewThrow($event))"></app-keyboard>
-    </div>
+      <app-score-input *ngIf="showScoreInput()" [showNumpad]="showNumpad()"
+                       (scoreOutput)="onScoreSubmit(createNewThrow($event))"></app-score-input>
 
+    </div>
   </ng-template>
 
   <ng-template #recap>

@@ -21,5 +21,5 @@ export const dashboardRoutes: Routes = [
     RouterModule
   ]
 })
-export class LiveMatchRoutingModule {
+export class MatchRoutingModule {
 }

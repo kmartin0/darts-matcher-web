@@ -1,0 +1,24 @@
+<div class="score-input-container">
+
+  <div class="score-label-container">
+    <div class="score-card-container">
+      <p class="score-title">
+        Score
+      </p>
+    </div>
+
+    <div class="score-card-container">
+      <p class="score-value" [ngClass]="{'focused': isWindowFocused}">
+        {{score}}
+      </p>
+    </div>
+  </div>
+
+  <div class="numpad-container" *ngIf="showNumpad">
+    <button (click)="onKeyClick(btn)" *ngFor="let btn of numpadButtons" mat-flat-button color="primary" type="button"
+            class="numpad-input-button">
+      {{btn.value}}
+    </button>
+  </div>
+
+</div>

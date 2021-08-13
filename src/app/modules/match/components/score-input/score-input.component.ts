@@ -1,17 +1,29 @@
-import {Component, ElementRef, OnInit, Output, ViewChild, EventEmitter, OnDestroy, HostListener} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  Output,
+  ViewChild,
+  EventEmitter,
+  OnDestroy,
+  HostListener,
+  Input
+} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 
 
 @Component({
-  selector: 'app-keyboard',
-  templateUrl: './keyboard.component.html',
-  styleUrls: ['./keyboard.component.scss']
+  selector: 'app-score-input',
+  templateUrl: './score-input.component.html',
+  styleUrls: ['./score-input.component.scss'],
 })
-export class KeyboardComponent implements OnInit, OnDestroy {
+export class ScoreInputComponent implements OnInit, OnDestroy {
 
-  keyboardButtons = [
+  @Input() showNumpad = false;
+
+  numpadButtons = [
     {type: 'number', value: 1},
     {type: 'number', value: 2},
     {type: 'number', value: 3},
@@ -36,25 +48,15 @@ export class KeyboardComponent implements OnInit, OnDestroy {
   constructor(private dialog: MatDialog) {
   }
 
-  @HostListener('window:focus', ['$event'])
-  onFocus(): void {
-    this.isWindowFocused = true;
-  }
-
-  @HostListener('window:blur', ['$event'])
-  onBlur(): void {
-    this.isWindowFocused = false;
-  }
-
   @HostListener('window:keydown', ['$event'])
   handleKeyPressed(event: KeyboardEvent) {
     if (!this.dialog.openDialogs || !this.dialog.openDialogs.length) {
       if (event.key === 'Delete' || event.key === 'Backspace') {
-        this.onKeyClick(this.keyboardButtons.find(button => button.value === 'Del'));
+        this.onKeyClick(this.numpadButtons.find(button => button.value === 'Del'));
       } else if (event.key === 'Enter') {
-        this.onKeyClick(this.keyboardButtons.find(button => button.value === 'Ent'));
+        this.onKeyClick(this.numpadButtons.find(button => button.value === 'Ent'));
       } else {
-        const key = this.keyboardButtons.find(_key => _key.value.toString() === event.key.toString());
+        const key = this.numpadButtons.find(_key => _key.value.toString() === event.key.toString());
         if (key) this.onKeyClick(key);
       }
     }
@@ -65,8 +67,17 @@ export class KeyboardComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-
   ngOnInit(): void {
+  }
+
+  @HostListener('window:blur', ['$event'])
+  onBlur(): void {
+    this.isWindowFocused = false;
+  }
+
+  @HostListener('window:focus', ['$event'])
+  onFocus(): void {
+    this.isWindowFocused = true;
   }
 
   onKeyClick(key: { type: string, value: number | string }) {

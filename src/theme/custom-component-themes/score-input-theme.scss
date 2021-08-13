@@ -10,7 +10,7 @@
   $primary-palette: map.get($color-config, 'primary');
   $background-palette: map.get($color-config, 'background');
 
-  .keyboard-container {
+  .score-input-container {
     .score-card-container {
       background-color: mat.get-color-from-palette($background-palette, card);
     }
@@ -24,7 +24,7 @@
 @mixin typography($theme) {
   // Get the typography config from the theme.
   $typography-config: mat.get-typography-config($theme);
-  .keyboard-container {
+  .score-input-container {
     .score-title, .score-value {
       @include devices.device(phone) {
         @include mat.typography-level($typography-config, subheading-2);
@@ -40,7 +40,7 @@
       }
     }
 
-    .keyboard-input-button {
+    .numpad-input-button {
       @include devices.device(phablet) {
         font-size: 18px;
       }

@@ -1,7 +1,7 @@
 @use '~@angular/material/index' as mat;
 @use 'sass:map';
 @use 'surface-theme';
-@use 'keyboard-theme';
+@use 'score-input-theme';
 @use 'dashboard-theme';
 @use 'x01-match-sheet-theme';
 @use 'x01-match-recap-theme';
@@ -12,7 +12,7 @@
 
 @mixin all-custom-component-themes($theme) {
   @include surface-theme.theme($theme);
-  @include keyboard-theme.theme($theme);
+  @include score-input-theme.theme($theme);
   @include dashboard-theme.theme($theme);
   @include x01-match-sheet-theme.theme($theme);
   @include x01-match-recap-theme.theme($theme);

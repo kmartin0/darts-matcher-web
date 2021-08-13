@@ -40,7 +40,7 @@ import {
 @Component({
   selector: 'app-live-match',
   templateUrl: './live-match.component.html',
-  styleUrls: ['./live-match.component.scss']
+  styleUrls: ['./live-match.component.scss'],
 })
 export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
 
@@ -48,6 +48,7 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
   error = new BehaviorSubject(null);
   isDarkTheme$ = this.themeService.isDarkTheme;
   isScoreboard = true;
+  hideNumpad = false;
   match: X01Match;
   selectedRound: SelectedRound;
 
@@ -184,6 +185,18 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
     } else { // When no checkout could have been scored publish the score.
       this.publishScore(x01Throw);
     }
+  }
+
+  showNumpad(): boolean {
+    return this.showScoreInput() && !this.hideNumpad;
+  }
+
+  showScoreInput(): boolean {
+    return this.selectedRound?.isLegInPlaySelected() && this.match?.matchStatus === 'IN_PLAY';
+  }
+
+  toggleNumpad() {
+    this.hideNumpad = !this.hideNumpad;
   }
 
   toggleScoreboard() {

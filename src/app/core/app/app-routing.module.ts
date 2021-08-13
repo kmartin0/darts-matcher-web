@@ -13,7 +13,7 @@ export const appRoutes: Routes = [
   },
   {
     path: 'matches/:id',
-    loadChildren: () => import('../../modules/match/live-match.module').then(m => m.LiveMatchModule)
+    loadChildren: () => import('../../modules/match/match.module').then(m => m.MatchModule)
   },
   {
     path: '',

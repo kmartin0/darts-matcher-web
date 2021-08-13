@@ -3,6 +3,7 @@
   grid-auto-flow: row;
   grid-auto-rows: max-content minmax(0, 1fr);
   width: 100vw;
+  overflow-y: auto;
 }
 
 .match-sheet-container {
@@ -10,9 +11,18 @@
   grid-auto-flow: row;
   grid-gap: 8px;
   padding: 8px 0;
+  grid-template-rows: minmax(100px, 20fr) auto;
+
+  &.score-input {
+    grid-template-rows: minmax(100px, 17fr) auto 3fr;
+  }
+
+  &.numpad.score-input {
+    grid-template-rows: minmax(100px, 14fr) auto 6fr;
+  }
 }
 
-app-x01-match-sheet, app-keyboard, mat-error, app-x01-match-recap {
+app-x01-match-sheet, app-score-input, mat-error, app-x01-match-recap {
   padding: 0 8px;
   max-width: 1800px;
   margin: 0 auto;
@@ -23,7 +33,7 @@ app-x01-match-sheet {
   height: 100%;
 }
 
-app-keyboard, app-x01-match-recap {
+app-score-input, app-x01-match-recap {
   width: 100%;
   height: 100%;
 }
@@ -32,18 +42,12 @@ app-x01-match-sheet, app-x01-match-recap {
   overflow-y: auto;
 }
 
-app-keyboard {
+app-score-input {
   max-width: 800px;
+  margin: auto;
+  align-self: start;
 }
 
 .match-error {
   min-height: 1em;
-}
-
-.match-sheet-container.full {
-  grid-template-rows: minmax(100px, 2fr) auto minmax(140px, 1fr);
-}
-
-.example-icon {
-  padding: 0 14px;
 }
