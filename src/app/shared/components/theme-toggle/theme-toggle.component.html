@@ -1,0 +1,3 @@
+<button appLoseFocusAfterClick mat-icon-button (click)="toggleTheme()" matTooltip="Toggle Theme">
+  <mat-icon>{{(isDarkTheme$ | async) ? 'light_mode' : 'dark_mode'}}</mat-icon>
+</button>

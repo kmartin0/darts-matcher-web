@@ -29,7 +29,6 @@ import {TargetErrors} from '../../../../api/error/api-error-body';
 import {PlayerType} from '../../../../shared/models/match/player-type';
 import {SelectedRound} from '../x01-match-sheet/selected-round';
 import {X01DartBotThrow} from '../../../../shared/models/x01-match/x01-dart-bot/x01-dart-bot-throw';
-import {ThemeService} from '../../../../shared/services/theme/theme-service';
 import {range} from '../../../../shared/helpers/utility';
 import {getLeg} from '../../../../shared/models/x01-match/set/x01-set';
 import {getRemaining} from '../../../../shared/models/x01-match/leg/x01-leg';
@@ -46,7 +45,6 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
 
   checkouts: Checkout[];
   error = new BehaviorSubject(null);
-  isDarkTheme$ = this.themeService.isDarkTheme;
   isScoreboard = true;
   hideNumpad = false;
   match: X01Match;
@@ -59,8 +57,7 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
   private unsubscribe$ = new Subject();
 
   constructor(private route: ActivatedRoute, private matchService: MatchService, private dialog: MatDialog,
-              private basicDialogService: BasicDialogService, private changeDetectorRef: ChangeDetectorRef,
-              private themeService: ThemeService) {
+              private basicDialogService: BasicDialogService, private changeDetectorRef: ChangeDetectorRef) {
   }
 
   createEditThrow(editScore: { playerId: string, round: number, score: number }): X01Throw {
@@ -203,10 +200,6 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
     this.isScoreboard = !this.isScoreboard;
     this.changeDetectorRef.detectChanges();
     if (this.isScoreboard) this.checkDartBotTurn();
-  }
-
-  toggleTheme() {
-    this.themeService.toggleTheme();
   }
 
   ngOnChanges(changes: SimpleChanges) {

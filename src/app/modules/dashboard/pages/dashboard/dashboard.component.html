@@ -1,18 +1,20 @@
 <div class="page-container dashboard-container">
-  <mat-toolbar color="primary">
+
+  <app-base-toolbar>
     <button (click)="sidenav.toggle()" mat-icon-button>
       <mat-icon>menu</mat-icon>
     </button>
-    <span>{{title}}</span>
-    <span style="margin-left: auto">{{(loggedInUser | async)?.userName}}</span>
-  </mat-toolbar>
+    <span>Dashboard</span>
+    <span class="toolbar-spacer"></span>
+    <span>{{(loggedInUser | async)?.userName}}</span>
+  </app-base-toolbar>
 
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav class="dashboard-sidenav" mode="side" opened>
       <div>
         <ul>
           <li [routerLinkActive]="['active-nav']">
-            <a [routerLink]="navRoutes.createMatch" >
+            <a [routerLink]="navRoutes.createMatch">
               <mat-icon svgIcon="darts"></mat-icon>
               <span>Create X01Match</span>
             </a>
@@ -34,7 +36,9 @@
         </ul>
       </div>
     </mat-sidenav>
-    <mat-sidenav-content class="dashboard-content"><router-outlet></router-outlet></mat-sidenav-content>
+    <mat-sidenav-content class="dashboard-content">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
 

@@ -40,6 +40,9 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatListModule} from '@angular/material/list';
 import {MatCardModule} from '@angular/material/card';
 import { EditMatchFormDialogComponent } from './components/edit-match-form-dialog/edit-match-form-dialog.component';
+import { BaseToolbarComponent } from './components/base-toolbar/base-toolbar.component';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +65,9 @@ import { EditMatchFormDialogComponent } from './components/edit-match-form-dialo
     LoginFormDialogComponent,
     SearchUserFormComponent,
     ConfigureMatchPlayerDialogComponent,
-    EditMatchFormDialogComponent
+    EditMatchFormDialogComponent,
+    BaseToolbarComponent,
+    ThemeToggleComponent
   ],
   imports: [
     CommonModule,
@@ -86,7 +91,8 @@ import { EditMatchFormDialogComponent } from './components/edit-match-form-dialo
     FormsModule,
     MatStepperModule,
     MatListModule,
-    MatCardModule
+    MatCardModule,
+    MatToolbarModule
   ],
   exports: [
     LoginFormComponent,
@@ -104,7 +110,8 @@ import { EditMatchFormDialogComponent } from './components/edit-match-form-dialo
     EditSetLegDialogComponent,
     BasicDialogComponent,
     LoseFocusAfterClickDirective,
-    SearchUserFormComponent
+    SearchUserFormComponent,
+    BaseToolbarComponent
   ],
 
 })

@@ -1,0 +1,6 @@
+<mat-toolbar [color]="(isDarkTheme$ | async) ? null : 'primary'">
+  <mat-toolbar-row>
+    <ng-content></ng-content>
+    <app-theme-toggle></app-theme-toggle>
+  </mat-toolbar-row>
+</mat-toolbar>

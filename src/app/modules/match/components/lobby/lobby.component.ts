@@ -4,7 +4,6 @@ import {X01Match} from '../../../../shared/models/x01-match/x01-match';
 import {IRxStompPublishParams, RxStomp} from '@stomp/rx-stomp';
 import {WebsocketErrorBody} from '../../../../api/error/websocket-error-body';
 import {MatDialog} from '@angular/material/dialog';
-import {ThemeService} from '../../../../shared/services/theme/theme-service';
 import {X01_START_MATCH_TOPIC} from '../../../../api/web-socket-endpoints';
 import {takeUntil} from 'rxjs/operators';
 import {BasicDialogService} from '../../../../shared/services/basic-dialog.service';
@@ -17,7 +16,6 @@ import {EditMatchFormDialogComponent} from '../../../../shared/components/edit-m
 })
 export class LobbyComponent implements OnInit {
 
-  isDarkTheme$ = this.themeService.isDarkTheme;
   match: X01Match;
 
   @Input() liveMatchWebsocket: RxStomp;
@@ -26,7 +24,7 @@ export class LobbyComponent implements OnInit {
 
   private unsubscribe$ = new Subject();
 
-  constructor(private dialog: MatDialog, private themeService: ThemeService, private changeDetectorRef: ChangeDetectorRef, private dialogService: BasicDialogService) {
+  constructor(private dialog: MatDialog, private changeDetectorRef: ChangeDetectorRef, private dialogService: BasicDialogService) {
   }
 
   ngOnInit(): void {
@@ -47,10 +45,6 @@ export class LobbyComponent implements OnInit {
 
   onEditClick() {
     this.dialog.open(EditMatchFormDialogComponent, {data: this.match});
-  }
-
-  toggleTheme() {
-    this.themeService.toggleTheme();
   }
 
   startMatch() {
