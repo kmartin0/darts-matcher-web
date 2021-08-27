@@ -92,7 +92,7 @@
               "browserTarget": "darts-matcher-web:build:production"
             },
             "development": {
-              "browserTarget": "angular-docker:build:development"
+              "browserTarget": "darts-matcher-web:build:development"
             }
           }
         },
