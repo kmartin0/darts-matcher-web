@@ -26,6 +26,10 @@ RUN npm run build-${PROFILE:-dev}
 # Use official nginx image
 FROM nginx:latest
 
+# Remove the default configuration and add our own.
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/
+
 # Copy the build output to replace the default nginx contents.
 COPY --from=build /app/dist/darts-matcher-web /usr/share/nginx/html
 
