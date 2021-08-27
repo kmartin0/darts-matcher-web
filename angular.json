@@ -71,6 +71,14 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           }
         },
@@ -82,6 +90,9 @@
           "configurations": {
             "production": {
               "browserTarget": "darts-matcher-web:build:production"
+            },
+            "development": {
+              "browserTarget": "angular-docker:build:development"
             }
           }
         },
