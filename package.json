@@ -9,12 +9,13 @@
     "ng": "ng",
     "start": "node server.js",
     "build": "ng build",
-    "build-prod": "ng build --configuration production",
+    "build-prod-heroku": "ng build --configuration prod-heroku",
+    "build-prod-pi": "ng build --configuration prod-pi",
     "build-dev": "ng build --configuration development",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "heroku-postbuild": "ng build --output-path dist --configuration=production"
+    "heroku-postbuild": "npm run build-prod-heroku"
   },
   "private": true,
   "dependencies": {

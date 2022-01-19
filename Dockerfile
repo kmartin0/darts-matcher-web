@@ -3,7 +3,7 @@
 # Stage 1: Compile and Build angular codebase
 
 # Use official node image as the base image
-FROM node:16 as build
+FROM node:16-slim as build
 
 # Set the working directory
 WORKDIR /app
@@ -19,6 +19,7 @@ ARG PROFILE
 ENV PROFILE $PROFILE
 
 # Generate the build of the application (defaults to dev build if no profile is set)
+# Accepts: prod-heroku, prod-pi, dev
 RUN npm run build-${PROFILE:-dev}
 
 # Stage 2: Serve app with nginx server

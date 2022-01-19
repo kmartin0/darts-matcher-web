@@ -1,17 +1,18 @@
 // Install Express Server
 const express = require('express');
 const bodyParser = require("body-parser");
+const path = require("path");
 
 const app = express();
 app.use(bodyParser.json());
 
 // Create link to Angular build directory
 const distDir = __dirname + "/dist";
-app.use(express.static(distDir));
+app.use(express.static(__dirname + '/dist/darts-matcher-web'));
 
 // Pass our application into our routes.
 app.get('*', function (req, res) {
-  res.sendFile(`${distDir}/index.html`); // load our index.html file
+  res.sendFile(path.join(__dirname + '/dist/darts-matcher-web/index.html')); // load our index.html file
 });
 
 // Initialize the app.

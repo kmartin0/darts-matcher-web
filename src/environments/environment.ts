@@ -7,8 +7,8 @@
 export const environment = {
   production: false,
   dartsMatcherApiUrl: 'http://localhost:8080',
-  dartsMatcherWebsocketUrl: 'ws://localhost:8080',
-  clientId: 'darts-matcher-dev-client',
+  dartsMatcherWebsocketUrl: 'wss://localhost:8080',
+  clientId: 'darts-matcher-web',
   clientSecret: 'secret',
 };
 
@@ -20,3 +20,12 @@ export const environment = {
  * on performance if an error is thrown.
  */
 // import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
+
+
+// export const environment = {
+//   production: false,
+//   dartsMatcherApiUrl: 'http://localhost:8080',
+//   dartsMatcherWebsocketUrl: 'ws://localhost:8080',
+//   clientId: 'darts-matcher-dev-client',
+//   clientSecret: 'secret',
+// };

@@ -1,0 +1,12 @@
+version: "3"
+services:
+  darts-matcher-web:
+    restart: always
+    image: darts-matcher-web
+    container_name: darts-matcher-web
+    build:
+      context: .
+      args:
+        - PROFILE=dev # Accepts dev, prod-pi, prod-heroku
+    ports:
+      - "4200:80"
