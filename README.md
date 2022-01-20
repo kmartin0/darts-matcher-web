@@ -14,7 +14,15 @@ Demo: https://darts-matcher-web.herokuapp.com/
 - Recover from wrong score inputs.
 - View match information, statistics and a recap.
 
+## Tech
+
+- Angular
+- Typescript
+- REST api communication using @angular/common/http/HttpClient
+- Websocket communication using @stomp/rxstomp
+
 ## Screenshots
+
 ![Homepage screenshot](https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts_matcher_web_login_register.png?raw=true)
 
 ![Dashboard Friend screenshot](https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts_matcher_web_friends.png?raw=true)
