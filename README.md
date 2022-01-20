@@ -1,27 +1,38 @@
-# DartsMatcherWeb
+# Darts Matcher Web Application
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.8.
+Web application for Darts Matcher platform which lets users create and play (online) darts matches against other players or bots.
 
-## Development server
+Demo: https://darts-matcher-web.herokuapp.com/
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Features
 
-## Code scaffolding
+- Light/dark mode.
+- Responsive design for mobile and desktop.
+- Login and Register.
+- Create and play darts matches with an online scoreboard with up to 4 players.
+- Configure and play against a darts bot.
+- Recover from wrong score inputs.
+- View match information, statistics and a recap.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Screenshots
+![Homepage screenshot](https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts_matcher_web_login_register.png?raw=true)
 
-## Build
+![Dashboard Friend screenshot](https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts_matcher_web_friends.png?raw=true)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+![Create Match screenshot](https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts_matcher_web_create_match.png?raw=true)
 
-## Running unit tests
+![Create Match Add Player screenshot](https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts_matcher_web_add_player.png?raw=true)
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+![Create Match Add Bot screenshot](https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts_matcher_web_add_bot.png?raw=true)
 
-## Running end-to-end tests
+![Match Lobby screenshot](https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts_matcher_web_lobby.png?raw=true)
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+![Match Scoreboard Dark screenshot](https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts_matcher_web_scoreboard_dark.png?raw=true)
 
-## Further help
+![Match SCoreboard Light screenshot](https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts_matcher_web_scoreboard_light.png?raw=true)
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+![Match Information screenshot](https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts_matcher_web_match_information.png?raw=true)
+
+![Match Statistics screenshot](https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts_matcher_web_match_statistics.png?raw=true)
+
+![Match Recap screenshot](https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts_matcher_web_match_recap.png?raw=true)
