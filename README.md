@@ -18,6 +18,7 @@ Demo: https://darts-matcher-web.herokuapp.com/
 
 - Angular
 - Typescript
+- Theming and styling using @angular/material
 - REST api communication using @angular/common/http/HttpClient
 - Websocket communication using @stomp/rxstomp
 
