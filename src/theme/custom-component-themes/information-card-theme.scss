@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '~@angular/material/index' as mat;
+@use 'node_modules/@angular/material' as mat;
 @use 'devices' as devices;
 
 @mixin color($theme) {

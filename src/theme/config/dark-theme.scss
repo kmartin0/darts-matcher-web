@@ -1,18 +1,20 @@
-@use '~@angular/material/index' as mat;
+@use 'node_modules/@angular/material' as mat;
 @use 'custom-color-palettes' as custom-color-palettes;
 @use 'typography' as custom-typograhy;
 @use 'sass:map';
 
 //Custom color collection. Ref: https://stackoverflow.com/a/58165951
 $dark-theme-custom-color-collection: (
+  default: #000000,
   win-or-draw : #a5d6a7,
   contrast: (
+    default: #FFFFFF,
     win-or-draw : #000000,
   )
 );
 
 // Custom color palette.
-$dark-theme-custom-palette: mat.define-palette($dark-theme-custom-color-collection, custom);
+$dark-theme-custom-palette: mat.define-palette($dark-theme-custom-color-collection, default, default, default);
 
 // Primary palette.
 $dark-theme-primary: mat.define-palette(custom-color-palettes.$mat-light-teal);
