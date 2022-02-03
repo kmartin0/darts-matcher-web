@@ -1,19 +1,19 @@
-@import "devices";
+@use "devices";
 
 .title {
   line-height: 1em;
   font-weight: 500;
   font-size: 18px;
 
-  @include tablet() {
+  @include devices.tablet() {
     font-size: 20px;
   }
 
-  @include desktop() {
+  @include devices.desktop() {
     font-size: 26px;
   }
 
-  @include desktop-xl() {
+  @include devices.desktop-xl() {
     font-size: 26px;
   }
 }
@@ -23,15 +23,15 @@
   font-weight: 500;
   font-size: 14px;
 
-  @include tablet() {
+  @include devices.tablet() {
     font-size: 15px;
   }
 
-  @include desktop() {
+  @include devices.desktop() {
     font-size: 16px;
   }
 
-  @include desktop-xl() {
+  @include devices.desktop-xl() {
     font-size: 16px;
   }
 }
