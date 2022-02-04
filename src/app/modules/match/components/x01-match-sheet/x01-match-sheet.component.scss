@@ -10,13 +10,13 @@
   overflow-x: auto;
 }
 
-// ===== PLAYER INFORMATION SECTION =====
+/* ===== PLAYER INFORMATION SECTION ===== */
 .mat-card {
   padding: 8px;
   word-wrap: break-word;
 }
 
-// Also defines the timeline table columns so that they are aligned.
+/* Also defines the timeline table columns so that they are aligned. */
 .players-information-container, .players-remaining-container {
   margin: auto;
   display: grid;
@@ -48,21 +48,21 @@
     border-bottom: 1px solid;
   }
 
-  @include device(phone, phablet, tablet) {
+  @include devices.device(phone, phablet, tablet) {
     width: 90%;
   }
 
-  @include device(desktop) {
+  @include devices.device(desktop) {
     width: 75%;
   }
 
-  @include device(desktop-xl) {
+  @include devices.device(desktop-xl) {
     width: 50%;
   }
 }
 
 .average-container > div {
-  @include device(phone) {
+  @include devices.device(phone) {
     flex-direction: column;
     justify-content: center;
   }
@@ -88,7 +88,7 @@
   margin: 0 auto;
   width: 100%;
 
-  @include device(tablet, desktop, desktop-xl) {
+  @include devices.device(tablet, desktop, desktop-xl) {
     width: 75%;
   }
 }
@@ -100,7 +100,7 @@
   border-radius: 8px;
 }
 
-// ===== REMAINING SECTION =====
+/* ===== REMAINING SECTION ===== */
 .player-remaining-container {
   display: flex;
   flex-direction: column;
@@ -135,7 +135,7 @@
   content: ', ';
 }
 
-// ===== TIMELINE SECTION =====
+/* ===== TIMELINE SECTION ===== */
 .timeline-container {
   height: 100%;
   min-height: 185px;
