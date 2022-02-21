@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {BaseFormComponent} from '../base-form/base-form.component';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {X01Match} from '../../models/x01-match/x01-match';
@@ -7,7 +7,9 @@ import {MatchType} from '../../models/match/match-type';
 import {MatchPlayer} from '../../models/match/match-player';
 import {MatDialog} from '@angular/material/dialog';
 import {DartBotInfoDialogComponent} from '../dart-bot-info-dialog/dart-bot-info-dialog.component';
-import {ConfigureMatchPlayerDialogComponent} from '../configure-match-player-dialog/configure-match-player-dialog.component';
+import {
+  ConfigureMatchPlayerDialogComponent
+} from '../configure-match-player-dialog/configure-match-player-dialog.component';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {CustomValidators} from '../../validators/custom-validators';
@@ -52,13 +54,13 @@ export class MatchFormComponent extends BaseFormComponent<X01Match> implements O
 
   setFormData(x01Match: X01Match) {
     this.form.patchValue({
-      matchType: x01Match.x01,
+      matchType: x01Match.x01MatchSettings.x01,
       bestOf: {
-        type: x01Match.bestOf.sets > 1 ? 'SETS' : 'LEGS',
-        legs: x01Match.bestOf.legs,
-        sets: x01Match.bestOf.sets
+        type: x01Match.x01MatchSettings.bestOf.sets > 1 ? 'SETS' : 'LEGS',
+        legs: x01Match.x01MatchSettings.bestOf.legs,
+        sets: x01Match.x01MatchSettings.bestOf.sets
       },
-      trackCheckouts: x01Match.trackDoubles
+      trackCheckouts: x01Match.x01MatchSettings.trackDoubles
     });
 
     this.players.clear();
@@ -100,17 +102,19 @@ export class MatchFormComponent extends BaseFormComponent<X01Match> implements O
       id: undefined,
       startDate: new Date(),
       endDate: undefined,
-      throwFirst: x01Players[0]?.playerId,
       currentThrower: undefined,
       matchType: MatchType.X01,
-      x01: form.get('matchType').value,
-      trackDoubles: form.get('trackCheckouts').value,
       matchStatus: MatchStatus.LOBBY,
-      bestOf: {
-        sets: form.get('bestOf.type').value === 'SETS' ? form.get('bestOf.sets').value : 1,
-        legs: form.get('bestOf.legs').value,
+      matchResult: undefined,
+      x01MatchSettings: {
+        x01: form.get('matchType').value,
+        trackDoubles: form.get('trackCheckouts').value,
+        bestOf: {
+          sets: form.get('bestOf.type').value === 'SETS' ? form.get('bestOf.sets').value : 1,
+          legs: form.get('bestOf.legs').value,
+        }
       },
-      result: undefined,
+      x01Result: undefined,
       statistics: undefined,
       players: x01Players,
       timeline: undefined

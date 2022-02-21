@@ -71,6 +71,14 @@ mat-form-field {
   width: 100%;
 }
 
+a {
+  all: unset;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 //===========================
 //CUSTOM_MAT_TABLE
 //===========================

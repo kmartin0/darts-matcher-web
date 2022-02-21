@@ -1,7 +1,9 @@
 <div class="page-container lobby-container">
 
   <app-base-toolbar>
-    <span>Match Lobby</span>
+    <a [routerLink]="navRoutes.home">
+      <span>Match</span>
+    </a>
     <span class="toolbar-spacer"></span>
   </app-base-toolbar>
 
@@ -20,7 +22,7 @@
 
         <div class="information-container">
           <span class="information-title">X01:</span>
-          <span class="information-value">{{match.x01}}</span>
+          <span class="information-value">{{match.x01MatchSettings.x01}}</span>
         </div>
       </div>
 
@@ -30,12 +32,12 @@
 
         <div class="information-container">
           <span class="information-title">Sets:</span>
-          <span class="information-value">{{match.bestOf.sets}}</span>
+          <span class="information-value">{{match.x01MatchSettings.bestOf.sets}}</span>
         </div>
 
         <div class="information-container">
           <span class="information-title">Legs:</span>
-          <span class="information-value">{{match.bestOf.legs}}</span>
+          <span class="information-value">{{match.x01MatchSettings.bestOf.legs}}</span>
         </div>
       </div>
 
@@ -45,7 +47,7 @@
 
         <div class="information-container">
           <span class="information-title">Track Doubles:</span>
-          <span class="information-value">{{match.trackDoubles ? 'Yes' : 'No'}}</span>
+          <span class="information-value">{{match.x01MatchSettings.trackDoubles ? 'Yes' : 'No'}}</span>
         </div>
       </div>
 

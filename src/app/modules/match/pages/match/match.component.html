@@ -6,4 +6,5 @@
 
   <app-lobby *ngIf="(x01Match$ | async)?.matchStatus === matchStatuses.LOBBY" [liveMatchWebsocket]="matchWebSocket"
              [websocketError$]="webSocketError$" [match$]="x01Match$"></app-lobby>
+
 </div>

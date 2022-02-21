@@ -8,6 +8,7 @@ import {X01_START_MATCH_TOPIC} from '../../../../api/web-socket-endpoints';
 import {takeUntil} from 'rxjs/operators';
 import {BasicDialogService} from '../../../../shared/services/basic-dialog.service';
 import {EditMatchFormDialogComponent} from '../../../../shared/components/edit-match-form-dialog/edit-match-form-dialog.component';
+import {HOME} from '../../../../shared/constants/web-endpoints';
 
 @Component({
   selector: 'app-lobby',
@@ -15,6 +16,8 @@ import {EditMatchFormDialogComponent} from '../../../../shared/components/edit-m
   styleUrls: ['./lobby.component.scss']
 })
 export class LobbyComponent implements OnInit {
+
+  navRoutes = {home: HOME};
 
   match: X01Match;
 

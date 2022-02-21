@@ -27,13 +27,13 @@ export class X01MatchInformationUiData {
       };
 
       // Get the players' result.
-      const playerResult = x01Match.result.find(_playerResult => _playerResult.playerId === matchPlayer.playerId);
+      const playerResult = x01Match.x01Result.find(_playerResult => _playerResult.playerId === matchPlayer.playerId);
 
       // Set the result.
       uiPlayerResult.result = playerResult.result;
 
       // Set the score. Depending on if the match uses legs or sets as a goal.
-      uiPlayerResult.score = x01Match.bestOf.sets > 1 ? playerResult.setsWon : playerResult.legsWon;
+      uiPlayerResult.score = x01Match.x01MatchSettings.bestOf.sets > 1 ? playerResult.setsWon : playerResult.legsWon;
 
       return uiPlayerResult;
     });
@@ -42,9 +42,9 @@ export class X01MatchInformationUiData {
   private initRules(x01Match: X01Match) {
     this.rules = {
       goal: 'Best Of',
-      sets: x01Match.bestOf.sets,
-      legs: x01Match.bestOf.legs,
-      x01: x01Match.x01
+      sets: x01Match.x01MatchSettings.bestOf.sets,
+      legs: x01Match.x01MatchSettings.bestOf.legs,
+      x01: x01Match.x01MatchSettings.x01
     };
   }
 

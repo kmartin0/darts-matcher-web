@@ -44,7 +44,7 @@ export class X01SummaryUiData {
     newSource.columns.push(...this.createColumnKeys(x01Match.players));
 
     // Add the leg summaries.
-    newSource.legs.push(...this.createMatchSummary(x01Match.timeline, x01Match.x01));
+    newSource.legs.push(...this.createMatchSummary(x01Match.timeline, x01Match.x01MatchSettings.x01));
 
     this.dataSource.next(newSource);
   }

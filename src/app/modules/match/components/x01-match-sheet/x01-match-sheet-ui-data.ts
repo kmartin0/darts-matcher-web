@@ -43,20 +43,20 @@ export class X01MatchSheetUiData {
   constructor(match: X01Match, setNumber: number, legNumber: number, checkouts: Checkout[], isLegInPlay: boolean) {
     if (!match) return;
 
-    this.bestOf = {...match.bestOf, isBestOfSets: match.bestOf.sets > 1, x01: match.x01};
+    this.bestOf = {...match.x01MatchSettings.bestOf, isBestOfSets: match.x01MatchSettings.bestOf.sets > 1, x01: match.x01MatchSettings.x01};
     this.isLegInPlay = isLegInPlay;
     this.players = [];
 
     match.players.forEach(player => {
       const stats = match.statistics.find(_stats => _stats.playerId === player.playerId);
-      const playerResult = match.result.find(_playerResult => _playerResult.playerId === player.playerId);
+      const playerResult = match.x01Result.find(_playerResult => _playerResult.playerId === player.playerId);
 
       this.players.push({
         playerId: player.playerId,
         playerName: player.playerType === PlayerType.REGISTERED ? `${player.firstName} ${player.lastName}` : player.playerId,
         average: stats.averageStats.average,
         averageFirstNine: stats.averageStats.averageFirstNine,
-        remaining: match.x01,
+        remaining: match.x01MatchSettings.x01,
         winOrDraw: playerResult?.result === ResultType.WIN || playerResult?.result === ResultType.DRAW
       });
     });
@@ -67,7 +67,7 @@ export class X01MatchSheetUiData {
     this.initWonLegs(set);
 
     const leg = (set && set.legs) ? set.legs.find(_leg => _leg.leg === legNumber) : null;
-    this.initRoundsTableData(leg, match.x01, checkouts);
+    this.initRoundsTableData(leg, match.x01MatchSettings.x01, checkouts);
 
     this.currentThrower = match.currentThrower;
     this.timelineInNumbers = this.createTimelineInNumbers(match);
@@ -215,7 +215,7 @@ export class X01MatchSheetUiData {
       return;
     }
 
-    match.result.forEach(playerResult => {
+    match.x01Result.forEach(playerResult => {
       const player = this.players.find(_player => _player.playerId === playerResult.playerId);
       if (player) player.wonSets = playerResult.setsWon;
     });

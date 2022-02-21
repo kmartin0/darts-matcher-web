@@ -27,7 +27,7 @@ export class X01StatisticsUiData {
 
       const player = x01Match.players.find(value => value.playerId === playerStats.playerId);
       const _playerId = player?.playerId;
-      const _result = x01Match.result.find(value => value.playerId === playerStats.playerId)?.result;
+      const _result = x01Match.x01Result.find(value => value.playerId === playerStats.playerId)?.result;
       const _playerName = player.playerType === PlayerType.REGISTERED ? `${player.firstName} ${player.lastName}` : player.playerId;
 
       const playerData: PlayerStatisticsData = {
@@ -46,7 +46,7 @@ export class X01StatisticsUiData {
 
     tmpSource.forEach(playerStatisticsData => {
       const playerId = playerStatisticsData.playerId;
-      const playerResult = x01Match.result.find(_playerResult => _playerResult.playerId === playerId);
+      const playerResult = x01Match.x01Result.find(_playerResult => _playerResult.playerId === playerId);
 
       playerStatisticsData.setsWon = playerResult?.setsWon ?? 0;
       playerStatisticsData.legsWon = playerResult?.legsWon ?? 0;

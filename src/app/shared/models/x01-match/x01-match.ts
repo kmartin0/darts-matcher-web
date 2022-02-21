@@ -1,25 +1,17 @@
 import {MatchType} from '../match/match-type';
 import {MatchStatus} from '../match/match-status';
-import {X01BestOf} from './best-of/x01-best-of';
 import {MatchPlayer} from '../match/match-player';
 import {X01PlayerResult} from './player-result/x01-player-result';
 import {X01Set} from './set/x01-set';
 import {X01PlayerStatistics} from './statistics/x01-player-statistics';
+import {X01MatchSettings} from './settings/x01-match-settings';
+import {BaseMatch} from '../match/base-match';
 
-export interface X01Match {
-  id: string;
-  startDate: Date;
-  endDate: Date;
-  throwFirst: string;
-  currentThrower: string;
-  matchType: MatchType;
-  x01: number;
-  trackDoubles: boolean;
-  matchStatus: MatchStatus;
-  bestOf: X01BestOf;
-  result: X01PlayerResult[];
+export interface X01Match extends BaseMatch {
+  x01MatchSettings: X01MatchSettings;
+  x01Result: X01PlayerResult[];
   statistics: X01PlayerStatistics[];
-  players: MatchPlayer[];
+
   timeline: X01Set[];
 }
 

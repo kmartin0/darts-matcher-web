@@ -35,6 +35,7 @@ import {getRemaining} from '../../../../shared/models/x01-match/leg/x01-leg';
 import {
   X01_DELETE_LEG_TOPIC, X01_DELETE_SET_TOPIC, X01_DELETE_THROW_TOPIC, X01_THROW_DART_BOT_TOPIC, X01_ADD_THROW_TOPIC
 } from '../../../../api/web-socket-endpoints';
+import {HOME} from '../../../../shared/constants/web-endpoints';
 
 @Component({
   selector: 'app-live-match',
@@ -43,6 +44,7 @@ import {
 })
 export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
 
+  navRoutes = {home: HOME};
   checkouts: Checkout[];
   error = new BehaviorSubject(null);
   isScoreboard = true;
@@ -160,14 +162,14 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
     // Get the remaining at the start of this round.
     const set = getSet(this.match, x01Throw.set);
     const leg = getLeg(set, x01Throw.leg);
-    const remaining = getRemaining(leg, x01Throw.playerId, this.match.x01);
+    const remaining = getRemaining(leg, x01Throw.playerId, this.match.x01MatchSettings.x01);
 
     // Get the possible checkout.
     const checkout = this.checkouts.find(value => value.checkout === remaining);
 
     // When this is the final throw, first open de doubles missed then the final throw dialog.
     if (this.isFinalThrow(x01Throw, this.match)) {
-      this.openDoublesMissedDialog(checkout, this.match.trackDoubles, doublesMissed => {
+      this.openDoublesMissedDialog(checkout, this.match.x01MatchSettings.trackDoubles, doublesMissed => {
         x01Throw.doublesMissed = doublesMissed;
         this.openFinalThrowDialog(checkout, dartsUsed => {
           x01Throw.dartsUsed = dartsUsed;
@@ -175,7 +177,7 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
         });
       });
     } else if (checkout) { // When a checkout could have been scored open the doubles missed dialog.
-      this.openDoublesMissedDialog(checkout, this.match.trackDoubles, doublesMissed => {
+      this.openDoublesMissedDialog(checkout, this.match.x01MatchSettings.trackDoubles, doublesMissed => {
         x01Throw.doublesMissed = doublesMissed;
         this.publishScore(x01Throw);
       });
@@ -304,7 +306,7 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
       if (x01LegRound.round !== x01Throw.round && playerLegRoundScore) playerScore += playerLegRoundScore.score;
     });
 
-    return match.x01 - (playerScore + x01Throw.score) === 0;
+    return match.x01MatchSettings.x01 - (playerScore + x01Throw.score) === 0;
   }
 
   private openFinalThrowDialog(checkout: Checkout, onSubmit: (dartsUsed: number) => void) {

@@ -1,7 +1,9 @@
 <div class="page-container live-match-container">
 
   <app-base-toolbar>
-    <span>Match</span>
+    <a [routerLink]="navRoutes.home">
+      <span>Match</span>
+    </a>
     <span class="toolbar-spacer"></span>
     <button *ngIf="showScoreInput() && isScoreboard" appLoseFocusAfterClick mat-icon-button (click)="toggleNumpad()"
             matTooltip="Toggle Numpad">

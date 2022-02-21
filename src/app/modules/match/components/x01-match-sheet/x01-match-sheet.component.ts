@@ -213,7 +213,7 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     this.updateSelectedRound(tmpSelectedRound);
-    this.matchUiData.updateSelectedLeg(selectedLeg, this.match.x01, this.checkouts);
+    this.matchUiData.updateSelectedLeg(selectedLeg, this.match.x01MatchSettings.x01, this.checkouts);
     this.scrollContentIntoView();
   }
 
