@@ -13,8 +13,6 @@
 
   .x01-match-sheet-container {
     .name-container {
-      background-color: mat.get-color-from-palette($background-palette, 'hover');
-
       &.win-or-draw {
         color: mat.get-color-from-palette($custom-palette, 'win-or-draw-contrast');
         background-color: mat.get-color-from-palette($custom-palette, 'win-or-draw');
@@ -22,15 +20,17 @@
     }
 
     .player-information-container {
-      border-color: transparent;
+      .name-container, .player-overview-container {
+        border-color: transparent;
+      }
 
-      &.starts-leg::after {
+      &.starts-leg > .player-overview-container::after {
         background: mat.get-color-from-palette($accent-palette);
       }
-    }
 
-    .player-information-container.current-throw {
-      border-color: mat.get-color-from-palette($accent-palette);
+      &.current-throw > .player-overview-container, &.current-throw > .name-container {
+        border-color: mat.get-color-from-palette($accent-palette);
+      }
     }
   }
 }

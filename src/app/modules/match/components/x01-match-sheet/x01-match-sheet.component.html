@@ -12,12 +12,13 @@
   </div>
 
   <div class="players-information-container">
-    <mat-card #playerInformationContainer class="player-information-container"
-              *ngFor="let player of matchUiData.players let i = index"
-              [ngClass]="{'current-throw': matchUiData.currentThrower === player.playerId && matchUiData.isLegInPlay,
-                            'starts-leg': matchUiData.throwsFirstInLeg === player.playerId}">
+    <div class="player-information-container" *ngFor="let player of matchUiData.players let i = index"
+         [ngClass]="{
+         'current-throw': matchUiData.currentThrower === player.playerId && matchUiData.isLegInPlay,
+         'starts-leg': matchUiData.throwsFirstInLeg === player.playerId
+         }">
 
-      <div class="name-container" [ngClass]="{'win-or-draw': player.winOrDraw}">
+      <mat-card class="name-container" [ngClass]="{'win-or-draw': player.winOrDraw}">
         <span class="name">{{player.playerName}}</span>
         <br>
         <span>
@@ -27,34 +28,37 @@
           </span>
           <span class="emphasize-value" *ngIf="matchUiData.bestOf.sets <= 1">{{player.wonLegs}}</span>
         </span>
-      </div>
+      </mat-card>
+
+      <mat-card #playerInformationContainer class="player-overview-container">
 
       <span class="last-score">Last:<br> <span
         class="emphasize-value">{{player.lastThrow ? player.lastThrow : '-'}}</span></span>
 
-      <span class="big-remaining">{{player.remaining}}</span>
+        <span class="big-remaining">{{player.remaining}}</span>
 
-      <div class="checkout-hint" [style.visibility]="player.checkoutHint ? 'visible' : 'hidden'">
-        <span>&#8203;</span>
-        <ng-container *ngFor="let dart of player.checkoutHint?.suggested" [ngSwitch]="dart?.area">
-          <span *ngSwitchCase="sectionAreas.TRIPLE">T{{dart.section}}</span>
-          <span *ngSwitchCase="sectionAreas.DOUBLE">D{{dart.section}}</span>
-          <span *ngSwitchCase="sectionAreas.INNER_SINGLE">{{dart.section}}</span>
-          <span *ngSwitchCase="sectionAreas.OUTER_SINGLE">{{dart.section}}</span>
-          <span *ngSwitchCase="sectionAreas.DOUBLE_BULL">BULL</span>
-          <span *ngSwitchCase="sectionAreas.SINGLE_BULL">25</span>
-        </ng-container>
-      </div>
+        <div class="checkout-hint" [style.visibility]="player.checkoutHint ? 'visible' : 'hidden'">
+          <span>&#8203;</span>
+          <ng-container *ngFor="let dart of player.checkoutHint?.suggested" [ngSwitch]="dart?.area">
+            <span *ngSwitchCase="sectionAreas.TRIPLE">T{{dart.section}}</span>
+            <span *ngSwitchCase="sectionAreas.DOUBLE">D{{dart.section}}</span>
+            <span *ngSwitchCase="sectionAreas.INNER_SINGLE">{{dart.section}}</span>
+            <span *ngSwitchCase="sectionAreas.OUTER_SINGLE">{{dart.section}}</span>
+            <span *ngSwitchCase="sectionAreas.DOUBLE_BULL">BULL</span>
+            <span *ngSwitchCase="sectionAreas.SINGLE_BULL">25</span>
+          </ng-container>
+        </div>
 
-      <span class="three-dart-avg">3-Dart:<br> <span class="emphasize-value">{{player.average}}</span></span>
+        <span class="three-dart-avg">3-Dart:<br> <span class="emphasize-value">{{player.average}}</span></span>
 
-      <span class="first-nine-avg">
+        <span class="first-nine-avg">
           First 9:
           <br>
           <span class="emphasize-value">{{player.averageFirstNine}}</span>
         </span>
 
-    </mat-card>
+      </mat-card>
+    </div>
   </div>
 
   <div class="edit-container">

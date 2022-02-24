@@ -47,14 +47,30 @@
 }
 
 .player-information-container {
+  display: grid;
+  grid-auto-flow: row;
+  grid-gap: 8px;
+
+  &.starts-leg > .player-overview-container::after { // Creates a triangle in the top right corner
+    content: "";
+    position: absolute;
+    right: 0;
+    margin: -20px;
+    width: 40px;
+    height: 40px;
+    transform: rotate(45deg);
+    align-self: start;
+  }
+}
+
+.player-overview-container {
   border-style: solid;
   border-width: 2px;
   overflow: hidden;
   display: grid;
   align-items: center;
   grid-gap: 20px;
-  grid-template:  "name             name            name"
-                  "big-remaining    big-remaining   big-remaining"
+  grid-template:  "big-remaining    big-remaining   big-remaining"
                   "checkout-hint    checkout-hint   checkout-hint"
                   "three-dart-score last-score      first-nine-score ";
 
@@ -82,20 +98,8 @@
     grid-area: first-nine-score;
   }
 
-  &.starts-leg::after { // Creates a triangle in the top right corner
-    content: "";
-    position: absolute;
-    right: 0;
-    margin: -20px;
-    width: 40px;
-    height: 40px;
-    transform: rotate(45deg);
-    align-self: start;
-  }
-
   @include devices.phone {
-    grid-template:  "name             name"
-                    "last-score       big-remaining"
+    grid-template:  "last-score       big-remaining"
                     "checkout-hint    checkout-hint"
                     "three-dart-score first-nine-score";
   }
@@ -115,6 +119,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  border-style: solid;
+  border-width: 2px;
 }
 
 .checkout-hint span:not(:nth-child(-n+2)):before {
