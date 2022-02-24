@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {OverlayContainer} from '@angular/cdk/overlay';
+import {Meta} from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class ThemeService {
   defaultThemeClass = 'theme-default';
   darkThemeClass = 'theme-dark';
 
-  constructor(private overlayContainer: OverlayContainer) {
+  constructor(private overlayContainer: OverlayContainer, private meta: Meta) {
     this.initDarkThemeObserver();
   }
 
@@ -30,7 +31,7 @@ export class ThemeService {
       }
 
       overlayContainerClasses.add(isDarkTheme ? this.darkThemeClass : this.defaultThemeClass);
-
+      this.meta.updateTag({name: 'theme-color', content: isDarkTheme ? '#000000' : '#FFFFFF'});
       this.persistTheme(isDarkTheme);
 
     });
