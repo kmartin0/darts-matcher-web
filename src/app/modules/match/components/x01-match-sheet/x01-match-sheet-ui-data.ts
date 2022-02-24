@@ -43,7 +43,11 @@ export class X01MatchSheetUiData {
   constructor(match: X01Match, setNumber: number, legNumber: number, checkouts: Checkout[], isLegInPlay: boolean) {
     if (!match) return;
 
-    this.bestOf = {...match.x01MatchSettings.bestOf, isBestOfSets: match.x01MatchSettings.bestOf.sets > 1, x01: match.x01MatchSettings.x01};
+    this.bestOf = {
+      ...match.x01MatchSettings.bestOf,
+      isBestOfSets: match.x01MatchSettings.bestOf.sets > 1,
+      x01: match.x01MatchSettings.x01
+    };
     this.isLegInPlay = isLegInPlay;
     this.players = [];
 
@@ -100,7 +104,6 @@ export class X01MatchSheetUiData {
     });
 
     return timeline;
-
   }
 
   private createDisplayedColumns(): string[] {
@@ -154,33 +157,37 @@ export class X01MatchSheetUiData {
       return tmpRounds;
     }
 
-    leg.rounds.forEach(legRound => {
-      const round: RoundDataSource = {round: legRound.round, playerScores: {}};
+    // Make sure the round are in sorted order.
+    leg.rounds.sort((a, b) => a.round - b.round);
 
-      legRound.playerScores.forEach(playerScore => {
-        const previousRound = tmpRounds.find(_round => _round.round === legRound.round - 1);
-        const previousRoundPlayerScore = previousRound && previousRound.playerScores[playerScore.playerId] ? previousRound.playerScores[playerScore.playerId] : null;
-        const previousRemaining = previousRoundPlayerScore ? previousRoundPlayerScore.remaining : x01;
+    // For each round create a round data source.
+    let dartsUsedCounter = 0;
+    leg.rounds.forEach(value => {
+      if (value.playerScores && value.playerScores.length) {
+        const dartsUsed = value.playerScores.reduce((previousValue, currentValue) => currentValue.dartsUsed < previousValue.dartsUsed ? currentValue : previousValue)?.dartsUsed;
+        dartsUsedCounter += dartsUsed;
 
-        const playerRemaining = previousRemaining - playerScore.score;
-        round.playerScores[playerScore.playerId] = {scored: playerScore.score, remaining: playerRemaining};
-
-      });
-
-      // Initialize the darts used (incl.) this round.
-      const dartsUsedThisRound = Math.min(...legRound.playerScores.map(value => value.dartsUsed));
-      const dartsUsedExclusiveThisRound = tmpRounds.find(value => value.round === round.round - 1)?.darts ?? 0;
-
-      if (dartsUsedThisRound === Infinity) {
-        round.darts = null;
-      } else if (!dartsUsedExclusiveThisRound) {
-        round.darts = dartsUsedThisRound;
+        tmpRounds.push({round: value.round, darts: dartsUsedCounter, playerScores: {}});
       } else {
-        round.darts = dartsUsedThisRound + dartsUsedExclusiveThisRound;
+        tmpRounds.push({round: value.round, darts: null, playerScores: {}});
       }
+    });
 
-      // Push the round into the temporary rounds array.
-      tmpRounds.push(round);
+    // Fill each round data source with the player score for each player.
+    this.players.forEach(player => {
+      let _remaining = x01;
+
+      leg.rounds.forEach(x01LegRound => {
+        const playerScore = x01LegRound.playerScores.find(x01LegRoundScore => x01LegRoundScore.playerId === player.playerId);
+        if (playerScore) {
+          _remaining = _remaining - playerScore.score;
+          const tmpRound = tmpRounds.find(roundDataSource => roundDataSource.round === x01LegRound.round);
+          tmpRound.playerScores = {
+            ...tmpRound.playerScores,
+            [player.playerId]: {scored: playerScore.score, remaining: _remaining}
+          };
+        }
+      });
     });
 
     return tmpRounds;

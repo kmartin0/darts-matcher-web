@@ -23,7 +23,7 @@ import { NumOfDartsDialogComponent } from './components/num-of-darts-dialog/num-
 import {MatDialogModule} from '@angular/material/dialog';
 import { EditThrowDialogComponent } from './components/edit-throw-dialog/edit-throw-dialog.component';
 import {MatSelectModule} from '@angular/material/select';
-import { EditSetLegDialogComponent } from './components/edit-set-leg-dialog/edit-set-leg-dialog.component';
+import { X01EditActionsDialogComponent } from './components/x01-edit-actions-dialog/x01-edit-actions-dialog.component';
 import { BasicDialogComponent } from './components/basic-dialog/basic-dialog.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSliderModule} from '@angular/material/slider';
@@ -58,7 +58,7 @@ import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.com
     CreateMatchComponent,
     NumOfDartsDialogComponent,
     EditThrowDialogComponent,
-    EditSetLegDialogComponent,
+    X01EditActionsDialogComponent,
     BasicDialogComponent,
     LoseFocusAfterClickDirective,
     DartBotInfoDialogComponent,
@@ -107,7 +107,7 @@ import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.com
     CreateMatchComponent,
     NumOfDartsDialogComponent,
     EditThrowDialogComponent,
-    EditSetLegDialogComponent,
+    X01EditActionsDialogComponent,
     BasicDialogComponent,
     LoseFocusAfterClickDirective,
     SearchUserFormComponent,

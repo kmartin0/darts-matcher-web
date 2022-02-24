@@ -7,7 +7,6 @@ import {PlayerType} from '../../models/match/player-type';
 import {distinctUntilChanged} from 'rxjs/operators';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {DartBotInfoDialogComponent} from '../dart-bot-info-dialog/dart-bot-info-dialog.component';
-import {ThrowDialogData} from '../edit-throw-dialog/edit-throw-dialog.component';
 import {MatStepper} from '@angular/material/stepper';
 
 @Component({

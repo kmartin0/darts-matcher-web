@@ -1,6 +1,5 @@
-<p class="title">Edit score</p>
-
 <div *ngIf="isDataValid(); else emptyState" class="edit-throw-form">
+  <p class="title">Edit score ({{data.playerName}})</p>
   <p class="subtitle">Set {{data.selectedSetNumber}} - Leg {{data.selectedLegNumber}} - Round {{data.round}}</p>
 
   <mat-form-field style="width: fit-content" class="leg-select-field" appearance="outline">

@@ -326,7 +326,7 @@ export class LiveMatchComponent implements OnInit, OnDestroy, OnChanges {
         .afterClosed()
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(dartsUsed => {
-          if (dartsUsed !== undefined) onSubmit(dartsUsed);
+          if (dartsUsed) onSubmit(dartsUsed);
         });
     }
   }

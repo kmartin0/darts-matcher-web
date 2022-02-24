@@ -1,70 +1,38 @@
-<div #container class="x01-match-sheet-container" *ngIf="match && matchUiData" xmlns="http://www.w3.org/1999/html">
+<div #container class="x01-match-sheet-container" [class.leg-in-play-selected]="isLegInPlaySelected()"
+     *ngIf="match && matchUiData" xmlns="http://www.w3.org/1999/html">
+
+  <div class="match-information-container">
+      <span>
+        Best of
+        <span *ngIf="matchUiData.bestOf.sets > 1">{{matchUiData.bestOf.sets}} ({{matchUiData.bestOf.legs}}) sets</span>
+        <span *ngIf="matchUiData.bestOf.sets <= 1">{{matchUiData.bestOf.legs}} legs</span>
+      </span>
+    <span>|</span>
+    <span>X01 (501)</span>
+  </div>
+
   <div class="players-information-container">
     <mat-card #playerInformationContainer class="player-information-container"
               *ngFor="let player of matchUiData.players let i = index"
-              [ngStyle]="{order: i}"
-              [ngClass]="{'current-throw': matchUiData.currentThrower === player.playerId && matchUiData.isLegInPlay}">
+              [ngClass]="{'current-throw': matchUiData.currentThrower === player.playerId && matchUiData.isLegInPlay,
+                            'starts-leg': matchUiData.throwsFirstInLeg === player.playerId}">
 
-      <div class="player-score-container">
-        <div *ngIf="matchUiData.bestOf.isBestOfSets">
-          Sets: <span class="player-score-value">{{player.wonSets}}</span>
-        </div>
-        <div>
-          Legs: <span class="player-score-value">{{player.wonLegs}}</span>
-        </div>
+      <div class="name-container" [ngClass]="{'win-or-draw': player.winOrDraw}">
+        <span class="name">{{player.playerName}}</span>
+        <br>
+        <span>
+          Score:
+          <span class="emphasize-value" *ngIf="matchUiData.bestOf.sets > 1">
+            {{player.wonSets}} ({{player.wonLegs}})
+          </span>
+          <span class="emphasize-value" *ngIf="matchUiData.bestOf.sets <= 1">{{player.wonLegs}}</span>
+        </span>
       </div>
 
-      <p class="name" [class.win-or-draw]="player.winOrDraw">{{player.playerName}}</p>
+      <span class="last-score">Last:<br> <span
+        class="emphasize-value">{{player.lastThrow ? player.lastThrow : '-'}}</span></span>
 
-      <div class="average-container" @blockInitialRenderAnimation>
-
-        <p class="average-container-label">
-          Avg.
-          <button appLoseFocusAfterClick mat-icon-button (click)="toggleAverage()">
-            <mat-icon *ngIf="showAverages">add</mat-icon>
-            <mat-icon *ngIf="!showAverages">remove</mat-icon>
-          </button>
-        </p>
-
-        <ng-container *ngIf="showAverages">
-          <div @expandCollapseAnimation><span>3-Dart:</span><span class="average-value">{{player.average}}</span></div>
-          <div @expandCollapseAnimation><span>First 9:</span><span
-            class="average-value">{{player.averageFirstNine}}</span></div>
-        </ng-container>
-      </div>
-
-    </mat-card>
-
-    <mat-card class="player-information-middle-container"
-              [ngStyle]="{order: middleOrder}">
-
-      <div class="best-of-container">
-        <p>Best Of</p>
-        <div>Sets:<span class="best-of-value">{{matchUiData.bestOf.sets}}</span></div>
-        <div>Legs:<span class="best-of-value">{{matchUiData.bestOf.legs}}</span></div>
-        <div>X01:<span class="best-of-value">{{matchUiData.bestOf.x01}}</span></div>
-      </div>
-
-      <button appLoseFocusAfterClick class="edit-score-button" mat-flat-button color="primary"
-              (click)="toggleEditMode()">
-        Edit Mode
-      </button>
-    </mat-card>
-  </div>
-
-  <div class="players-remaining-container">
-    <mat-card *ngFor="let player of matchUiData.players let i = index" class="player-remaining-container"
-              [ngStyle]="{order: i}"
-              [ngClass]="{'current-throw': matchUiData.currentThrower === player.playerId && matchUiData.isLegInPlay}">
-
-            <span class="starts-leg"
-                  [style.visibility]="matchUiData.throwsFirstInLeg === player.playerId ? 'visible' : 'hidden'">
-            </span>
-
-      <p *ngIf="matchUiData.isLegInPlay">Last: <span
-        class="last-score-value">{{player.lastThrow ? player.lastThrow : '-'}}</span></p>
-
-      <p class="big-remaining">{{player.remaining}}</p>
+      <span class="big-remaining">{{player.remaining}}</span>
 
       <div class="checkout-hint" [style.visibility]="player.checkoutHint ? 'visible' : 'hidden'">
         <span>&#8203;</span>
@@ -78,31 +46,39 @@
         </ng-container>
       </div>
 
-    </mat-card>
+      <span class="three-dart-avg">3-Dart:<br> <span class="emphasize-value">{{player.average}}</span></span>
 
-    <mat-card class="player-remaining-middle-container"
-              [ngStyle]="{order: middleOrder}">
-
-      <div class="leg-select-header-container">
-        <button appLoseFocusAfterClick @expandCollapseAnimation (click)="onEditSetLegClick()" mat-icon-button
-                *ngIf="modeEdit">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <span *ngIf="matchUiData.bestOf.isBestOfSets">Set {{legSelectionFormControl.value.set}}</span>
-      </div>
-
-      <mat-form-field appLoseFocusAfterClick appearance="standard">
-        <mat-label>Select Leg</mat-label>
-        <mat-select [formControl]="legSelectionFormControl" [compareWith]="matchUiData.compareSelectedLeg">
-          <mat-optgroup *ngFor="let set of matchUiData.timelineInNumbers | keyvalue" label="Set {{set.key}}">
-            <mat-option *ngFor="let leg of set.value" [value]="{set: set.key, leg: leg}">
-              Leg {{leg}}
-            </mat-option>
-          </mat-optgroup>
-        </mat-select>
-      </mat-form-field>
+      <span class="first-nine-avg">
+          First 9:
+          <br>
+          <span class="emphasize-value">{{player.averageFirstNine}}</span>
+        </span>
 
     </mat-card>
+  </div>
+
+  <div class="edit-container">
+
+    <button appLoseFocusAfterClick (click)="onEditSetLegClick()" mat-icon-button>
+      <mat-icon>edit</mat-icon>
+    </button>
+
+    <mat-form-field appLoseFocusAfterClick appearance="standard">
+      <mat-label>Select Leg <span *ngIf="matchUiData.bestOf.sets > 1">(Set {{selectedRound.set.set}})</span></mat-label>
+      <mat-select [formControl]="legSelectionFormControl" [compareWith]="matchUiData.compareSelectedLeg">
+        <mat-optgroup *ngFor="let set of matchUiData.timelineInNumbers | keyvalue" label="Set {{set.key}}">
+          <mat-option *ngFor="let leg of set.value" [value]="{set: set.key, leg: leg}">
+            Leg {{leg}}
+          </mat-option>
+        </mat-optgroup>
+      </mat-select>
+    </mat-form-field>
+
+    <button appLoseFocusAfterClick class="toggle-edit-btn" mat-flat-button color="primary"
+            (click)="toggleEditMode()">
+      Edit Mode
+    </button>
+
   </div>
 
   <div #timelineTableContainer class="timeline-container">
@@ -119,6 +95,7 @@
           </div>
 
           <ng-template #playerHeader>
+            <span *ngIf="modeEdit"></span>
             <span>Score</span>
             <span>To Go</span>
           </ng-template>
@@ -138,7 +115,7 @@
           </div>
 
           <ng-template #playerRowValue>
-            <button appLoseFocusAfterClick
+            <button appLoseFocusAfterClick class="small-icon-button"
                     (click)="onEditScoreClick(round.round, column, round['playerScores'][column]?.scored)"
                     mat-icon-button
                     *ngIf="modeEdit && column !== 'darts'">
@@ -161,4 +138,5 @@
       <mat-row *matRowDef="let row; columns: matchUiData.displayedColumns;"></mat-row>
     </mat-table>
   </div>
+
 </div>

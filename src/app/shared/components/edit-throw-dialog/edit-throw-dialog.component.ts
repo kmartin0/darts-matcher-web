@@ -10,6 +10,7 @@ export interface ThrowDialogData {
   match: X01Match;
   round: number;
   playerId: string;
+  playerName: string;
   score?: number;
 }
 

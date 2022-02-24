@@ -30,10 +30,10 @@ import {
 } from '../../../../shared/components/edit-throw-dialog/edit-throw-dialog.component';
 import {X01DeleteThrow} from '../../../../shared/models/x01-delete-throw';
 import {
-  EditSetLegDialogActions,
-  EditSetLegDialogComponent,
-  EditSetLegDialogData
-} from '../../../../shared/components/edit-set-leg-dialog/edit-set-leg-dialog.component';
+  X01EditActionsDialogActions,
+  X01EditActionsDialogComponent,
+  X01EditActionsDialogData
+} from '../../../../shared/components/x01-edit-actions-dialog/x01-edit-actions-dialog.component';
 import {X01DeleteSet} from '../../../../shared/models/x01-delete-set';
 import {X01DeleteLeg} from '../../../../shared/models/x01-delete-leg';
 import {Checkout} from '../../../../shared/models/x01-match/checkout/checkout';
@@ -43,7 +43,6 @@ import {expandCollapseTrigger} from '../../../../shared/anim/expand-collapse.ani
 import {blockInitialTrigger} from '../../../../shared/anim/block-initial-render-anim';
 import {ThemeService} from '../../../../shared/services/theme/theme-service';
 
-// TODO: Future: Create Simple view with only scoreboard / Past scores. Let user toggle between simple and advanced view in toolbar.
 @Component({
   selector: 'app-x01-match-sheet',
   templateUrl: './x01-match-sheet.component.html',
@@ -75,11 +74,6 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
   showAverages = true;
   unsubscribe$ = new Subject();
 
-  get middleOrder(): number {
-    if (!this.match || !this.match.players) return null;
-    return Math.floor((this.match.players.length - 1) / 2);
-  }
-
   constructor(private userService: UserService, private changeDetector: ChangeDetectorRef, private dialog: MatDialog, private themeService: ThemeService) {
   }
 
@@ -108,13 +102,34 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
       const setNumber = selectLegValue && selectLegValue.set ? selectLegValue.set : null;
       const legNumber = selectLegValue && selectLegValue.leg ? selectLegValue.leg : null;
 
-      const dialogData: EditSetLegDialogData = {
+      const rounds = this.matchUiData.roundsDataSource.value;
+      const _lastPlayerScores = [];
+
+      // Find the latest score for each player.
+      this.matchUiData.players.forEach(player => {
+        const playerRounds = rounds.filter(round => round.playerScores[player.playerId]);
+
+        const latestPlayerScore = playerRounds && playerRounds.length > 0
+          ? playerRounds.reduce((previousValue, currentValue) => currentValue.round > previousValue.round ? currentValue : previousValue)
+          : null;
+
+        if (latestPlayerScore) _lastPlayerScores.push({
+          round: latestPlayerScore.round,
+          playerId: player.playerId,
+          playerName: player.playerName,
+          playerScore: latestPlayerScore.playerScores[player.playerId]
+        });
+      });
+
+      const dialogData: X01EditActionsDialogData = {
         match: this.match,
         selectedLegNumber: legNumber,
-        selectedSetNumber: setNumber
+        selectedSetNumber: setNumber,
+        lastPlayerScores: _lastPlayerScores
       };
 
-      this.openEditSetLegDialog(dialogData);
+      this.openEditActionsDialog(dialogData);
+
     }
   }
 
@@ -129,12 +144,17 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
         selectedLegNumber: legNumber,
         selectedSetNumber: setNumber,
         playerId: playerIdToUpdate,
+        playerName: this.matchUiData.players.find(value => value.playerId === playerIdToUpdate).playerName,
         round: roundToUpdate,
         score: oldScore
       };
 
       this.openEditThrowDialog(dialogData);
     }
+  }
+
+  isLegInPlaySelected(): boolean { // TODO: Alphabetic order
+    return this.selectedRound?.isLegInPlaySelected() && this.match?.matchStatus === 'IN_PLAY';
   }
 
   toggleAverage() {
@@ -145,14 +165,14 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
     this.modeEdit = !this.modeEdit;
   }
 
-  private openEditSetLegDialog(dialogData: EditSetLegDialogData) {
-    this.dialog.open(EditSetLegDialogComponent, {data: dialogData})
+  private openEditActionsDialog(dialogData: X01EditActionsDialogData) {
+    this.dialog.open(X01EditActionsDialogComponent, {data: dialogData})
       .afterClosed()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(dialogResult => {
         if (dialogResult) {
-          switch (dialogResult.action as EditSetLegDialogActions) {
-            case EditSetLegDialogActions.DELETE_SET: {
+          switch (dialogResult.action as X01EditActionsDialogActions) {
+            case X01EditActionsDialogActions.DELETE_SET: {
               this.deleteSet.emit({
                 matchId: dialogData.match.id,
                 set: dialogData.selectedSetNumber
@@ -160,13 +180,18 @@ export class X01MatchSheetComponent implements OnChanges, OnInit, OnDestroy {
               break;
             }
 
-            case EditSetLegDialogActions.DELETE_LEG: {
+            case X01EditActionsDialogActions.DELETE_LEG: {
               this.deleteLeg.emit({
                 matchId: dialogData.match.id,
                 set: dialogData.selectedSetNumber,
                 leg: dialogData.selectedLegNumber
               });
               break;
+            }
+
+            case X01EditActionsDialogActions.EDIT_LAST_SCORE: {
+              const scoreToUpdate = dialogResult.lastPlayerScore;
+              this.onEditScoreClick(scoreToUpdate.round, scoreToUpdate.playerId, scoreToUpdate.playerScore.scored);
             }
 
           }

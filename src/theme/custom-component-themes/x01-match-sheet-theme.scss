@@ -12,7 +12,7 @@
   $custom-palette: map.get($color-config, 'custom');
 
   .x01-match-sheet-container {
-    .name {
+    .name-container {
       background-color: mat.get-color-from-palette($background-palette, 'hover');
 
       &.win-or-draw {
@@ -21,16 +21,16 @@
       }
     }
 
-    .player-information-container, .player-remaining-container, .player-information-middle-container, .player-remaining-middle-container {
+    .player-information-container {
       border-color: transparent;
+
+      &.starts-leg::after {
+        background: mat.get-color-from-palette($accent-palette);
+      }
     }
 
-    .player-information-container.current-throw, .player-remaining-container.current-throw {
+    .player-information-container.current-throw {
       border-color: mat.get-color-from-palette($accent-palette);
-    }
-
-    .starts-leg {
-      background-color: mat.get-color-from-palette($accent-palette);
     }
   }
 }
@@ -40,7 +40,7 @@
   $typography-config: mat.get-typography-config($theme);
 
   .x01-match-sheet-container {
-    .players-information-container, .players-remaining-container, .match-error {
+    .players-information-container, .match-error, .edit-container, .match-information-container {
       @include devices.device(phone, phablet) {
         @include mat.typography-level($typography-config, subheading-2);
       }
@@ -61,7 +61,7 @@
       }
     }
 
-    .average-value, .best-of-value, .last-score-value, .player-score-value {
+    .emphasize-value {
       font-weight: 600;
     }
 
@@ -77,11 +77,6 @@
       }
 
       @include devices.device(tablet, desktop, desktop-xl) {
-        @include mat.typography-level($typography-config, display-3);
-        font-weight: 600;
-      }
-
-      @include devices.device(desktop-xl) {
         @include mat.typography-level($typography-config, display-3);
         font-weight: 600;
       }

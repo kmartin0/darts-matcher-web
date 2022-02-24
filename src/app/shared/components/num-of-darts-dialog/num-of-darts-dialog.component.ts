@@ -35,7 +35,6 @@ export class NumOfDartsDialogComponent {
     this.dialogRef.close(this.dartsOptionsFormControl.value);
   }
 
-  // TODO
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
     switch (event.key) {

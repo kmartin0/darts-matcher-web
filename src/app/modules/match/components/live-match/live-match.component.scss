@@ -1,3 +1,5 @@
+@use "devices";
+
 .live-match-container {
   display: grid;
   grid-auto-flow: row;
@@ -19,6 +21,18 @@
 
   &.numpad.score-input {
     grid-template-rows: minmax(100px, 14fr) auto 6fr;
+
+    @include devices.desktop {
+      grid-template-rows: minmax(100px, 14fr) auto 8fr;
+    }
+
+    @include devices.tablet {
+      grid-template-rows: minmax(100px, 14fr) auto 10fr;
+    }
+
+    @include devices.device(phone, phablet) {
+      grid-template-rows: minmax(100px, 14fr) auto 12fr;
+    }
   }
 }
 

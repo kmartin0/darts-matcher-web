@@ -43,3 +43,9 @@
   grid-auto-flow: row;
   grid-gap: 16px;
 }
+
+button {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
