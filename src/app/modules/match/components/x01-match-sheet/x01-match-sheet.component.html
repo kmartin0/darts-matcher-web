@@ -19,8 +19,6 @@
          }">
 
       <mat-card class="name-container" [ngClass]="{'win-or-draw': player.winOrDraw}">
-        <span class="name">{{player.playerName}}</span>
-        <br>
         <span>
           Score:
           <span class="emphasize-value" *ngIf="matchUiData.bestOf.sets > 1">
@@ -28,6 +26,8 @@
           </span>
           <span class="emphasize-value" *ngIf="matchUiData.bestOf.sets <= 1">{{player.wonLegs}}</span>
         </span>
+        <br>
+        <span class="name">{{player.playerName}}</span>
       </mat-card>
 
       <mat-card #playerInformationContainer class="player-overview-container">
