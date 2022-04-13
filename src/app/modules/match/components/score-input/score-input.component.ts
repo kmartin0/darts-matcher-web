@@ -7,7 +7,7 @@ import {
   EventEmitter,
   OnDestroy,
   HostListener,
-  Input
+  Input, ChangeDetectorRef
 } from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {Subject} from 'rxjs';
@@ -45,7 +45,7 @@ export class ScoreInputComponent implements OnInit, OnDestroy {
   @ViewChild('formDirective') scoreFormElement: NgForm;
   private unsubscribe$ = new Subject();
 
-  constructor(private dialog: MatDialog) {
+  constructor(private dialog: MatDialog, private cdr: ChangeDetectorRef) {
   }
 
   @HostListener('window:keydown', ['$event'])
@@ -97,6 +97,7 @@ export class ScoreInputComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.scoreOutput.emit(this.score);
     this.score = null;
+    this.cdr.detectChanges();
   }
 
   private updateScore(newScore: number | string) {
