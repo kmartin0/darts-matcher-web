@@ -30,14 +30,14 @@
                     <mat-icon>delete</mat-icon>
                   </button>
 
-                  <button
+                  <a
                     mat-icon-button
-                    type="button"
+                    [routerLink]="AppEndpoints.match(match.id)"
                     aria-label="Go to match"
                     matTooltip="Go to match"
-                    (click)="onSelectMatch($event, match.id)">
+                    (click)="$event.stopPropagation()">
                     <mat-icon>arrow_forward</mat-icon>
-                  </button>
+                  </a>
                 </div>
               </mat-panel-description>
             </mat-expansion-panel-header>

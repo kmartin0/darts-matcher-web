@@ -50,15 +50,6 @@ export class HomePage {
   }
 
   /**
-   * Handles selection of a recent match.
-   *
-   * @param matchId - ID of the selected match.
-   */
-  protected onSelectMatch(matchId: string): void {
-    this.navigateToMatch(matchId);
-  }
-
-  /**
    * Handles removal of a match from recent matches.
    *
    * @param matchId - ID of the match to remove.

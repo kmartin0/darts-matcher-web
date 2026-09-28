@@ -13,6 +13,8 @@ import {BestOfSetsSummaryPipe} from './pipes/best-of-sets-summary.pipe';
 import {FinalSetClearByTwoSummaryPipe} from './pipes/final-set-clear-by-two-summary.pipe';
 import {EpochSecondsToDatePipe} from '../../../../shared/pipes/epoch-seconds-to-date.pipe';
 import {ScorelinePipe} from './pipes/scoreline.pipe';
+import {AppEndpoints} from '../../../../app/app-endpoints';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-recent-matches',
@@ -30,6 +32,7 @@ import {ScorelinePipe} from './pipes/scoreline.pipe';
     BestOfSetsSummaryPipe,
     BestOfLegsSummaryPipe,
     FinalSetClearByTwoSummaryPipe,
+    RouterLink,
   ],
   templateUrl: './recent-matches.html',
   styleUrl: './recent-matches.scss',
@@ -37,19 +40,9 @@ import {ScorelinePipe} from './pipes/scoreline.pipe';
 export class RecentMatches {
   readonly recentMatches = input.required<LoadState<X01Match[]>>();
 
-  readonly selectMatch = output<string>();
   readonly deleteMatch = output<string>();
 
-  /**
-   * Selects a recent match without toggling its expansion panel.
-   *
-   * @param event - Click event to stop from propagating to the panel header.
-   * @param matchId - ID of the match to select.
-   */
-  protected onSelectMatch(event: MouseEvent, matchId: string): void {
-    event.stopPropagation();
-    this.selectMatch.emit(matchId);
-  }
+  protected readonly AppEndpoints = AppEndpoints;
 
   /**
    * Deletes a recent match without toggling its expansion panel.
