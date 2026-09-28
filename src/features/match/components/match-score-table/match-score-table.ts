@@ -139,15 +139,19 @@ export class MatchScoreTable {
   }
 
   /**
-   * Creates the displayed table columns with the round column centered between players.
+   * Creates the displayed table columns, including the round column for up to two players.
    *
    * @param match - Match containing the players.
    * @returns Ordered table column IDs.
    */
   private createDisplayedColumns(match: X01Match): string[] {
     const playerIds = match.players.map(player => player.playerId);
-    const half = Math.floor(playerIds.length / 2);
 
+    if (playerIds.length > 2) {
+      return playerIds;
+    }
+
+    const half = Math.floor(playerIds.length / 2);
     return [...playerIds.slice(0, half), ROUND_COLUMN_ID, ...playerIds.slice(half)];
   }
 

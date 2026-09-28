@@ -1,5 +1,8 @@
+@use "mixins/devices";
+
 .match-player-cards {
   display: flex;
+  justify-content: center;
   gap: 12px;
   width: 100%;
   padding: 2px;
@@ -9,4 +12,18 @@ app-match-player-card {
   flex: 1 1 0;
   min-width: 160px;
   max-width: 50%;
+
+  &:only-child {
+    max-width: 60%;
+
+    @include devices.device(phone, phablet) {
+      max-width: 90%;
+    }
+    @include devices.device(tablet) {
+      max-width: 80%;
+    }
+    @include devices.device(desktop) {
+      max-width: 70%;
+    }
+  }
 }
