@@ -23,13 +23,3 @@ export const THEME_MODE_BODY_CLASSES: Readonly<Record<ThemeMode, string>> =
 export function isThemeMode(value: unknown): value is ThemeMode {
   return value === ThemeMode.LIGHT || value === ThemeMode.DARK;
 }
-
-/**
- * Gets the body class belonging to a theme mode.
- *
- * @param themeMode - Theme mode whose body class should be resolved.
- * @returns Body class belonging to the theme mode.
- */
-export function getThemeModeBodyClass(themeMode: ThemeMode): string {
-  return THEME_MODE_BODY_CLASSES[themeMode];
-}

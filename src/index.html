@@ -14,22 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 </head>
 <body>
-<!--
-  Apply the persisted theme before Angular boots to prevent a light-theme flash.
-  Keep the storage key in sync with SettingsRepository and the theme values and body classes in sync with theme-mode.ts.
--->
-<script>
-  (function () {
-    try {
-      const storedSettings = localStorage.getItem('darts-matcher:app-settings');
-      const settings = storedSettings === null ? null : JSON.parse(storedSettings);
-      const themeMode = settings?.themeMode;
-      document.body.classList.add(themeMode === 'dark' ? 'theme-mode-dark' : 'theme-mode-light');
-    } catch {
-      document.body.classList.add('theme-mode-light');
-    }
-  })();
-</script>
+<script src="/theme-bootstrap.js"></script>
 
 <app-root></app-root>
 </body>

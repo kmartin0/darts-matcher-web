@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject} from '@angular/core';
+import {Component, computed, inject} from '@angular/core';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatTooltip} from '@angular/material/tooltip';
@@ -10,8 +10,7 @@ import {LoseFocusAfterClickDirective} from '../../directives/lose-focus-after-cl
   selector: 'app-theme-toggle',
   imports: [LoseFocusAfterClickDirective, MatIconButton, MatIcon, MatTooltip],
   templateUrl: 'theme-toggle.html',
-  styleUrl: 'theme-toggle.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: 'theme-toggle.scss'
 })
 export class ThemeToggle {
   private readonly appStore = inject(AppStore);
