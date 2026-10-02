@@ -2,7 +2,7 @@ import {Component, computed, inject, signal, viewChild} from '@angular/core';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {MatButton} from '@angular/material/button';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {Router, RouterLink} from '@angular/router';
+import {RouterLink} from '@angular/router';
 import {AppEndpoints} from '../../../../app/app-endpoints';
 import {X01Match} from '../../../../data/model/x01/match/x01-match';
 import {PageError} from '../../../../shared/components/page-error/page-error';

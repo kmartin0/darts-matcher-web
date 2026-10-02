@@ -1,9 +1,6 @@
 import {X01Match} from '../../../../data/model/x01/match/x01-match';
 import {X01MatchPlayer} from '../../../../data/model/x01/match/x01-match-player';
-import {
-  MatchHistoryCardData,
-  MatchHistoryCardPlayerData
-} from '../match-history-card/match-history-card-data';
+import {MatchHistoryCardData, MatchHistoryCardPlayerData} from '../match-history-card/match-history-card-data';
 import {MatchHistoryEntry} from '../../model/match-history-entry';
 
 /**

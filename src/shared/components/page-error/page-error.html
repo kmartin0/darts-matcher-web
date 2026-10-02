@@ -1,1 +1,7 @@
 <h1>{{ message() }}</h1>
+
+@if (showHomeButton()) {
+  <a matButton="outlined" [routerLink]="AppEndpoints.home()">
+    Return home
+  </a>
+}

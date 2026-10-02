@@ -8,5 +8,5 @@ export const routes: Routes = [
   {path: '', component: HomePage},
   {path: 'matches/:matchId', component: MatchPage},
   {path: 'match-history', component: MatchHistoryPage},
-  {path: '**', component: PageError, data: {message: '404 Page Not Found'}}
+  {path: '**', component: PageError, data: {message: '404 Page Not Found', showHomeButton: true}}
 ];
