@@ -18,11 +18,11 @@ export interface MatchFormatSummaryPipeData {
 export class MatchFormatSummaryPipe implements PipeTransform {
 
   /**
-   * Formats the best-of configuration, clear-by-two state, match type, and starting score.
+   * Formats the best-of configuration, clear-by-two state, and starting score (x01).
    *
    * Examples:
-   * `Best of 5 legs | X01 (501)`
-   * `Best of 3 sets (BO5) | Clear by two | X01 (501)`
+   * `Best of 5 legs • 501`
+   * `Best of 3 sets (BO5) • Clear by two • 501`
    *
    * @param data - Match settings and match type to format.
    * @returns Formatted match format summary.
@@ -35,9 +35,9 @@ export class MatchFormatSummaryPipe implements PipeTransform {
       summaryParts.push('Clear by two');
     }
 
-    summaryParts.push(`${data.matchType} (${matchSettings.x01})`);
+    summaryParts.push(`${matchSettings.x01}`);
 
-    return summaryParts.join(' | ');
+    return summaryParts.join(' • ');
   }
 
   /**
