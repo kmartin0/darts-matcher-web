@@ -1,0 +1,184 @@
+@use "@angular/material" as mat;
+@use "mixins/devices";
+
+// Sizing
+$card-inset: 16px;
+$outline-width: 2px;
+
+// Colors
+$card-background: color-mix(in srgb, var(--mat-sys-primary-container) 12%, var(--mat-sys-surface-container-low));
+$card-text: var(--mat-sys-on-primary-container);
+
+$header-background: var(--mat-sys-primary-container);
+$header-text: var(--mat-sys-on-primary-container);
+$header-divider: color-mix(in srgb, $header-text 35%, transparent);
+
+$winner-background: color-mix(in srgb, var(--mat-sys-primary-container) 50%, var(--mat-sys-surface-container-low));
+$outline-color: var(--mat-sys-primary-container);
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+mat-card {
+  padding: 0;
+  overflow: hidden;
+  color: $card-text;
+
+  @include mat.card-overrides((
+    outlined-outline-width: $outline-width,
+    outlined-outline-color: $outline-color,
+    outlined-container-color: $card-background
+  ));
+}
+
+// Header
+.card-header {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: $card-inset;
+  background: $header-background;
+  color: $header-text;
+}
+
+.card-header-start,
+.card-header-end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+
+  @include devices.device(phone) {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+.card-header-start {
+  @include devices.device(phone) {
+    align-items: flex-start;
+  }
+}
+
+.card-header-end {
+  @include devices.device(phone) {
+    align-items: flex-end;
+  }
+}
+
+.separator {
+  color: $header-divider;
+
+  @include devices.device(phone) {
+    display: none;
+  }
+}
+
+// Player table
+.players-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  border-bottom: $outline-width solid $outline-color;
+
+  .player-column {
+    width: 40%;
+  }
+
+  .statistic-column {
+    width: 20%;
+  }
+
+  th,
+  td {
+    padding: 8px $card-inset;
+    white-space: nowrap;
+  }
+
+  thead th {
+    border-bottom: $outline-width solid $outline-color;
+  }
+
+  tbody tr.winner {
+    background: $winner-background;
+  }
+
+  th:first-child,
+  td:first-child {
+    text-align: left;
+  }
+
+  th:not(:first-child),
+  td:not(:first-child) {
+    text-align: center;
+  }
+
+  @include devices.device(phone, phablet) {
+    .checkout-column {
+      display: none;
+    }
+
+    col.statistic-column:nth-child(3) {
+      width: 40%;
+    }
+  }
+}
+
+.player-name {
+  display: block;
+  max-width: 24ch;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+// Actions
+.card-actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 8px $card-inset;
+}
+
+.delete-match-button {
+  justify-self: start;
+  color: inherit;
+}
+
+.open-match-link {
+  display: inline-flex;
+  justify-self: end;
+  align-items: center;
+  gap: 2px;
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.last-visited {
+  grid-column: 1 / -1;
+  justify-self: center;
+  font: var(--mat-sys-label-medium);
+  text-align: center;
+
+  .last-visited-date-short {
+    display: none;
+  }
+
+  @include devices.device(phone) {
+    .last-visited-date-extended {
+      display: none;
+    }
+
+    .last-visited-date-short {
+      display: inline;
+    }
+  }
+}

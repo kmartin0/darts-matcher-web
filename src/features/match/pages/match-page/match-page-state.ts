@@ -3,6 +3,7 @@ import {X01CheckoutsMap} from '../../../../data/model/x01/checkout/x01-checkout'
 import {X01Match} from '../../../../data/model/x01/match/x01-match';
 import {LoadState} from '../../../../shared/types/load-state';
 import {LocalMatchSettings} from '../../../../data/model/settings/local-match-settings';
+import {ToolbarError} from '../../../../shared/types/toolbar-error';
 
 type MatchLoadState = LoadState<X01Match> | { status: 'deleted' };
 
@@ -16,17 +17,14 @@ export type MatchToolbarErrorSource =
   | 'deleteLastTurn'
   | 'rematch';
 
-export interface MatchToolbarError {
-  source: MatchToolbarErrorSource;
-  message: string;
-}
+export type MatchPageToolbarError = ToolbarError<MatchToolbarErrorSource>;
 
 export interface MatchPageState {
   match: MatchLoadState;
   localMatchSettings: LoadState<LocalMatchSettings>;
   checkouts: LoadState<X01CheckoutsMap>;
   streamConnectionState: StreamConnectionState;
-  toolbarError: MatchToolbarError | null;
+  toolbarError: MatchPageToolbarError | null;
   scoreInputError: string | null;
   rematchPrompt: { rematchId: string } | null;
 }

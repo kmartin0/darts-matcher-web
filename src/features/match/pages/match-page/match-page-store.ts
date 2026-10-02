@@ -29,7 +29,6 @@ import {StreamConnectionState, StreamEventType} from '../../../../data/api/ws/st
 import {X01Match} from '../../../../data/model/x01/match/x01-match';
 import {CheckoutRepository} from '../../../../data/repository/checkout-repository';
 import {MatchRepository} from '../../../../data/repository/match-repository';
-import {RecentMatchesRepository} from '../../../../data/repository/recent-matches-repository';
 import {INITIAL_MATCH_PAGE_STATE, MatchPageState, MatchToolbarErrorSource} from './match-page-state';
 import {mapToEditTurnRequestDto} from '../../mappers/edit-turn-request.mapper';
 import {mapToEditTurnErrorMessage} from '../../mappers/edit-turn-error.mapper';
@@ -39,6 +38,7 @@ import {mapToCreateTurnErrorMessage} from '../../mappers/create-turn-error.mappe
 import {LocalMatchSettingsRepository} from '../../../../data/repository/local-match-settings-repository';
 import {MatchPlayer} from '../../../../data/model/base-match/match-player';
 import {LocalMatchSettings} from '../../../../data/model/settings/local-match-settings';
+import {RecentMatchesRepository} from '../../../../data/repository/recent-matches-repository';
 
 const BOT_TURN_DELAY_MS = 500;
 
@@ -94,6 +94,11 @@ export class MatchPageStore {
     );
   }
 
+  /**
+   * Creates a rematch for the currently loaded match.
+   *
+   * Clears this operation's toolbar error on success and displays an error when it fails.
+   */
   createRematch(): void {
     this.executeMatchCommand(
       match => this.matchRepository.createRematch(match.id, ALL_API_ERROR_CODES),
@@ -230,11 +235,11 @@ export class MatchPageStore {
             return EMPTY;
           }
 
-          return this.observeMatch(matchId).pipe(
+          return this.observeMatch$(matchId).pipe(
             filter(event => event.type === 'data'),
             map(event => event.data),
             filter(isMatchUpdateMessage),
-            exhaustMap(message => this.observeLocalMatchSettings(message.payload.id, message.payload.players))
+            exhaustMap(message => this.observeLocalMatchSettings$(message.payload.id, message.payload.players))
           );
         }),
         takeUntilDestroyed(this.destroyRef),
@@ -248,11 +253,11 @@ export class MatchPageStore {
    * @param matchId - ID of the match to observe.
    * @returns Observable representing the match stream.
    */
-  private observeMatch(matchId: string): Observable<StreamEventType<MatchMessageUnion>> {
+  private observeMatch$(matchId: string): Observable<StreamEventType<MatchMessageUnion>> {
     this.patchState({match: {status: 'loading'}});
 
     return this.matchRepository.streamMatch(matchId, ALL_API_ERROR_CODES).pipe(
-      concatMap(event => this.delayBotTurnEvent(event)),
+      concatMap(event => this.delayBotTurnEvent$(event)),
       tap(streamEvent => this.handleStreamMatchEvent(streamEvent)),
       catchError((error: unknown) => {
         this.handleObserveMatchError(matchId, error);
@@ -271,7 +276,7 @@ export class MatchPageStore {
    * @param players - Players used to initialize and validate the settings.
    * @returns Observable emitting the current local match settings.
    */
-  private observeLocalMatchSettings(matchId: string, players: readonly MatchPlayer[]): Observable<LocalMatchSettings> {
+  private observeLocalMatchSettings$(matchId: string, players: readonly MatchPlayer[]): Observable<LocalMatchSettings> {
     this.patchState({localMatchSettings: {status: 'loading'}});
 
     return this.localMatchSettingsRepository
@@ -299,7 +304,7 @@ export class MatchPageStore {
    * @param event - Stream event to evaluate.
    * @returns Observable emitting the stream event, optionally delayed.
    */
-  private delayBotTurnEvent(event: StreamEventType<MatchMessageUnion>): Observable<StreamEventType<MatchMessageUnion>> {
+  private delayBotTurnEvent$(event: StreamEventType<MatchMessageUnion>): Observable<StreamEventType<MatchMessageUnion>> {
     if (event.type === 'data' && event.data.messageType === MatchMessageType.ADD_BOT_TURN) {
       return of(event).pipe(delay(BOT_TURN_DELAY_MS));
     }
@@ -339,7 +344,8 @@ export class MatchPageStore {
   }
 
   /**
-   * Updates the stream connection state and retries unavailable page data after the connection is restored.
+   * Updates the stream connection state and retries unavailable checkout
+   * suggestions when connected.
    *
    * @param connectionState - Current match-stream connection state.
    */
@@ -358,8 +364,8 @@ export class MatchPageStore {
   /**
    * Handles a match update message.
    *
-   * Updates with an equal or older broadcast version are ignored. The match is
-   * added to recent matches when it is loaded for the first time.
+   * Updates with an equal or older broadcast version are ignored. The first
+   * accepted load attempts to record the match in recent history.
    *
    * @param message - Match update message to handle.
    */
@@ -368,13 +374,16 @@ export class MatchPageStore {
     const currentMatchState = this._state().match;
 
     // Ignore stale or duplicate match updates.
-    if (currentMatchState.status === 'loaded' && currentMatchState.data.broadcastVersion >= match.broadcastVersion) {
+    if (currentMatchState.status === 'loaded' &&
+      currentMatchState.data.broadcastVersion >= match.broadcastVersion) {
       return;
     }
 
-    // Track the match in recent history if it wasn't previously loaded.
     if (currentMatchState.status !== 'loaded') {
-      this.recentMatchesRepository.addMatch(match.id);
+      void this.recentMatchesRepository.addMatch(match.id)
+        .catch(error => {
+          console.error('Failed to record recent match', error);
+        });
     }
 
     this.patchState({match: {status: 'loaded', data: match}});
@@ -385,24 +394,17 @@ export class MatchPageStore {
   }
 
   /**
-   * Handles a match deletion message.
-   *
-   * Removes the deleted match from recent matches and marks the page as deleted.
+   * Marks the match as deleted and starts removing its locally stored data.
    *
    * @param message - Delete match message to handle.
    */
   private handleDeleteMatchMessage(message: DeleteMatchMessage): void {
-    const matchId = message.payload;
-
-    this.recentMatchesRepository.deleteMatch(matchId);
     this.patchState({match: {status: 'deleted'}});
+    this.removeLocalMatchData(message.payload);
   }
 
   /**
-   * Handles a match observation failure.
-   *
-   * Deletes the match from recent matches when it no longer exists and marks
-   * the match state as errored.
+   * Marks the match as errored and removes local data when it no longer exists.
    *
    * @param matchId - ID of the match being observed.
    * @param error - Error returned by the match stream.
@@ -410,12 +412,30 @@ export class MatchPageStore {
   private handleObserveMatchError(matchId: string, error: unknown): void {
     const errorResponse = isApiErrorResponse(error) ? error : undefined;
 
-    if (errorResponse?.type === ApiErrorCode.RESOURCE_NOT_FOUND) {
-      this.recentMatchesRepository.deleteMatch(matchId);
-    }
-
     this.patchState({match: {status: 'error'}});
+
+    if (errorResponse?.type === ApiErrorCode.RESOURCE_NOT_FOUND) {
+      this.removeLocalMatchData(matchId);
+    }
   }
+
+  /**
+   * Removes a match's local history entry and settings independently.
+   *
+   * @param matchId - Match ID whose local data should be removed.
+   */
+  private removeLocalMatchData(matchId: string): void {
+    void this.recentMatchesRepository.deleteMatch(matchId)
+      .catch(error => {
+        console.error('Failed to remove recent match', error);
+      });
+
+    void this.localMatchSettingsRepository.deleteMatchSettings(matchId)
+      .catch(error => {
+        console.error('Failed to delete local match settings', error);
+      });
+  }
+
 
   /**
    * Executes a command against the currently loaded match.

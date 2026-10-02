@@ -1,0 +1,122 @@
+@let cardData = matchHistoryCardData();
+
+<mat-card appearance="outlined">
+  <!-- Header -->
+  <div class="card-header">
+    <div class="card-header-start">
+      <span>{{ cardData.x01 }}</span>
+
+      <span class="separator" aria-hidden="true">•</span>
+
+      <div>
+        @switch (cardData.bestOfType) {
+          @case (X01BestOfType.SETS) {
+            <span>BO{{ cardData.bestOfSets }} (BO{{ cardData.bestOfLegs }})</span>
+          }
+          @case (X01BestOfType.LEGS) {
+            <span>BO{{ cardData.bestOfLegs }}</span>
+          }
+        }
+      </div>
+    </div>
+
+    <div class="card-header-end">
+      <span [title]="(cardData.startDate | epochSecondsToDate | date:'d MMM y, HH:mm zzzz') ?? ''">
+        <span>{{ cardData.startDate | epochSecondsToDate | date:'d MMM y' }}</span>
+      </span>
+
+      <span class="separator" aria-hidden="true">|</span>
+
+      @switch (cardData.matchStatus) {
+        @case (MatchStatus.CONCLUDED) {
+          <span class="status">Concluded</span>
+        }
+        @case (MatchStatus.IN_PLAY) {
+          <span class="status">In play</span>
+        }
+      }
+    </div>
+  </div>
+
+  <!-- Players -->
+  <table class="players-table" aria-label="Player statistics">
+    <colgroup>
+      <col class="player-column">
+      <col class="statistic-column">
+      <col class="statistic-column">
+      <col class="statistic-column checkout-column">
+    </colgroup>
+
+    <thead>
+    <tr>
+      <th scope="col">Player</th>
+      <th scope="col">
+        @switch (cardData.bestOfType) {
+          @case (X01BestOfType.SETS) {
+            <span>Sets</span>
+          }
+          @case (X01BestOfType.LEGS) {
+            <span>Legs</span>
+          }
+        }
+      </th>
+      <th scope="col">Average</th>
+      <th scope="col" class="checkout-column">Checkout</th>
+    </tr>
+    </thead>
+
+    <tbody>
+      @for (player of cardData.players; track player.playerId) {
+        <tr [class.winner]="player.resultType === ResultType.WIN">
+          <td>
+            <span class="player-name" [title]="player.name">{{ player.name }}</span>
+          </td>
+          <td>
+            @switch (cardData.bestOfType) {
+              @case (X01BestOfType.SETS) {
+                <span>{{ player.setsWon }}</span>
+                @if (cardData.matchStatus === MatchStatus.IN_PLAY) {
+                  <span> ({{ player.legsWon }})</span>
+                }
+              }
+              @case (X01BestOfType.LEGS) {
+                <span>{{ player.legsWon }}</span>
+              }
+            }
+          </td>
+          <td>{{ player.average ?? '—' }}</td>
+          <td class="checkout-column">
+            <span>{{ player.checkoutPercentage === null ? '—' : player.checkoutPercentage + '%' }}</span>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <!-- Actions -->
+  <mat-card-actions class="card-actions">
+    <button
+      mat-icon-button
+      class="delete-match-button"
+      type="button"
+      aria-label="Delete from history"
+      matTooltip="Delete from history"
+      (click)="deleteMatchFromHistory.emit(cardData.matchId)">
+      <mat-icon>delete</mat-icon>
+    </button>
+
+    <a class="open-match-link" [routerLink]="AppEndpoints.match(cardData.matchId)">
+      <span>Open match</span>
+      <mat-icon aria-hidden="true">chevron_right</mat-icon>
+    </a>
+
+    <span class="last-visited">Last visited:
+      <span class="last-visited-date-extended">
+        <span>{{ cardData.lastVisitedAt | epochSecondsToDate | date:'d MMM y, HH:mm' }}</span>
+      </span>
+      <span class="last-visited-date-short">
+        <span>{{ cardData.lastVisitedAt | epochSecondsToDate | date:'d MMM, HH:mm' }}</span>
+      </span>
+    </span>
+  </mat-card-actions>
+</mat-card>

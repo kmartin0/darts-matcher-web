@@ -17,8 +17,13 @@
 </div>
 
 <div class="section-container">
-  <h3>Recent matches</h3>
-  <app-recent-matches
-    [recentMatches]="uiState().recentMatches"
-    (deleteMatch)="onDeleteFromRecentMatches($event)"/>
+  <h3>Match history</h3>
+  <a
+    matButton="outlined"
+    class="match-history-button"
+    [routerLink]="AppEndpoints.matchHistory()">
+    <mat-icon></mat-icon>
+    Open match history
+    <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+  </a>
 </div>

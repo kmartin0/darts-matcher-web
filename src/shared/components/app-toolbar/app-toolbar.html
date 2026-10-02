@@ -1,0 +1,19 @@
+<mat-toolbar>
+  @if (titleLink(); as link) {
+    <a class="plain" [routerLink]="link">{{ title() }}</a>
+  } @else {
+    <span>{{ title() }}</span>
+  }
+
+  <span class="spacer"></span>
+
+  @if (loading()) {
+    <mat-spinner [diameter]="24" aria-label="Loading"/>
+  }
+
+  @if (error(); as errorMessage) {
+    <app-error-message [message]="errorMessage" [contrast]="true"/>
+  }
+
+  <ng-content/>
+</mat-toolbar>

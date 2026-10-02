@@ -1,135 +1,126 @@
-import {DestroyRef, inject, Injectable, signal} from '@angular/core';
+import {Injectable} from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {Dexie, liveQuery} from 'dexie';
+import {defer, from, Observable, switchMap} from 'rxjs';
 import {isValidObjectId} from '../api/utils/object-id.util';
-import {tryParseJson} from '../../shared/utils/json.util';
+import {dateToEpochSeconds} from '../../shared/utils/date.util';
 
-const RECENT_MATCHES_LOCAL_STORAGE_KEY = 'darts-matcher:recent-matches';
-const MAX_RECENT_MATCHES = 5;
+const RECENT_MATCHES_DB_NAME = 'darts-matcher-recent-matches';
+
+export interface RecentMatchEntry {
+  matchId: string;
+  lastVisitedAt: number; // Unix timestamp in seconds
+}
 
 /**
- * Repository responsible for recently visited matches.
+ * Persists recently visited matches and exposes their entries
+ * in most recently visited order.
  *
- * Owns the reactive recent match ID state and synchronizes it with local
- * storage, including changes made in other tabs.
+ * Observes changes through Dexie, including changes made in other tabs.
  */
 @Injectable({providedIn: 'root'})
 export class RecentMatchesRepository {
-  private readonly destroyRef = inject(DestroyRef);
+  private readonly database = this.createDatabase();
+  private readonly recentMatchesTable =
+    this.database.table<RecentMatchEntry, string>('recentMatches');
 
-  private readonly _recentMatchIds = signal<string[]>([]);
-
-  readonly recentMatchIds = this._recentMatchIds.asReadonly();
-
-  constructor() {
-    this.loadRecentMatchIds();
-    this.registerStorageEventListener();
-  }
+  readonly recentMatches = toSignal(this.observeRecentMatches$());
 
   /**
-   * Adds a match ID as the most recently visited match.
+   * Records a match visit using the current timestamp.
    *
-   * Invalid match IDs are ignored. Existing entries are moved to the front
-   * and the number of stored matches is limited to the configured maximum.
+   * Invalid IDs or an invalid current date are ignored.
+   * Revisiting an existing match updates its visit timestamp.
    *
-   * @param matchId - Match ID to add.
+   * @param matchId - Match ID to record.
+   * @returns Promise resolving when the visit is persisted or ignored.
    */
-  addMatch(matchId: string): void {
+  async addMatch(matchId: string): Promise<void> {
     if (!isValidObjectId(matchId)) {
       return;
     }
 
-    const recentMatchIds = this._recentMatchIds().filter(id => id !== matchId);
-
-    recentMatchIds.unshift(matchId);
-
-    this.setRecentMatchIds(recentMatchIds.slice(0, MAX_RECENT_MATCHES));
-  }
-
-  /**
-   * Deletes a match ID from the recently visited matches.
-   *
-   * @param matchId - Match ID to delete.
-   */
-  deleteMatch(matchId: string): void {
-    const recentMatchIds = this._recentMatchIds().filter(id => id !== matchId);
-
-    this.setRecentMatchIds(recentMatchIds);
-  }
-
-  /**
-   * Registers the listener that synchronizes recent matches across tabs.
-   */
-  private registerStorageEventListener(): void {
-    const handleStorageEvent = (event: StorageEvent): void => {
-      if (event.key === RECENT_MATCHES_LOCAL_STORAGE_KEY || event.key === null) {
-        this.loadRecentMatchIds();
-      }
-    };
-
-    window.addEventListener('storage', handleStorageEvent);
-
-    this.destroyRef.onDestroy(() => window.removeEventListener('storage', handleStorageEvent));
-  }
-
-  /**
-   * Loads recently visited match IDs from local storage.
-   *
-   * Stored values are cleaned before being applied to the repository state.
-   * When cleaning changes the stored value, the cleaned IDs are persisted.
-   * Missing or unreadable values result in an empty in-memory list.
-   */
-  private loadRecentMatchIds(): void {
-    try {
-      const storedRecentMatchIds = localStorage.getItem(RECENT_MATCHES_LOCAL_STORAGE_KEY);
-
-      if (storedRecentMatchIds === null) {
-        this._recentMatchIds.set([]);
-        return;
-      }
-
-      const recentMatchIds = this.cleanRecentMatchIds(tryParseJson(storedRecentMatchIds));
-
-      if (storedRecentMatchIds !== JSON.stringify(recentMatchIds)) {
-        this.setRecentMatchIds(recentMatchIds);
-        return;
-      }
-
-      this._recentMatchIds.set(recentMatchIds);
-    } catch {
-      this._recentMatchIds.set([]);
+    const visitedAt = dateToEpochSeconds(new Date());
+    if (visitedAt === null) {
+      return;
     }
+
+    await this.recentMatchesTable.put({matchId, lastVisitedAt: visitedAt});
   }
 
   /**
-   * Cleans recently visited match IDs.
+   * Removes a match from recently visited matches.
    *
-   * Non-array values, invalid match IDs and duplicate match IDs are removed,
-   * and the number of returned IDs is limited to the configured maximum.
-   *
-   * @param recentMatchIds - Value containing the recent match IDs to clean.
-   * @returns Valid unique recent match IDs limited to the configured maximum.
+   * @param matchId - Match ID to remove.
+   * @returns Promise resolving when deletion completes.
    */
-  private cleanRecentMatchIds(recentMatchIds: unknown): string[] {
-    if (!Array.isArray(recentMatchIds)) return [];
+  deleteMatch(matchId: string): Promise<void> {
+    return this.recentMatchesTable.delete(matchId);
+  }
 
-    const validMatchIds = recentMatchIds.filter(
-      (matchId): matchId is string => typeof matchId === 'string' && isValidObjectId(matchId)
+  /**
+   * Creates the database instance and configures its schema.
+   *
+   * @returns The configured database.
+   */
+  private createDatabase(): Dexie {
+    const database = new Dexie(RECENT_MATCHES_DB_NAME);
+
+    database.version(1).stores({
+      recentMatches: 'matchId, lastVisitedAt'
+    });
+
+    return database;
+  }
+
+  /**
+   * Cleans stored records before observing recently visited match entries.
+   *
+   * @returns Observable emitting entries ordered by most recently visited first.
+   */
+  private observeRecentMatches$(): Observable<RecentMatchEntry[]> {
+    return defer(() => this.cleanRecentMatches()).pipe(
+      switchMap(() => from(liveQuery(() =>
+        this.recentMatchesTable
+          .orderBy('lastVisitedAt')
+          .reverse()
+          .toArray()
+      )))
     );
-
-    return [...new Set(validMatchIds)].slice(0, MAX_RECENT_MATCHES);
   }
 
   /**
-   * Updates the recent match IDs and attempts to persist them.
+   * Removes malformed visit records before observing recent matches.
    *
-   * @param recentMatchIds - Match IDs to apply.
+   * @returns Promise resolving when cleanup completes.
    */
-  private setRecentMatchIds(recentMatchIds: string[]): void {
-    this._recentMatchIds.set(recentMatchIds);
+  private async cleanRecentMatches(): Promise<void> {
+    await this.database.transaction('rw', this.recentMatchesTable, async () => {
+      await this.recentMatchesTable
+        .filter(recentMatch => !this.isRecentMatchEntry(recentMatch))
+        .delete();
+    });
+  }
 
-    try {
-      localStorage.setItem(RECENT_MATCHES_LOCAL_STORAGE_KEY, JSON.stringify(recentMatchIds));
-    } catch {
-      // Recent matches remain available for the current session.
+  /**
+   * Checks whether a stored value represents a valid match visit.
+   *
+   * @param value - Stored value to validate.
+   * @returns Whether the value contains a valid match ID and visit timestamp.
+   */
+  private isRecentMatchEntry(value: unknown): value is RecentMatchEntry {
+    if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+      return false;
     }
+
+    const record = value as Record<string, unknown>;
+    const matchId = record['matchId'];
+    const lastVisitedAt = record['lastVisitedAt'];
+
+    return typeof matchId === 'string' &&
+      isValidObjectId(matchId) &&
+      typeof lastVisitedAt === 'number' &&
+      Number.isSafeInteger(lastVisitedAt) &&
+      lastVisitedAt >= 0;
   }
 }

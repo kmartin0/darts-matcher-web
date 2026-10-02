@@ -1,0 +1,10 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.match-history-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

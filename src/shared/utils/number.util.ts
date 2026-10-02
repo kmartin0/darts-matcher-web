@@ -1,22 +1,4 @@
 /**
- * Converts an epoch timestamp in seconds to a Date object.
- *
- * @param epochSeconds - Unix timestamp in seconds.
- * @returns Converted Date object, or null when the input is invalid.
- */
-export function epochSecondsToDate(epochSeconds: number | null): Date | null {
-  if (epochSeconds === null || Number.isNaN(epochSeconds)) {
-    return null;
-  }
-
-  const date = new Date(epochSeconds * 1000);
-
-  return Number.isNaN(date.getTime())
-    ? null
-    : date;
-}
-
-/**
  * Formats a count with its matching singular or plural label.
  *
  * @param count - Count to format.

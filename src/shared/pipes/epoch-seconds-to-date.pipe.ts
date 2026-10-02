@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {epochSecondsToDate} from '../utils/number.util';
+import {epochSecondsToDate} from '../utils/date.util';
 
 /**
  * Converts Unix epoch seconds into a Date for template formatting.

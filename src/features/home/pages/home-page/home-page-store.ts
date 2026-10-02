@@ -1,11 +1,9 @@
 import {DestroyRef, inject, Injectable, signal} from '@angular/core';
-import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
-import {catchError, EMPTY, firstValueFrom, map, of, switchMap, tap} from 'rxjs';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {catchError, firstValueFrom, map, of, tap} from 'rxjs';
 import {ALL_API_ERROR_CODES} from '../../../../data/api/errors/api-error-code';
 import {isApiErrorResponse} from '../../../../data/api/errors/api-error-response';
-import {X01Match} from '../../../../data/model/x01/match/x01-match';
 import {MatchRepository} from '../../../../data/repository/match-repository';
-import {RecentMatchesRepository} from '../../../../data/repository/recent-matches-repository';
 import * as CreateMatchFormModel from '../../components/create-match-form/create-match-form.model';
 import * as MatchIdFormModel from '../../components/match-id-form/match-id-form.model';
 import {mapToCreateMatchRequest} from '../../mappers/create-match-request.mapper';
@@ -16,15 +14,10 @@ import {HomePageState, INITIAL_HOME_STATE} from './home-page-state';
 @Injectable()
 export class HomePageStore {
   private readonly matchRepository = inject(MatchRepository);
-  private readonly recentMatchesRepository = inject(RecentMatchesRepository);
   private readonly destroyRef = inject(DestroyRef);
 
   private readonly _state = signal<HomePageState>(INITIAL_HOME_STATE);
   readonly state = this._state.asReadonly();
-
-  constructor() {
-    this.registerRecentMatchIdsObserver();
-  }
 
   /**
    * Submits the create-match form.
@@ -81,47 +74,6 @@ export class HomePageStore {
         ),
       {defaultValue: []}
     );
-  }
-
-  /**
-   * Deletes a match from the recently visited matches.
-   *
-   * @param matchId - ID of the match to delete.
-   */
-  deleteFromRecentMatches(matchId: string): void {
-    this.recentMatchesRepository.deleteMatch(matchId);
-  }
-
-  /**
-   * Registers the observer that loads matches for the recently visited match IDs.
-   *
-   * Updates the recent matches load state when loading succeeds or fails.
-   */
-  private registerRecentMatchIdsObserver(): void {
-    this.patchState({recentMatches: {status: 'loading'}});
-
-    toObservable(this.recentMatchesRepository.recentMatchIds)
-      .pipe(
-        switchMap(recentMatchIds => {
-          if (recentMatchIds.length === 0) {
-            return of<X01Match[]>([]);
-          }
-
-          return this.matchRepository
-            .getMatches(recentMatchIds, ALL_API_ERROR_CODES)
-            .pipe(
-              catchError(() => {
-                this.patchState({recentMatches: {status: 'error'}});
-
-                return EMPTY;
-              })
-            );
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe(recentMatches => {
-        this.patchState({recentMatches: {status: 'loaded', data: recentMatches}});
-      });
   }
 
   /**

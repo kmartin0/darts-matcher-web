@@ -1,0 +1,24 @@
+@let state = uiState();
+@let matchesLoadState = state.matches;
+
+<app-match-history-toolbar
+  [error]="state.toolbarError?.message ?? null"
+  [loading]="toolbarLoading()"/>
+
+<div class="match-history-page-scroll">
+  <div class="match-history-page-content">
+    @switch (matchesLoadState.status) {
+      @case ('idle') {
+      }
+      @case ('loading') {
+      }
+      @case ('error') {
+      }
+      @case ('loaded') {
+        <app-match-history-cards
+          [matchHistoryEntries]="matchesLoadState.data"
+          (deleteMatchFromHistory)="onDeleteMatchFromHistory($event)"/>
+      }
+    }
+  </div>
+</div>

@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {epochSecondsToDate} from '../../../../../shared/utils/number.util';
+import {epochSecondsToDate} from '../../../../../shared/utils/date.util';
 
 const MATCH_DATE_TIME_FORMATTER = new Intl.DateTimeFormat('en-US', {
   weekday: 'short',

@@ -1,0 +1,7 @@
+<div class="match-history-cards">
+  @for (cardData of matchHistoryCardsData(); track cardData.matchId) {
+    <app-match-history-card
+      [matchHistoryCardData]="cardData"
+      (deleteMatchFromHistory)="deleteMatchFromHistory.emit($event)"/>
+  }
+</div>

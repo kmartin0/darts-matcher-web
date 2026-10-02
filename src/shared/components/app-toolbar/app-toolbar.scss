@@ -1,0 +1,61 @@
+@use "@angular/material" as mat;
+@use "mixins/helpers";
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+mat-toolbar {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+
+  @include mat.toolbar-overrides((
+    container-background-color: var(--mat-sys-primary),
+    container-text-color: var(--mat-sys-on-primary)
+  ));
+
+  @include mat.icon-button-overrides((
+    icon-color: var(--mat-sys-on-primary),
+    disabled-icon-color: color-mix(
+      in srgb,
+      var(--mat-sys-on-primary) 38%,
+      transparent
+    )
+  ));
+
+  @include helpers.dark-mode {
+    @include mat.toolbar-overrides((
+      container-background-color: var(--mat-sys-surface-container),
+      container-text-color: var(--mat-sys-on-surface)
+    ));
+
+    @include mat.icon-button-overrides((
+      icon-color: var(--mat-sys-on-surface),
+      disabled-icon-color: color-mix(
+        in srgb,
+        var(--mat-sys-on-surface) 38%,
+        transparent
+      )
+    ));
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+mat-spinner {
+  margin: 16px;
+
+  @include mat.progress-spinner-overrides((
+    active-indicator-color: var(--mat-sys-on-primary)
+  ));
+
+  @include helpers.dark-mode {
+    @include mat.progress-spinner-overrides((
+      active-indicator-color: var(--mat-sys-on-surface)
+    ));
+  }
+}

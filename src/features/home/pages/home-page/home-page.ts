@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {AppEndpoints} from '../../../../app/app-endpoints';
 import {ThemeToggle} from '../../../../shared/components/theme-toggle/theme-toggle';
 import {CommonDialogService} from '../../../../shared/services/common-dialog.service';
@@ -8,13 +8,14 @@ import {CreateMatchForm} from '../../components/create-match-form/create-match-f
 import * as CreateMatchFormModel from '../../components/create-match-form/create-match-form.model';
 import {MatchIdForm} from '../../components/match-id-form/match-id-form';
 import * as MatchIdFormModel from '../../components/match-id-form/match-id-form.model';
-import {RecentMatches} from '../../components/recent-matches/recent-matches';
 import {HomePageStore} from './home-page-store';
+import {MatButton} from '@angular/material/button';
+import {MatIcon} from '@angular/material/icon';
 
 @Component({
   selector: 'app-home-page',
   providers: [HomePageStore],
-  imports: [ThemeToggle, CreateMatchForm, MatchIdForm, RecentMatches],
+  imports: [ThemeToggle, CreateMatchForm, MatchIdForm, RouterLink, MatIcon, MatButton],
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss'
 })
@@ -23,6 +24,7 @@ export class HomePage {
   private readonly commonDialogService = inject(CommonDialogService);
   private readonly router = inject(Router);
 
+  protected readonly AppEndpoints = AppEndpoints;
   protected readonly uiState = this.store.state;
 
   /**
@@ -47,23 +49,6 @@ export class HomePage {
 
   constructor() {
     this.registerMatchNavigationObserver();
-  }
-
-  /**
-   * Handles removal of a match from recent matches.
-   *
-   * @param matchId - ID of the match to remove.
-   */
-  protected async onDeleteFromRecentMatches(matchId: string): Promise<void> {
-    const result = await this.commonDialogService.openConfirmDialog(
-      'Remove this match from recents'
-    );
-
-    if (result.status === 'dismissed') {
-      return;
-    }
-
-    this.store.deleteFromRecentMatches(matchId);
   }
 
   /**

@@ -3,14 +3,12 @@ import {RouterLink} from '@angular/router';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {MatToolbar} from '@angular/material/toolbar';
 import {MatTooltip} from '@angular/material/tooltip';
 import {AppEndpoints} from '../../../../app/app-endpoints';
-import {ErrorMessage} from '../../../../shared/components/error-message/error-message';
 import {ThemeToggle} from '../../../../shared/components/theme-toggle/theme-toggle';
 import {MatchView} from '../../model/match-view';
 import {MatchStatus} from '../../../../data/model/base-match/match-status';
+import {AppToolbar} from '../../../../shared/components/app-toolbar/app-toolbar';
 
 @Component({
   selector: 'app-match-toolbar',
@@ -18,7 +16,6 @@ import {MatchStatus} from '../../../../data/model/base-match/match-status';
   styleUrl: './match-toolbar.scss',
   imports: [
     RouterLink,
-    MatToolbar,
     ThemeToggle,
     MatIconButton,
     MatMenuTrigger,
@@ -26,8 +23,7 @@ import {MatchStatus} from '../../../../data/model/base-match/match-status';
     MatIcon,
     MatMenu,
     MatMenuItem,
-    MatProgressSpinner,
-    ErrorMessage
+    AppToolbar
   ]
 })
 export class MatchToolbar {
@@ -56,8 +52,8 @@ export class MatchToolbar {
   /**
    * Captures the current menu state when the menu opens.
    *
-   * The captured values remain unchanged while the menu closes so its actions
-   * do not visibly change during the closing animation.
+   * Keeps actions unchanged while the menu is open and during its closing
+   * animation. Values are refreshed the next time the menu opens.
    */
   protected onMenuOpened(): void {
     this.displayedMatchView.set(this.matchView());

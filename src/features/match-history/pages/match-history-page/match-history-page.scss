@@ -1,0 +1,23 @@
+@use "mixins/helpers";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+.match-history-page-scroll {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+}
+
+.match-history-page-content {
+  @include helpers.module-page;
+}
+
+app-match-history-cards {
+  width: 100%;
+  max-width: 600px;
+}

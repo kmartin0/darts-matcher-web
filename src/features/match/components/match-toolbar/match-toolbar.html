@@ -1,27 +1,11 @@
-<mat-toolbar>
-  <!-- Title -->
-  <a
-    class="plain"
-    [routerLink]="AppEndpoints.home()">
-    Match
-  </a>
+<app-toolbar
+  title="Match"
+  [titleLink]="AppEndpoints.home()"
+  [error]="error()"
+  [loading]="loading()">
 
-  <span class="spacer"></span>
-
-  <!-- Loading spinner -->
-  @if (loading()) {
-    <mat-spinner [diameter]="24"/>
-  }
-
-  <!-- Error -->
-  @if (error(); as error) {
-    <app-error-message [message]="error" [contrast]="true"/>
-  }
-
-  <!-- Theme toggle icon -->
   <app-theme-toggle/>
 
-  <!-- More options icon -->
   <button
     mat-icon-button
     type="button"
@@ -32,7 +16,7 @@
     [disabled]="!menuEnabled()">
     <mat-icon>more_vert</mat-icon>
   </button>
-</mat-toolbar>
+</app-toolbar>
 
 <!-- More options menu -->
 <mat-menu #menu="matMenu">
