@@ -1,21 +1,19 @@
 import {DestroyRef, inject, Injectable, signal} from '@angular/core';
-import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
-import {catchError, defer, EMPTY, filter, map, Observable, of, switchMap, tap} from 'rxjs';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {catchError, defer, EMPTY, Subscription, tap} from 'rxjs';
 import {ALL_API_ERROR_CODES} from '../../../../data/api/errors/api-error-code';
-import {X01Match} from '../../../../data/model/x01/match/x01-match';
-import {MatchRepository} from '../../../../data/repository/match-repository';
-import {RecentMatchEntry, RecentMatchesRepository} from '../../../../data/repository/recent-matches-repository';
+import {MatchHistoryPage} from '../../../../data/model/match-history/match-history-page';
+import {MatchHistoryRepository} from '../../../../data/repository/match-history-repository';
+import {LoadEvent} from '../../../../shared/types/load-event';
 import {
   INITIAL_MATCH_HISTORY_PAGE_STATE,
   MatchHistoryPageState,
   MatchHistoryToolbarErrorSource
 } from './match-history-page-state';
-import {MatchHistoryEntry} from '../../model/match-history-entry';
 
 @Injectable()
 export class MatchHistoryPageStore {
-  private readonly matchRepository = inject(MatchRepository);
-  private readonly recentMatchesRepository = inject(RecentMatchesRepository);
+  private readonly matchHistoryRepository = inject(MatchHistoryRepository);
   private readonly destroyRef = inject(DestroyRef);
 
   private readonly _state = signal<MatchHistoryPageState>(
@@ -23,22 +21,30 @@ export class MatchHistoryPageStore {
   );
   readonly state = this._state.asReadonly();
 
+  private matchHistorySubscription: Subscription | null = null;
+
   constructor() {
-    this.registerRecentMatchesObserver();
+    this.loadMatchHistory();
   }
 
   /**
    * Removes a match from locally stored history.
    *
-   * History changes reload the matches through the existing observation.
-   * Clears this operation's toolbar error on success and displays an error when it fails.
+   * Successful deletions update the active observation or restart it if it ended.
+   * Clears this operation's toolbar error on success and displays an error on failure.
    *
    * @param matchId - ID of the match to remove from history.
    */
   deleteFromHistory(matchId: string): void {
-    defer(() => this.recentMatchesRepository.deleteMatch(matchId)).pipe(
+    defer(() => this.matchHistoryRepository.deleteMatch(matchId)).pipe(
       tap({
-        complete: () => this.clearToolbarError('deleteFromHistory')
+        complete: () => {
+          this.clearToolbarError('deleteFromHistory');
+
+          if (this.matchHistorySubscription === null || this.matchHistorySubscription.closed) {
+            this.loadMatchHistory();
+          }
+        }
       }),
       catchError(() => {
         this.setToolbarError('deleteFromHistory', 'Failed to delete match from history');
@@ -49,84 +55,95 @@ export class MatchHistoryPageStore {
   }
 
   /**
-   * Reloads match history whenever the locally stored recent entries change.
+   * Selects and loads a history page.
    *
-   * Sets loading for the initial load only, keeping existing matches visible
-   * during subsequent reloads. Sets the page and toolbar errors if observing
-   * locally stored history fails.
+   * Replaces the previous history observation.
+   * Selecting the same page again also starts a new observation.
+   *
+   * @param pageIndex - Zero-based page index.
+   * @param pageSize - Maximum number of history entries per page.
    */
-  private registerRecentMatchesObserver(): void {
-    this.patchState({matches: {status: 'loading'}});
+  setPage(pageIndex: number, pageSize: number): void {
+    this.patchState({pageIndex: pageIndex, pageSize: pageSize});
+    this.loadMatchHistory();
+  }
 
-    toObservable(this.recentMatchesRepository.recentMatches)
-      .pipe(
-        filter(recentMatchEntries => recentMatchEntries !== undefined),
-        switchMap(recentMatchEntries => this.getMatchHistoryEntries$(recentMatchEntries)),
-        takeUntilDestroyed(this.destroyRef)
-      )
+  /**
+   * Observes history for the currently selected page.
+   *
+   * Replaces the previous subscription and handles loading, data, and failures.
+   */
+  private loadMatchHistory(): void {
+    this.matchHistorySubscription?.unsubscribe();
+
+    const state = this._state();
+
+    this.matchHistorySubscription = this.matchHistoryRepository
+      .getMatchHistoryPage$(state.pageIndex, state.pageSize, ALL_API_ERROR_CODES)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: matchHistoryEntries => {
-          this.patchState({matches: {status: 'loaded', data: matchHistoryEntries}});
-          this.clearToolbarError('matches');
-        },
-        error: () => {
-          this.patchState({matches: {status: 'error'}});
-          this.setToolbarError('matches', 'Failed to read locally stored match history');
-        }
+        next: event => this.handleMatchHistoryEvent(event),
+        error: () => this.handleMatchHistoryError()
       });
   }
 
   /**
-   * Retrieves matches for the recent entries and combines them with their
-   * stored visit timestamps.
+   * Handles a loading notification or an updated history page.
    *
-   * On failure, sets the page error state and toolbar error, then completes
-   * without emitting so the subscriber does not overwrite the error state.
+   * Loading notifications activate the indicator while preserving displayed entries.
    *
-   * @param recentMatchEntries - Stored recent match entries.
-   * @returns An observable emitting match history entries in API response order,
-   * or an empty list when history is empty or no matching entries remain.
+   * @param event - Load event emitted by the history repository.
    */
-  private getMatchHistoryEntries$(recentMatchEntries: RecentMatchEntry[]): Observable<MatchHistoryEntry[]> {
-    if (recentMatchEntries.length === 0) {
-      return of([]);
+  private handleMatchHistoryEvent(event: LoadEvent<MatchHistoryPage>): void {
+    switch (event.type) {
+      case 'loading':
+        this.patchState({loading: true});
+        break;
+
+      case 'data':
+        this.updateMatchHistory(event.data);
+        break;
     }
-
-    const recentMatchesMap = new Map(
-      recentMatchEntries.map(recentMatchEntry => [recentMatchEntry.matchId, recentMatchEntry])
-    );
-
-    return this.matchRepository.getMatches([...recentMatchesMap.keys()], ALL_API_ERROR_CODES).pipe(
-      map(matches => this.mapMatchHistoryEntries(matches, recentMatchesMap)),
-      catchError(() => {
-        this.patchState({matches: {status: 'error'}});
-        this.setToolbarError('matches', 'Failed to load match history');
-        return EMPTY;
-      })
-    );
   }
 
   /**
-   * Combines fetched matches with their stored visit timestamps.
+   * Applies history entries and pagination metadata, then stops loading.
    *
-   * Preserves API response order and omits matches without a recent entry.
+   * If the requested page is beyond the available records, loads the last
+   * available page before replacing the displayed entries.
    *
-   * @param matches - Matches returned by the API.
-   * @param recentMatchesMap - Stored recent entries keyed by match ID.
-   * @returns Match history entries for matches with a corresponding recent entry.
+   * @param matchHistory - History page returned by the repository.
    */
-  private mapMatchHistoryEntries(matches: X01Match[], recentMatchesMap: Map<string, RecentMatchEntry>): MatchHistoryEntry[] {
-    return matches.flatMap(match => {
-      const recentMatchEntry = recentMatchesMap.get(match.id);
+  private updateMatchHistory(matchHistory: MatchHistoryPage): void {
+    const pageMetadata = matchHistory.pageMetaData;
+    const lastPageIndex = Math.max(0, Math.ceil(pageMetadata.totalItems / pageMetadata.size) - 1);
 
-      if (recentMatchEntry === undefined) {
-        return [];
+    if (pageMetadata.index > lastPageIndex) {
+      this.patchState({totalMatches: pageMetadata.totalItems});
+      this.setPage(lastPageIndex, pageMetadata.size);
+      return;
+    }
+
+    this.patchState({
+      matches: matchHistory.entries,
+      loading: false,
+      pageIndex: pageMetadata.index,
+      pageSize: pageMetadata.size,
+      totalMatches: pageMetadata.totalItems
+    });
+    this.clearToolbarError('matches');
+  }
+
+  /**
+   * Resets the page to its initial state and reports a failure to load the match history.
+   */
+  private handleMatchHistoryError(): void {
+    this.patchState({
+      ...INITIAL_MATCH_HISTORY_PAGE_STATE,
+      toolbarError: {
+        source: 'matches',
+        message: 'Failed to load match history'
       }
-
-      return [{
-        match,
-        lastVisitedAt: recentMatchEntry.lastVisitedAt
-      }];
     });
   }
 
@@ -137,12 +154,7 @@ export class MatchHistoryPageStore {
    * @param message - Error message to display.
    */
   private setToolbarError(source: MatchHistoryToolbarErrorSource, message: string): void {
-    this.patchState({
-      toolbarError: {
-        source: source,
-        message: message
-      }
-    });
+    this.patchState({toolbarError: {source: source, message: message}});
   }
 
   /**

@@ -2,7 +2,7 @@ import {Component, computed, input, output} from '@angular/core';
 import {MatchHistoryCard} from '../match-history-card/match-history-card';
 import {MatchHistoryCardData} from '../match-history-card/match-history-card-data';
 import {resolveMatchHistoryCards} from './match-history-cards.resolver';
-import {MatchHistoryEntry} from '../../model/match-history-entry';
+import {MatchHistoryEntry} from '../../../../data/model/match-history/match-history-entry';
 
 @Component({
   selector: 'app-match-history-cards',

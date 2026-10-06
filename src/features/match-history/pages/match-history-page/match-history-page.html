@@ -1,24 +1,29 @@
 @let state = uiState();
-@let matchesLoadState = state.matches;
+@let matches = state.matches;
 
 <app-match-history-toolbar
   [error]="state.toolbarError?.message ?? null"
-  [loading]="toolbarLoading()"/>
+  [loading]="state.loading"/>
 
 <div class="match-history-page-scroll">
   <div class="match-history-page-content">
-    @switch (matchesLoadState.status) {
-      @case ('idle') {
-      }
-      @case ('loading') {
-      }
-      @case ('error') {
-      }
-      @case ('loaded') {
+    @if (matches !== null) {
+      @if (matches.length > 0) {
         <app-match-history-cards
-          [matchHistoryEntries]="matchesLoadState.data"
+          [matchHistoryEntries]="matches"
           (deleteMatchFromHistory)="onDeleteMatchFromHistory($event)"/>
+      } @else {
+        <app-page-error message="Match history empty"/>
       }
     }
+
+    <mat-paginator
+      [length]="state.totalMatches"
+      [pageIndex]="state.pageIndex"
+      [pageSize]="state.pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      [disabled]="state.loading"
+      (page)="onPageChange($event)"
+      aria-label="Match history pagination"/>
   </div>
 </div>

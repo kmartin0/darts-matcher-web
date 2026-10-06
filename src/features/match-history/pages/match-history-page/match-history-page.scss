@@ -6,6 +6,10 @@
   height: 100dvh;
 }
 
+app-match-history-toolbar {
+  flex-shrink: 0;
+}
+
 .match-history-page-scroll {
   flex: 1;
   min-height: 0;
@@ -15,9 +19,21 @@
 
 .match-history-page-content {
   @include helpers.module-page;
+
+  box-sizing: border-box;
+  min-height: 100%;
+  gap: 16px;
 }
 
 app-match-history-cards {
   width: 100%;
   max-width: 600px;
+  flex-shrink: 0;
+}
+
+mat-paginator {
+  width: fit-content;
+  max-width: 100%;
+  flex-shrink: 0;
+  margin-top: auto;
 }

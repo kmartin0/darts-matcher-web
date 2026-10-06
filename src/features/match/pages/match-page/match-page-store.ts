@@ -38,14 +38,14 @@ import {mapToCreateTurnErrorMessage} from '../../mappers/create-turn-error.mappe
 import {LocalMatchSettingsRepository} from '../../../../data/repository/local-match-settings-repository';
 import {MatchPlayer} from '../../../../data/model/base-match/match-player';
 import {LocalMatchSettings} from '../../../../data/model/settings/local-match-settings';
-import {RecentMatchesRepository} from '../../../../data/repository/recent-matches-repository';
+import {MatchHistoryRepository} from '../../../../data/repository/match-history-repository';
 
 const BOT_TURN_DELAY_MS = 500;
 
 @Injectable()
 export class MatchPageStore {
   private readonly matchRepository = inject(MatchRepository);
-  private readonly recentMatchesRepository = inject(RecentMatchesRepository);
+  private readonly recentMatchesRepository = inject(MatchHistoryRepository);
   private readonly localMatchSettingsRepository = inject(LocalMatchSettingsRepository);
   private readonly checkoutRepository = inject(CheckoutRepository);
   private readonly route = inject(ActivatedRoute);
