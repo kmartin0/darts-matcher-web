@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {Dexie, liveQuery} from 'dexie';
+import {liveQuery} from 'dexie';
 import {defer, from, ignoreElements, map, Observable, of, startWith, switchMap} from 'rxjs';
 import {LoadEvent} from '../../shared/types/load-event';
 import {PaginationRequest} from '../../shared/types/pagination-request';
@@ -7,35 +7,24 @@ import {PaginationResponse} from '../../shared/types/pagination-response';
 import {dateToEpochSeconds} from '../../shared/utils/date.util';
 import {ApiErrorCodes} from '../api/errors/api-error-code';
 import {isValidObjectId} from '../api/utils/object-id.util';
+import {AppLocalDatabase} from '../local/app-local-database';
 import {MatchHistoryItem} from '../model/match-history/match-history-item';
+import {StoredMatchHistoryItem} from '../model/match-history/stored-match-history-item';
 import {X01Match} from '../model/x01/match/x01-match';
 import {MatchRepository} from './match-repository';
 
 /**
- * A locally stored match visit containing its ID and visit timestamp.
- * The full match is retrieved separately from the API.
- */
-interface MatchHistoryRecord {
-  matchId: string;
-  lastVisitedAt: number; // Unix timestamp in seconds
-}
-
-const MATCH_HISTORY_DB_NAME = 'darts-matcher-match-history';
-const MATCH_HISTORY_TABLE_NAME = 'matchHistory';
-
-/**
- * Persists local match visits and exposes history pages with loading notifications.
+ * Records local match visits and exposes history pages with loading notifications.
  *
- * Removes malformed records on database initialization and stored records
- * for matches omitted (not found) by successful API responses.
+ * Combines stored history items with matches retrieved from the API.
+ * Removes stored items for matches omitted (not found) by successful API responses.
  */
 @Injectable({providedIn: 'root'})
 export class MatchHistoryRepository {
   private readonly matchRepository = inject(MatchRepository);
+  private readonly localDatabase = inject(AppLocalDatabase);
 
-  private readonly database = this.createDatabase();
-  private readonly matchHistoryTable =
-    this.database.table<MatchHistoryRecord, string>(MATCH_HISTORY_TABLE_NAME);
+  private readonly matchHistoryTable = this.localDatabase.tables.matchHistory;
 
   /**
    * Records a match visit using the current timestamp.
@@ -56,7 +45,10 @@ export class MatchHistoryRepository {
       return;
     }
 
-    await this.matchHistoryTable.put({matchId: matchId, lastVisitedAt: visitedAt});
+    await this.matchHistoryTable.put({
+      matchId: matchId,
+      lastVisitedAt: visitedAt
+    });
   }
 
   /**
@@ -72,8 +64,8 @@ export class MatchHistoryRepository {
   /**
    * Observes a history page, emitting loading and data events as history changes.
    *
-   * Missing match records are removed before emitting the refreshed page.
-   * Database and API failures propagate through the observable's error channel.
+   * Stored items for missing matches are removed before emitting the refreshed page.
+   * Pagination validation, database and API failures use the observable's error channel.
    *
    * @param paginationRequest - Requested page index and page size.
    * @param handleLocally - API error codes handled locally by the caller.
@@ -85,11 +77,11 @@ export class MatchHistoryRepository {
   ): Observable<LoadEvent<PaginationResponse<MatchHistoryItem>>> {
     return defer(() => {
       this.validatePagination(paginationRequest);
-      return this.getMatchHistoryRecords$(paginationRequest);
+      return this.getStoredMatchHistoryPage$(paginationRequest);
     }).pipe(
-      switchMap(recordsPage =>
-        this.getMatchHistoryPageFromRecords$(recordsPage, handleLocally).pipe(
-          switchMap(page => this.resolveMatchHistoryPage$(recordsPage, page)),
+      switchMap(storedPage =>
+        this.getMatchHistoryPageFromStoredItems$(storedPage, handleLocally).pipe(
+          switchMap(page => this.resolveMatchHistoryPage$(storedPage, page)),
           startWith<LoadEvent<PaginationResponse<MatchHistoryItem>>>({type: 'loading'})
         )
       ),
@@ -98,22 +90,22 @@ export class MatchHistoryRepository {
   }
 
   /**
-   * Observes stored history records ordered by most recently visited first.
+   * Observes stored history items ordered by most recently visited first.
    *
-   * Reads the selected records and total count in one transaction.
+   * Reads the selected items and total count in one transaction.
    * Emits updated results when match history changes.
    *
    * @param paginationRequest - Requested page index and page size.
-   * @returns Observable emitting a page of stored history records.
+   * @returns Observable emitting a page of stored history items.
    */
-  private getMatchHistoryRecords$(
+  private getStoredMatchHistoryPage$(
     paginationRequest: PaginationRequest
-  ): Observable<PaginationResponse<MatchHistoryRecord>> {
+  ): Observable<PaginationResponse<StoredMatchHistoryItem>> {
     return from(liveQuery(() =>
-      this.database.transaction('r', this.matchHistoryTable, async () => {
+      this.localDatabase.transaction('r', this.matchHistoryTable, async () => {
         const totalElements = await this.matchHistoryTable.count();
 
-        const records = await this.matchHistoryTable
+        const items = await this.matchHistoryTable
           .orderBy('lastVisitedAt')
           .reverse()
           .offset(paginationRequest.pageIndex * paginationRequest.pageSize)
@@ -121,7 +113,7 @@ export class MatchHistoryRepository {
           .toArray();
 
         return {
-          items: records,
+          items: items,
           pageIndex: paginationRequest.pageIndex,
           pageSize: paginationRequest.pageSize,
           totalElements: totalElements
@@ -131,141 +123,114 @@ export class MatchHistoryRepository {
   }
 
   /**
-   * Converts stored records into history items while retaining pagination information.
+   * Converts stored items into history items while retaining pagination information.
    *
-   * @param recordsPage - Page of stored history records.
+   * @param storedPage - Page of stored history items.
    * @param handleLocally - API error codes handled locally by the caller.
    * @returns Observable emitting a history page that excludes missing matches.
    */
-  private getMatchHistoryPageFromRecords$(
-    recordsPage: PaginationResponse<MatchHistoryRecord>,
+  private getMatchHistoryPageFromStoredItems$(
+    storedPage: PaginationResponse<StoredMatchHistoryItem>,
     handleLocally: ApiErrorCodes
   ): Observable<PaginationResponse<MatchHistoryItem>> {
-    return this.getMatchHistoryItems$(recordsPage.items, handleLocally).pipe(
+    return this.getMatchHistoryItems$(storedPage.items, handleLocally).pipe(
       map(items => ({
         items: items,
-        pageIndex: recordsPage.pageIndex,
-        pageSize: recordsPage.pageSize,
-        totalElements: recordsPage.totalElements
+        pageIndex: storedPage.pageIndex,
+        pageSize: storedPage.pageSize,
+        totalElements: storedPage.totalElements
       }))
     );
   }
 
   /**
-   * Retrieves matches for stored history records and adds their visit timestamps.
+   * Retrieves matches for stored history items and adds their visit timestamps.
    *
-   * Empty records emit an empty array without an API request.
+   * Empty stored items emit an empty array without an API request.
    * Matches omitted by the API are excluded from the result.
    *
-   * @param records - Stored history records in the requested order.
+   * @param storedItems - Stored history items in the requested order.
    * @param handleLocally - API error codes handled locally by the caller.
    * @returns Observable emitting history items for the existing matches.
    */
   private getMatchHistoryItems$(
-    records: MatchHistoryRecord[],
+    storedItems: StoredMatchHistoryItem[],
     handleLocally: ApiErrorCodes
   ): Observable<MatchHistoryItem[]> {
-    if (records.length === 0) {
+    if (storedItems.length === 0) {
       return of([]);
     }
 
-    const recordsById = new Map(records.map(record => [record.matchId, record]));
+    const storedItemsById = new Map(storedItems.map(item => [item.matchId, item]));
 
     return this.matchRepository
-      .getMatches([...recordsById.keys()], handleLocally)
-      .pipe(map(matches => this.mapMatchHistoryItems(matches, recordsById)));
+      .getMatches([...storedItemsById.keys()], handleLocally)
+      .pipe(map(matches => this.mapMatchHistoryItems(matches, storedItemsById)));
   }
 
   /**
    * Combines fetched matches with their stored visit timestamps.
    *
-   * Preserves API response order and omits matches without a stored record.
+   * Preserves API response order and omits matches without a stored item.
    *
    * @param matches - Matches returned by the API in requested ID order.
-   * @param recordsById - Stored history records keyed by match ID.
+   * @param storedItemsById - Stored history items keyed by match ID.
    * @returns Match history items with their visit timestamps.
    */
-  private mapMatchHistoryItems(matches: X01Match[], recordsById: Map<string, MatchHistoryRecord>): MatchHistoryItem[] {
+  private mapMatchHistoryItems(
+    matches: X01Match[],
+    storedItemsById: Map<string, StoredMatchHistoryItem>
+  ): MatchHistoryItem[] {
     return matches.flatMap(match => {
-      const record = recordsById.get(match.id);
+      const storedItem = storedItemsById.get(match.id);
 
-      if (record === undefined) {
+      if (storedItem === undefined) {
         return [];
       }
 
-      return [{match: match, lastVisitedAt: record.lastVisitedAt}];
+      return [{match: match, lastVisitedAt: storedItem.lastVisitedAt}];
     });
   }
 
   /**
-   * Emits a data event when every requested record has a matching history item.
-   * Otherwise, deletes missing match records and completes without emitting.
+   * Emits a data event when every requested stored item has a matching history item.
+   * Otherwise, deletes stored items for missing matches and completes without emitting.
    *
-   * @param recordsPage - Stored records used to request the matches.
+   * @param storedPage - Stored items used to request the matches.
    * @param page - Page resolved from the successful API response.
    * @returns Observable emitting a data event, or completing after cleanup.
    */
   private resolveMatchHistoryPage$(
-    recordsPage: PaginationResponse<MatchHistoryRecord>,
+    storedPage: PaginationResponse<StoredMatchHistoryItem>,
     page: PaginationResponse<MatchHistoryItem>
   ): Observable<LoadEvent<PaginationResponse<MatchHistoryItem>>> {
-    if (page.items.length === recordsPage.items.length) {
+    if (page.items.length === storedPage.items.length) {
       return of({type: 'data', data: page});
     }
 
     return from(
-      this.deleteMissingMatchRecords(recordsPage.items, page.items)
+      this.deleteMissingMatchItems(storedPage.items, page.items)
     ).pipe(ignoreElements());
   }
 
   /**
-   * Deletes supplied history records whose matches are absent from the resolved items.
+   * Deletes supplied stored items whose matches are absent from the resolved items.
    *
-   * @param records - Stored records used to request the matches.
+   * @param storedItems - Stored history items used to request the matches.
    * @param items - History items resolved from the successful API response.
-   * @returns Promise resolving when the missing records have been deleted.
+   * @returns Promise resolving when the stored items for missing matches have been deleted.
    */
-  private deleteMissingMatchRecords(records: MatchHistoryRecord[], items: MatchHistoryItem[]): Promise<void> {
+  private deleteMissingMatchItems(
+    storedItems: StoredMatchHistoryItem[],
+    items: MatchHistoryItem[]
+  ): Promise<void> {
     const existingMatchIds = new Set(items.map(item => item.match.id));
 
-    const missingMatchIds = records
-      .filter(record => !existingMatchIds.has(record.matchId))
-      .map(record => record.matchId);
+    const missingMatchIds = storedItems
+      .filter(item => !existingMatchIds.has(item.matchId))
+      .map(item => item.matchId);
 
     return this.matchHistoryTable.bulkDelete(missingMatchIds);
-  }
-
-  /**
-   * Configures the database schema and registers initialization cleanup.
-   *
-   * The database opens automatically on the first database operation.
-   * Operations wait for the registered cleanup to finish.
-   *
-   * @returns The configured database.
-   */
-  private createDatabase(): Dexie {
-    const database = new Dexie(MATCH_HISTORY_DB_NAME);
-
-    database.version(1).stores({
-      [MATCH_HISTORY_TABLE_NAME]: 'matchId, lastVisitedAt'
-    });
-
-    database.on('ready', initializationDatabase => this.cleanMatchHistoryTable(initializationDatabase));
-
-    return database;
-  }
-
-  /**
-   * Removes malformed visit records from the supplied database.
-   *
-   * @param database - Database containing the match history table.
-   * @returns Promise resolving when cleanup completes.
-   */
-  private async cleanMatchHistoryTable(database: Dexie): Promise<void> {
-    await database
-      .table<MatchHistoryRecord, string>(MATCH_HISTORY_TABLE_NAME)
-      .filter(record => !this.isMatchHistoryRecord(record))
-      .delete();
   }
 
   /**
@@ -282,27 +247,5 @@ export class MatchHistoryRepository {
     if (!Number.isSafeInteger(paginationRequest.pageSize) || paginationRequest.pageSize <= 0) {
       throw new RangeError('pageSize must be a positive safe integer');
     }
-  }
-
-  /**
-   * Checks whether a stored value represents a valid match visit.
-   *
-   * @param value - Stored value to validate.
-   * @returns Whether the value contains a valid match ID and visit timestamp.
-   */
-  private isMatchHistoryRecord(value: unknown): value is MatchHistoryRecord {
-    if (value === null || typeof value !== 'object' || Array.isArray(value)) {
-      return false;
-    }
-
-    const record = value as Record<string, unknown>;
-    const matchId = record['matchId'];
-    const lastVisitedAt = record['lastVisitedAt'];
-
-    return typeof matchId === 'string' &&
-      isValidObjectId(matchId) &&
-      typeof lastVisitedAt === 'number' &&
-      Number.isSafeInteger(lastVisitedAt) &&
-      lastVisitedAt >= 0;
   }
 }

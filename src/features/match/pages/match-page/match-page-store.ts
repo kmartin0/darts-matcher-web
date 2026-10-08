@@ -280,7 +280,7 @@ export class MatchPageStore {
     this.patchState({localMatchSettings: {status: 'loading'}});
 
     return this.localMatchSettingsRepository
-      .observeMatchSettings(matchId, players)
+      .getLocalMatchSettings$(matchId, players)
       .pipe(
         tap(localMatchSettings => {
           this.patchState(

@@ -21,7 +21,6 @@ import {MatIcon} from '@angular/material/icon';
 })
 export class HomePage {
   private readonly store = inject(HomePageStore);
-  private readonly commonDialogService = inject(CommonDialogService);
   private readonly router = inject(Router);
 
   protected readonly AppEndpoints = AppEndpoints;

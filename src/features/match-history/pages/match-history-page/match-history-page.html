@@ -16,19 +16,19 @@
         <app-match-history-cards
           [matchHistoryEntries]="matchHistory.items"
           (deleteMatchFromHistory)="onDeleteMatchFromHistory($event)"/>
+
+        <mat-paginator
+          [length]="matchHistory.totalElements"
+          [pageIndex]="pageIndex()"
+          [pageSize]="pageSize()"
+          [pageSizeOptions]="pageSizeOptions"
+          [disabled]="state.loading"
+          [showFirstLastButtons]="true"
+          (page)="onPageChange($event)"
+          aria-label="Match history pagination"/>
       } @else {
         <app-page-error message="Match history empty"/>
       }
-
-      <mat-paginator
-        [length]="matchHistory.totalElements"
-        [pageIndex]="pageIndex()"
-        [pageSize]="pageSize()"
-        [pageSizeOptions]="pageSizeOptions"
-        [disabled]="state.loading"
-        [showFirstLastButtons]="true"
-        (page)="onPageChange($event)"
-        aria-label="Match history pagination"/>
     }
   </div>
 </div>

@@ -1,48 +1,35 @@
-import {Injectable} from '@angular/core';
-import {Dexie, liveQuery, Table} from 'dexie';
+import {inject, Injectable} from '@angular/core';
+import {liveQuery} from 'dexie';
 import {defer, from, Observable, switchMap} from 'rxjs';
+import {AppLocalDatabase} from '../local/app-local-database';
 import {MatchPlayer} from '../model/base-match/match-player';
 import {
   createDefaultLocalMatchSettings,
-  isLocalMatchSettings,
   isSameLocalSettings,
   LocalMatchSettings
 } from '../model/settings/local-match-settings';
 
-const LOCAL_MATCH_SETTINGS_DB_NAME = 'darts-matcher-local-match-settings';
-
 /**
  * Repository responsible for local match settings.
  *
- * Persists settings in IndexedDB and observes updates through Dexie live queries,
- * including changes made through Dexie in other tabs on the same origin.
+ * Validates player selections, supplies defaults, and observes settings
+ * stored in the shared local database.
  */
 @Injectable({providedIn: 'root'})
 export class LocalMatchSettingsRepository {
-  private readonly database = new Dexie(LOCAL_MATCH_SETTINGS_DB_NAME);
-  private readonly matchSettingsTable: Table<LocalMatchSettings, string>;
+  private readonly localDatabase = inject(AppLocalDatabase);
 
-  constructor() {
-    this.database.version(1).stores({
-      matchSettings: 'matchId'
-    });
-
-    this.matchSettingsTable = this.database.table('matchSettings');
-  }
+  private readonly matchSettingsTable = this.localDatabase.tables.localMatchSettings;
 
   /**
-   * Observes the local settings for a match.
-   *
-   * On subscription, missing or invalid settings are replaced with persisted defaults
-   * selecting all supplied players. Valid selections, including none, are preserved.
-   * Later changes are read without repeating validation. If the record is deleted,
-   * observers receive defaults without persisting them.
+   * Observes settings, initializing missing or invalid settings with defaults on subscription.
+   * Later deletions emit defaults without persisting them.
    *
    * @param matchId - Match ID whose settings should be observed.
-   * @param players - Match players used to validate settings and create defaults.
-   * @returns Observable emitting settings after initialization and on later changes.
+   * @param players - Match players used for validation and defaults.
+   * @returns Observable emitting initial settings and subsequent changes.
    */
-  observeMatchSettings(matchId: string, players: readonly MatchPlayer[]): Observable<LocalMatchSettings> {
+  getLocalMatchSettings$(matchId: string, players: readonly MatchPlayer[]): Observable<LocalMatchSettings> {
     // Validate and initialize persisted settings before starting the read-only live query.
     return defer(() => this.getOrCreateMatchSettings(matchId, players)).pipe(
       switchMap(() => from(liveQuery(async () => {
@@ -54,25 +41,21 @@ export class LocalMatchSettingsRepository {
   }
 
   /**
-   * Saves or replaces the local settings for a match when they have changed.
+   * Saves settings only when they differ from the stored values.
    *
-   * Reads, compares and writes within one transaction so another tab cannot
-   * change the stored record between the comparison and the write.
-   * All selections are supported, including all players or no players.
-   *
-   * @param settings - Settings to save, including their match ID.
+   * @param settings - Settings to save.
    * @returns Promise resolving to the match ID, whether saved or unchanged.
    */
   saveMatchSettings(settings: LocalMatchSettings): Promise<string> {
-    return this.database.transaction('rw', this.matchSettingsTable, async () => {
+    return this.localDatabase.transaction('rw', this.matchSettingsTable, async () => {
       const storedSettings = await this.matchSettingsTable.get(settings.matchId);
 
       // Skip writing when the persisted settings already match.
-      if (isLocalMatchSettings(storedSettings) && isSameLocalSettings(storedSettings, settings)) {
+      if (storedSettings !== undefined && isSameLocalSettings(storedSettings, settings)) {
         return settings.matchId;
       }
 
-      // Create missing settings or replace different or invalid settings.
+      // Create missing settings or replace different settings.
       return this.matchSettingsTable.put(settings);
     });
   }
@@ -93,9 +76,6 @@ export class LocalMatchSettingsRepository {
   /**
    * Deletes a match's persisted local settings.
    *
-   * Existing observers receive defaults. A new subscription creates the defaults
-   * again if the record is still missing.
-   *
    * @param matchId - Match ID whose settings should be deleted.
    * @returns Promise resolving when deletion completes.
    */
@@ -104,26 +84,23 @@ export class LocalMatchSettingsRepository {
   }
 
   /**
-   * Gets persisted settings, creating defaults when settings are missing or invalid.
-   *
-   * Reading and writing within one transaction prevents concurrent initialization
-   * in different tabs from overwriting a valid saved selection.
+   * Gets stored settings, creating defaults when missing or invalid for the match.
    *
    * @param matchId - Match ID whose settings should be resolved.
-   * @param players - Match players used to validate settings and create defaults.
+   * @param players - Match players used for validation and defaults.
    * @returns Promise resolving to the existing or newly persisted settings.
    */
   private getOrCreateMatchSettings(matchId: string, players: readonly MatchPlayer[]): Promise<LocalMatchSettings> {
-    return this.database.transaction('rw', this.matchSettingsTable, async () => {
+    return this.localDatabase.transaction('rw', this.matchSettingsTable, async () => {
       const storedSettings = await this.matchSettingsTable.get(matchId);
 
-      if (this.isValidLocalMatchSettings(storedSettings, matchId, players)) {
+      if (storedSettings !== undefined && this.hasValidPlayerSelections(storedSettings, players)) {
         return storedSettings;
       }
 
       const defaultSettings = createDefaultLocalMatchSettings(matchId, players);
 
-      // Create missing settings or replace an invalid stored record.
+      // Create missing settings or replace settings with invalid player selections.
       await this.matchSettingsTable.put(defaultSettings);
 
       return defaultSettings;
@@ -131,18 +108,13 @@ export class LocalMatchSettingsRepository {
   }
 
   /**
-   * Checks whether stored settings are valid for the supplied match.
+   * Checks whether selected player IDs are unique and belong to the match.
    *
-   * @param settings - Stored value to validate.
-   * @param matchId - Match ID the settings must belong to.
+   * @param settings - Settings whose player selections should be checked.
    * @param players - Players belonging to the match.
-   * @returns Whether settings have the expected structure, match ID, and unique match player IDs.
+   * @returns Whether every selected ID is unique and belongs to a match player.
    */
-  private isValidLocalMatchSettings(settings: unknown, matchId: string, players: readonly MatchPlayer[]): settings is LocalMatchSettings {
-    if (!isLocalMatchSettings(settings) || settings.matchId !== matchId) {
-      return false;
-    }
-
+  private hasValidPlayerSelections(settings: LocalMatchSettings, players: readonly MatchPlayer[]): boolean {
     const matchPlayerIds = new Set(players.map(player => player.playerId));
     const selectedPlayerIds = settings.scoreForPlayerIds;
 
