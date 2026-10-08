@@ -12,6 +12,7 @@ import {
   MatchHistoryPageState,
   MatchHistoryToolbarErrorSource
 } from './match-history-page-state';
+import {getLastPageIndex} from '../../../../shared/utils/pagination.util';
 
 @Injectable()
 export class MatchHistoryPageStore {
@@ -102,7 +103,7 @@ export class MatchHistoryPageStore {
    * @param matchHistory - Paginated history returned by the repository.
    */
   private updateMatchHistory(matchHistory: PaginationResponse<MatchHistoryItem>): void {
-    const lastPageIndex = Math.max(0, Math.ceil(matchHistory.totalElements / matchHistory.pageSize) - 1);
+    const lastPageIndex = getLastPageIndex(matchHistory.totalElements, matchHistory.pageSize);
 
     if (matchHistory.pageIndex > lastPageIndex) {
       this.patchState({navigateToPageIndex: lastPageIndex, loading: true});

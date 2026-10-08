@@ -36,3 +36,25 @@ export function resolvePageSize(value: unknown, pageSizeOptions: readonly number
     ? pageSize
     : defaultPageSize;
 }
+
+/**
+ * Calculates the number of pages needed for the supplied total.
+ *
+ * @param totalElements - Total elements, or undefined before data is available.
+ * @param pageSize - Positive number of elements per page.
+ * @returns Page count, or zero when the total is missing or empty.
+ */
+export function getPageCount(totalElements: number | undefined, pageSize: number): number {
+  return Math.ceil((totalElements ?? 0) / pageSize);
+}
+
+/**
+ * Calculates the last available zero-based page index.
+ *
+ * @param totalElements - Total elements, or undefined before data is available.
+ * @param pageSize - Positive number of elements per page.
+ * @returns Last page index, or zero when the total is missing or empty.
+ */
+export function getLastPageIndex(totalElements: number | undefined, pageSize: number): number {
+  return Math.max(0, getPageCount(totalElements, pageSize) - 1);
+}

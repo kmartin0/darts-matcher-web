@@ -25,6 +25,11 @@ app-match-history-toolbar {
   gap: 16px;
 }
 
+.header {
+  font: var(--mat-sys-headline-small);
+  margin: 0;
+}
+
 app-match-history-cards {
   width: 100%;
   max-width: 600px;

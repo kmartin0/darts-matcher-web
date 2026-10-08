@@ -9,21 +9,26 @@
   <div class="match-history-page-content">
     @if (matchHistory !== null) {
       @if (matchHistory.items.length > 0) {
+        <h1 class="header">
+          {{ matchHistory.totalElements }} matches | Page {{ matchHistory.pageIndex + 1 }} of {{ pageCount() }}
+        </h1>
+
         <app-match-history-cards
           [matchHistoryEntries]="matchHistory.items"
           (deleteMatchFromHistory)="onDeleteMatchFromHistory($event)"/>
       } @else {
         <app-page-error message="Match history empty"/>
       }
-    }
 
-    <mat-paginator
-      [length]="matchHistory?.totalElements ?? 0"
-      [pageIndex]="pageIndex()"
-      [pageSize]="pageSize()"
-      [pageSizeOptions]="pageSizeOptions"
-      [disabled]="state.loading"
-      (page)="onPageChange($event)"
-      aria-label="Match history pagination"/>
+      <mat-paginator
+        [length]="matchHistory.totalElements"
+        [pageIndex]="pageIndex()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="pageSizeOptions"
+        [disabled]="state.loading"
+        [showFirstLastButtons]="true"
+        (page)="onPageChange($event)"
+        aria-label="Match history pagination"/>
+    }
   </div>
 </div>

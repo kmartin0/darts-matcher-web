@@ -5,7 +5,7 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import {PageError} from '../../../../shared/components/page-error/page-error';
 import {CommonDialogService} from '../../../../shared/services/common-dialog.service';
 import {PaginationRequest} from '../../../../shared/types/pagination-request';
-import {resolvePageIndex, resolvePageSize} from '../../../../shared/utils/pagination.util';
+import {getPageCount, resolvePageIndex, resolvePageSize} from '../../../../shared/utils/pagination.util';
 import {observeSignalProperty} from '../../../../shared/utils/signal.util';
 import {MatchHistoryCards} from '../../components/match-history-cards/match-history-cards';
 import {MatchHistoryToolbar} from '../../components/match-history-toolbar/match-history-toolbar';
@@ -47,8 +47,14 @@ export class MatchHistoryPage {
     transform: (value: unknown) => resolvePageSize(value, PAGE_SIZE_OPTIONS, DEFAULT_PAGE_SIZE)
   });
 
+
   protected readonly uiState = this.store.state;
   protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
+
+  protected readonly pageCount = computed<number>(() => {
+    const matchHistory = this.uiState().matchHistory;
+    return getPageCount(matchHistory?.totalElements, matchHistory?.pageSize ?? this.pageSize());
+  });
 
   protected readonly paginationRequest = computed<PaginationRequest>(() => ({
     pageIndex: this.pageIndex(),
@@ -144,8 +150,7 @@ export class MatchHistoryPage {
    * @returns Whether the pagination parameters need no URL correction.
    */
   private isQueryParamsNormalized(queryParams: Params): boolean {
-    const pageIndex = resolvePageIndex(queryParams[PAGE_INDEX_QUERY_PARAM], DEFAULT_PAGE_INDEX);
-    const pageSize = resolvePageSize(queryParams[PAGE_SIZE_QUERY_PARAM], PAGE_SIZE_OPTIONS, DEFAULT_PAGE_SIZE);
+    const {pageSize, pageIndex} = this.createPaginationRequest(queryParams);
 
     const normalizedPage = pageIndex === DEFAULT_PAGE_INDEX ? undefined : String(pageIndex + 1);
     const normalizedPageSize = pageSize === DEFAULT_PAGE_SIZE ? undefined : String(pageSize);
