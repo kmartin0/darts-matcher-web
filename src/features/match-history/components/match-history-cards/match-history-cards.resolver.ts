@@ -1,7 +1,7 @@
 import {X01Match} from '../../../../data/model/x01/match/x01-match';
 import {X01MatchPlayer} from '../../../../data/model/x01/match/x01-match-player';
 import {MatchHistoryCardData, MatchHistoryCardPlayerData} from '../match-history-card/match-history-card-data';
-import {MatchHistoryEntry} from '../../../../data/model/match-history/match-history-entry';
+import {MatchHistoryItem} from '../../../../data/model/match-history/match-history-item';
 
 /**
  * Resolves history entries into card data, preserving their supplied order.
@@ -9,7 +9,7 @@ import {MatchHistoryEntry} from '../../../../data/model/match-history/match-hist
  * @param matchHistoryEntries - History entries to display.
  * @returns Card data in the supplied entry order.
  */
-export function resolveMatchHistoryCards(matchHistoryEntries: MatchHistoryEntry[]): MatchHistoryCardData[] {
+export function resolveMatchHistoryCards(matchHistoryEntries: MatchHistoryItem[]): MatchHistoryCardData[] {
   return matchHistoryEntries.map(resolveMatchHistoryCard);
 }
 
@@ -19,7 +19,7 @@ export function resolveMatchHistoryCards(matchHistoryEntries: MatchHistoryEntry[
  * @param matchHistoryEntry - Match and its last visit timestamp.
  * @returns Display data for the match history card.
  */
-function resolveMatchHistoryCard(matchHistoryEntry: MatchHistoryEntry): MatchHistoryCardData {
+function resolveMatchHistoryCard(matchHistoryEntry: MatchHistoryItem): MatchHistoryCardData {
   const match = matchHistoryEntry.match;
   const bestOf = match.matchSettings.bestOf;
 

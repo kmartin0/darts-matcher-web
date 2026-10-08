@@ -2,7 +2,7 @@ import {Component, computed, input, output} from '@angular/core';
 import {MatchHistoryCard} from '../match-history-card/match-history-card';
 import {MatchHistoryCardData} from '../match-history-card/match-history-card-data';
 import {resolveMatchHistoryCards} from './match-history-cards.resolver';
-import {MatchHistoryEntry} from '../../../../data/model/match-history/match-history-entry';
+import {MatchHistoryItem} from '../../../../data/model/match-history/match-history-item';
 
 @Component({
   selector: 'app-match-history-cards',
@@ -11,7 +11,7 @@ import {MatchHistoryEntry} from '../../../../data/model/match-history/match-hist
   styleUrl: './match-history-cards.scss'
 })
 export class MatchHistoryCards {
-  readonly matchHistoryEntries = input.required<MatchHistoryEntry[]>();
+  readonly matchHistoryEntries = input.required<MatchHistoryItem[]>();
 
   readonly deleteMatchFromHistory = output<string>();
 

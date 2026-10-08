@@ -1,26 +1,24 @@
-import {MatchHistoryEntry} from '../../../../data/model/match-history/match-history-entry';
+import {MatchHistoryItem} from '../../../../data/model/match-history/match-history-item';
 import {ToolbarError} from '../../../../shared/types/toolbar-error';
+import {PaginationResponse} from '../../../../shared/types/pagination-response';
 
 export type MatchHistoryToolbarErrorSource =
   | 'matches'
   | 'deleteFromHistory';
 
-export type MatchHistoryPageToolbarError = ToolbarError<MatchHistoryToolbarErrorSource>;
+export type MatchHistoryPageToolbarError =
+  ToolbarError<MatchHistoryToolbarErrorSource>;
 
 export interface MatchHistoryPageState {
-  matches: MatchHistoryEntry[] | null;
+  matchHistory: PaginationResponse<MatchHistoryItem> | null;
   loading: boolean;
   toolbarError: MatchHistoryPageToolbarError | null;
-  pageIndex: number;
-  pageSize: number;
-  totalMatches: number;
+  navigateToPageIndex: number | null;
 }
 
 export const INITIAL_MATCH_HISTORY_PAGE_STATE: MatchHistoryPageState = {
-  matches: null,
+  matchHistory: null,
   loading: false,
   toolbarError: null,
-  pageIndex: 0,
-  pageSize: 5,
-  totalMatches: 0
+  navigateToPageIndex: null
 };

@@ -1,5 +1,5 @@
 @let state = uiState();
-@let matches = state.matches;
+@let matchHistory = state.matchHistory;
 
 <app-match-history-toolbar
   [error]="state.toolbarError?.message ?? null"
@@ -7,10 +7,10 @@
 
 <div class="match-history-page-scroll">
   <div class="match-history-page-content">
-    @if (matches !== null) {
-      @if (matches.length > 0) {
+    @if (matchHistory !== null) {
+      @if (matchHistory.items.length > 0) {
         <app-match-history-cards
-          [matchHistoryEntries]="matches"
+          [matchHistoryEntries]="matchHistory.items"
           (deleteMatchFromHistory)="onDeleteMatchFromHistory($event)"/>
       } @else {
         <app-page-error message="Match history empty"/>
@@ -18,9 +18,9 @@
     }
 
     <mat-paginator
-      [length]="state.totalMatches"
-      [pageIndex]="state.pageIndex"
-      [pageSize]="state.pageSize"
+      [length]="matchHistory?.totalElements ?? 0"
+      [pageIndex]="pageIndex()"
+      [pageSize]="pageSize()"
       [pageSizeOptions]="pageSizeOptions"
       [disabled]="state.loading"
       (page)="onPageChange($event)"

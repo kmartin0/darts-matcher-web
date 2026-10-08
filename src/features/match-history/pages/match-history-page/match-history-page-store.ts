@@ -2,9 +2,11 @@ import {DestroyRef, inject, Injectable, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {catchError, defer, EMPTY, Subscription, tap} from 'rxjs';
 import {ALL_API_ERROR_CODES} from '../../../../data/api/errors/api-error-code';
-import {MatchHistoryPage} from '../../../../data/model/match-history/match-history-page';
+import {MatchHistoryItem} from '../../../../data/model/match-history/match-history-item';
 import {MatchHistoryRepository} from '../../../../data/repository/match-history-repository';
 import {LoadEvent} from '../../../../shared/types/load-event';
+import {PaginationRequest} from '../../../../shared/types/pagination-request';
+import {PaginationResponse} from '../../../../shared/types/pagination-response';
 import {
   INITIAL_MATCH_HISTORY_PAGE_STATE,
   MatchHistoryPageState,
@@ -23,28 +25,40 @@ export class MatchHistoryPageStore {
 
   private matchHistorySubscription: Subscription | null = null;
 
-  constructor() {
-    this.loadMatchHistory();
+  /**
+   * Observes the requested history page, replacing the previous observation.
+   *
+   * @param paginationRequest - Requested page index and page size.
+   */
+  loadMatchHistory(paginationRequest: PaginationRequest): void {
+    this.matchHistorySubscription?.unsubscribe();
+    this.patchState({navigateToPageIndex: null});
+
+    this.matchHistorySubscription = this.matchHistoryRepository
+      .getMatchHistoryPage$(paginationRequest, ALL_API_ERROR_CODES)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: event => this.handleMatchHistoryEvent(event),
+        error: () => this.handleMatchHistoryError()
+      });
   }
 
   /**
-   * Removes a match from locally stored history.
+   * Removes a match from locally stored history when a history observation is active.
    *
-   * Successful deletions update the active observation or restart it if it ended.
+   * Successful deletion result is streamed through the active match history observation.
    * Clears this operation's toolbar error on success and displays an error on failure.
    *
    * @param matchId - ID of the match to remove from history.
    */
   deleteFromHistory(matchId: string): void {
+    if (this.matchHistorySubscription === null || this.matchHistorySubscription.closed) {
+      return;
+    }
+
     defer(() => this.matchHistoryRepository.deleteMatch(matchId)).pipe(
       tap({
-        complete: () => {
-          this.clearToolbarError('deleteFromHistory');
-
-          if (this.matchHistorySubscription === null || this.matchHistorySubscription.closed) {
-            this.loadMatchHistory();
-          }
-        }
+        complete: () => this.clearToolbarError('deleteFromHistory')
       }),
       catchError(() => {
         this.setToolbarError('deleteFromHistory', 'Failed to delete match from history');
@@ -55,46 +69,20 @@ export class MatchHistoryPageStore {
   }
 
   /**
-   * Selects and loads a history page.
-   *
-   * Replaces the previous history observation.
-   * Selecting the same page again also starts a new observation.
-   *
-   * @param pageIndex - Zero-based page index.
-   * @param pageSize - Maximum number of history entries per page.
+   * Clears the pending page navigation request.
    */
-  setPage(pageIndex: number, pageSize: number): void {
-    this.patchState({pageIndex: pageIndex, pageSize: pageSize});
-    this.loadMatchHistory();
+  clearPageNavigation(): void {
+    this.patchState({navigateToPageIndex: null});
   }
 
   /**
-   * Observes history for the currently selected page.
+   * Handles loading notifications and updated history pages.
    *
-   * Replaces the previous subscription and handles loading, data, and failures.
+   * @param event - Load event emitted by the repository.
    */
-  private loadMatchHistory(): void {
-    this.matchHistorySubscription?.unsubscribe();
-
-    const state = this._state();
-
-    this.matchHistorySubscription = this.matchHistoryRepository
-      .getMatchHistoryPage$(state.pageIndex, state.pageSize, ALL_API_ERROR_CODES)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: event => this.handleMatchHistoryEvent(event),
-        error: () => this.handleMatchHistoryError()
-      });
-  }
-
-  /**
-   * Handles a loading notification or an updated history page.
-   *
-   * Loading notifications activate the indicator while preserving displayed entries.
-   *
-   * @param event - Load event emitted by the history repository.
-   */
-  private handleMatchHistoryEvent(event: LoadEvent<MatchHistoryPage>): void {
+  private handleMatchHistoryEvent(
+    event: LoadEvent<PaginationResponse<MatchHistoryItem>>
+  ): void {
     switch (event.type) {
       case 'loading':
         this.patchState({loading: true});
@@ -107,50 +95,38 @@ export class MatchHistoryPageStore {
   }
 
   /**
-   * Applies history entries and pagination metadata, then stops loading.
+   * Stores the history page or requests navigation to the last available page.
    *
-   * If the requested page is beyond the available records, loads the last
-   * available page before replacing the displayed entries.
+   * Preserves the displayed page while an out-of-range selection is corrected.
    *
-   * @param matchHistory - History page returned by the repository.
+   * @param matchHistory - Paginated history returned by the repository.
    */
-  private updateMatchHistory(matchHistory: MatchHistoryPage): void {
-    const pageMetadata = matchHistory.pageMetaData;
-    const lastPageIndex = Math.max(0, Math.ceil(pageMetadata.totalItems / pageMetadata.size) - 1);
+  private updateMatchHistory(matchHistory: PaginationResponse<MatchHistoryItem>): void {
+    const lastPageIndex = Math.max(0, Math.ceil(matchHistory.totalElements / matchHistory.pageSize) - 1);
 
-    if (pageMetadata.index > lastPageIndex) {
-      this.patchState({totalMatches: pageMetadata.totalItems});
-      this.setPage(lastPageIndex, pageMetadata.size);
+    if (matchHistory.pageIndex > lastPageIndex) {
+      this.patchState({navigateToPageIndex: lastPageIndex, loading: true});
       return;
     }
 
-    this.patchState({
-      matches: matchHistory.entries,
-      loading: false,
-      pageIndex: pageMetadata.index,
-      pageSize: pageMetadata.size,
-      totalMatches: pageMetadata.totalItems
-    });
+    this.patchState({matchHistory: matchHistory, loading: false, navigateToPageIndex: null});
     this.clearToolbarError('matches');
   }
 
   /**
-   * Resets the page to its initial state and reports a failure to load the match history.
+   * Resets the displayed history and reports an observation failure.
    */
   private handleMatchHistoryError(): void {
     this.patchState({
       ...INITIAL_MATCH_HISTORY_PAGE_STATE,
-      toolbarError: {
-        source: 'matches',
-        message: 'Failed to load match history'
-      }
+      toolbarError: {source: 'matches', message: 'Failed to load match history'}
     });
   }
 
   /**
    * Sets the toolbar error for the supplied source.
    *
-   * @param source - Operation that owns the toolbar error.
+   * @param source - Operation that owns the error.
    * @param message - Error message to display.
    */
   private setToolbarError(source: MatchHistoryToolbarErrorSource, message: string): void {
@@ -160,7 +136,7 @@ export class MatchHistoryPageStore {
   /**
    * Clears the toolbar error when it belongs to the supplied source.
    *
-   * @param source - Error source permitted to clear the current toolbar error.
+   * @param source - Error source permitted to clear the current error.
    */
   private clearToolbarError(source: MatchHistoryToolbarErrorSource): void {
     if (this._state().toolbarError?.source === source) {

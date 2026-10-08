@@ -2,26 +2,25 @@ import {inject, Injectable} from '@angular/core';
 import {Dexie, liveQuery} from 'dexie';
 import {defer, from, ignoreElements, map, Observable, of, startWith, switchMap} from 'rxjs';
 import {LoadEvent} from '../../shared/types/load-event';
-import {PageMetadata} from '../../shared/types/page-metadata';
+import {PaginationRequest} from '../../shared/types/pagination-request';
+import {PaginationResponse} from '../../shared/types/pagination-response';
 import {dateToEpochSeconds} from '../../shared/utils/date.util';
 import {ApiErrorCodes} from '../api/errors/api-error-code';
 import {isValidObjectId} from '../api/utils/object-id.util';
-import {MatchHistoryEntry} from '../model/match-history/match-history-entry';
-import {MatchHistoryPage} from '../model/match-history/match-history-page';
+import {MatchHistoryItem} from '../model/match-history/match-history-item';
 import {X01Match} from '../model/x01/match/x01-match';
 import {MatchRepository} from './match-repository';
 
-const MATCH_HISTORY_DB_NAME = 'darts-matcher-recent-matches';
-
+/**
+ * A locally stored match visit containing its ID and visit timestamp.
+ * The full match is retrieved separately from the API.
+ */
 interface MatchHistoryRecord {
   matchId: string;
   lastVisitedAt: number; // Unix timestamp in seconds
 }
 
-interface MatchHistoryRecordsPage {
-  records: MatchHistoryRecord[];
-  pageMetadata: PageMetadata;
-}
+const MATCH_HISTORY_DB_NAME = 'darts-matcher-match-history';
 
 /**
  * Persists local match visits and exposes history pages with loading notifications.
@@ -35,7 +34,7 @@ export class MatchHistoryRepository {
 
   private readonly database = this.createDatabase();
   private readonly matchHistoryTable =
-    this.database.table<MatchHistoryRecord, string>('recentMatches');
+    this.database.table<MatchHistoryRecord, string>('matchHistory');
 
   /**
    * Records a match visit using the current timestamp.
@@ -75,27 +74,25 @@ export class MatchHistoryRepository {
    * Missing match records are removed before emitting the refreshed page.
    * Database and API failures propagate through the observable's error channel.
    *
-   * @param pageIndex - Zero-based page index; must be a non-negative safe integer.
-   * @param pageSize - Maximum entries per page; must be a positive safe integer.
+   * @param paginationRequest - Requested page index and page size.
    * @param handleLocally - API error codes handled locally by the caller.
-   * @returns Observable emitting loading notifications and resolved history pages.
+   * @returns Observable emitting loading notifications and paginated history items.
    */
   getMatchHistoryPage$(
-    pageIndex: number,
-    pageSize: number,
+    paginationRequest: PaginationRequest,
     handleLocally: ApiErrorCodes = []
-  ): Observable<LoadEvent<MatchHistoryPage>> {
+  ): Observable<LoadEvent<PaginationResponse<MatchHistoryItem>>> {
     return defer(() => {
-      this.validatePagination(pageIndex, pageSize);
-      return this.getMatchHistoryRecords$(pageIndex, pageSize);
+      this.validatePagination(paginationRequest);
+      return this.getMatchHistoryRecords$(paginationRequest);
     }).pipe(
       switchMap(recordsPage =>
         this.getMatchHistoryPageFromRecords$(recordsPage, handleLocally).pipe(
           switchMap(page => this.resolveMatchHistoryPage$(recordsPage, page)),
-          startWith<LoadEvent<MatchHistoryPage>>({type: 'loading'})
+          startWith<LoadEvent<PaginationResponse<MatchHistoryItem>>>({type: 'loading'})
         )
       ),
-      startWith<LoadEvent<MatchHistoryPage>>({type: 'loading'})
+      startWith<LoadEvent<PaginationResponse<MatchHistoryItem>>>({type: 'loading'})
     );
   }
 
@@ -105,45 +102,50 @@ export class MatchHistoryRepository {
    * Reads the selected records and total count in one transaction.
    * Emits updated results when match history changes.
    *
-   * @param pageIndex - Zero-based page index.
-   * @param pageSize - Maximum number of records per page.
-   * @returns Observable emitting the selected records and pagination metadata.
+   * @param paginationRequest - Requested page index and page size.
+   * @returns Observable emitting a page of stored history records.
    */
-  private getMatchHistoryRecords$(pageIndex: number, pageSize: number): Observable<MatchHistoryRecordsPage> {
+  private getMatchHistoryRecords$(
+    paginationRequest: PaginationRequest
+  ): Observable<PaginationResponse<MatchHistoryRecord>> {
     return from(liveQuery(() =>
       this.database.transaction('r', this.matchHistoryTable, async () => {
-        const totalItems = await this.matchHistoryTable.count();
+        const totalElements = await this.matchHistoryTable.count();
 
         const records = await this.matchHistoryTable
           .orderBy('lastVisitedAt')
           .reverse()
-          .offset(pageIndex * pageSize)
-          .limit(pageSize)
+          .offset(paginationRequest.pageIndex * paginationRequest.pageSize)
+          .limit(paginationRequest.pageSize)
           .toArray();
 
         return {
-          records: records,
-          pageMetadata: {index: pageIndex, size: pageSize, totalItems: totalItems}
+          items: records,
+          pageIndex: paginationRequest.pageIndex,
+          pageSize: paginationRequest.pageSize,
+          totalElements: totalElements
         };
       })
     ));
   }
 
   /**
-   * Retrieves matches for stored records and retains their pagination metadata.
+   * Converts stored records into history items while retaining pagination information.
    *
-   * @param recordsPage - Stored history records and pagination metadata.
+   * @param recordsPage - Page of stored history records.
    * @param handleLocally - API error codes handled locally by the caller.
    * @returns Observable emitting a history page that excludes missing matches.
    */
   private getMatchHistoryPageFromRecords$(
-    recordsPage: MatchHistoryRecordsPage,
+    recordsPage: PaginationResponse<MatchHistoryRecord>,
     handleLocally: ApiErrorCodes
-  ): Observable<MatchHistoryPage> {
-    return this.getMatchHistoryEntries$(recordsPage.records, handleLocally).pipe(
-      map(entries => ({
-        entries: entries,
-        pageMetaData: recordsPage.pageMetadata
+  ): Observable<PaginationResponse<MatchHistoryItem>> {
+    return this.getMatchHistoryItems$(recordsPage.items, handleLocally).pipe(
+      map(items => ({
+        items: items,
+        pageIndex: recordsPage.pageIndex,
+        pageSize: recordsPage.pageSize,
+        totalElements: recordsPage.totalElements
       }))
     );
   }
@@ -156,12 +158,12 @@ export class MatchHistoryRepository {
    *
    * @param records - Stored history records in the requested order.
    * @param handleLocally - API error codes handled locally by the caller.
-   * @returns Observable emitting entries for the existing matches.
+   * @returns Observable emitting history items for the existing matches.
    */
-  private getMatchHistoryEntries$(
+  private getMatchHistoryItems$(
     records: MatchHistoryRecord[],
     handleLocally: ApiErrorCodes
-  ): Observable<MatchHistoryEntry[]> {
+  ): Observable<MatchHistoryItem[]> {
     if (records.length === 0) {
       return of([]);
     }
@@ -170,7 +172,7 @@ export class MatchHistoryRepository {
 
     return this.matchRepository
       .getMatches([...recordsById.keys()], handleLocally)
-      .pipe(map(matches => this.mapMatchHistoryEntries(matches, recordsById)));
+      .pipe(map(matches => this.mapMatchHistoryItems(matches, recordsById)));
   }
 
   /**
@@ -180,9 +182,9 @@ export class MatchHistoryRepository {
    *
    * @param matches - Matches returned by the API in requested ID order.
    * @param recordsById - Stored history records keyed by match ID.
-   * @returns Match history entries with their visit timestamps.
+   * @returns Match history items with their visit timestamps.
    */
-  private mapMatchHistoryEntries(matches: X01Match[], recordsById: Map<string, MatchHistoryRecord>): MatchHistoryEntry[] {
+  private mapMatchHistoryItems(matches: X01Match[], recordsById: Map<string, MatchHistoryRecord>): MatchHistoryItem[] {
     return matches.flatMap(match => {
       const record = recordsById.get(match.id);
 
@@ -195,36 +197,35 @@ export class MatchHistoryRepository {
   }
 
   /**
-   * Emits a data event when every requested record has a matching entry.
-   *
-   * Otherwise deletes missing match records and completes without emitting.
+   * Emits a data event when every requested record has a matching history item.
+   * Otherwise, deletes missing match records and completes without emitting.
    *
    * @param recordsPage - Stored records used to request the matches.
    * @param page - Page resolved from the successful API response.
    * @returns Observable emitting a data event, or completing after cleanup.
    */
   private resolveMatchHistoryPage$(
-    recordsPage: MatchHistoryRecordsPage,
-    page: MatchHistoryPage
-  ): Observable<LoadEvent<MatchHistoryPage>> {
-    if (page.entries.length === recordsPage.records.length) {
+    recordsPage: PaginationResponse<MatchHistoryRecord>,
+    page: PaginationResponse<MatchHistoryItem>
+  ): Observable<LoadEvent<PaginationResponse<MatchHistoryItem>>> {
+    if (page.items.length === recordsPage.items.length) {
       return of({type: 'data', data: page});
     }
 
     return from(
-      this.deleteMissingMatchRecords(recordsPage.records, page.entries)
+      this.deleteMissingMatchRecords(recordsPage.items, page.items)
     ).pipe(ignoreElements());
   }
 
   /**
-   * Deletes supplied history records whose matches are absent from the entries.
+   * Deletes supplied history records whose matches are absent from the resolved items.
    *
    * @param records - Stored records used to request the matches.
-   * @param entries - Entries resolved from the successful API response.
+   * @param items - History items resolved from the successful API response.
    * @returns Promise resolving when the missing records have been deleted.
    */
-  private deleteMissingMatchRecords(records: MatchHistoryRecord[], entries: MatchHistoryEntry[]): Promise<void> {
-    const existingMatchIds = new Set(entries.map(entry => entry.match.id));
+  private deleteMissingMatchRecords(records: MatchHistoryRecord[], items: MatchHistoryItem[]): Promise<void> {
+    const existingMatchIds = new Set(items.map(item => item.match.id));
 
     const missingMatchIds = records
       .filter(record => !existingMatchIds.has(record.matchId))
@@ -244,13 +245,9 @@ export class MatchHistoryRepository {
   private createDatabase(): Dexie {
     const database = new Dexie(MATCH_HISTORY_DB_NAME);
 
-    database.version(1).stores({
-      recentMatches: 'matchId, lastVisitedAt'
-    });
+    database.version(1).stores({recentMatches: 'matchId, lastVisitedAt'});
 
-    database.on('ready', initializationDatabase =>
-      this.cleanMatchHistoryTable(initializationDatabase)
-    );
+    database.on('ready', initializationDatabase => this.cleanMatchHistoryTable(initializationDatabase));
 
     return database;
   }
@@ -271,16 +268,15 @@ export class MatchHistoryRepository {
   /**
    * Validates the requested pagination values.
    *
-   * @param pageIndex - Zero-based page index.
-   * @param pageSize - Maximum number of entries per page.
+   * @param paginationRequest - Requested page index and page size.
    * @throws RangeError when either value is outside its permitted range.
    */
-  private validatePagination(pageIndex: number, pageSize: number): void {
-    if (!Number.isSafeInteger(pageIndex) || pageIndex < 0) {
+  private validatePagination(paginationRequest: PaginationRequest): void {
+    if (!Number.isSafeInteger(paginationRequest.pageIndex) || paginationRequest.pageIndex < 0) {
       throw new RangeError('pageIndex must be a non-negative safe integer');
     }
 
-    if (!Number.isSafeInteger(pageSize) || pageSize <= 0) {
+    if (!Number.isSafeInteger(paginationRequest.pageSize) || paginationRequest.pageSize <= 0) {
       throw new RangeError('pageSize must be a positive safe integer');
     }
   }
