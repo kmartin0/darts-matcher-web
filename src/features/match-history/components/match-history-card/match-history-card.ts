@@ -5,7 +5,7 @@ import {X01BestOfType} from '../../../../data/model/x01/rules/x01-best-of-type';
 import {MatchStatus} from '../../../../data/model/base-match/match-status';
 import {ResultType} from '../../../../data/model/base-match/result-type';
 import {DatePipe} from '@angular/common';
-import {MatIconButton} from '@angular/material/button';
+import {MatButton, MatIconButton} from '@angular/material/button';
 import {AppEndpoints} from '../../../../app/app-endpoints';
 import {MatIcon} from '@angular/material/icon';
 import {RouterLink} from '@angular/router';
@@ -14,7 +14,7 @@ import {EpochSecondsToDatePipe} from '../../../../shared/pipes/epoch-seconds-to-
 
 @Component({
   selector: 'app-match-history-card',
-  imports: [MatCard, DatePipe, MatCardActions, MatIconButton, MatIcon, RouterLink, MatTooltip, EpochSecondsToDatePipe],
+  imports: [MatCard, DatePipe, MatCardActions, MatIconButton, MatIcon, RouterLink, MatTooltip, EpochSecondsToDatePipe, MatButton],
   templateUrl: './match-history-card.html',
   styleUrl: './match-history-card.scss'
 })

@@ -105,9 +105,9 @@
       <mat-icon>delete</mat-icon>
     </button>
 
-    <a class="open-match-link" [routerLink]="AppEndpoints.match(cardData.matchId)">
+    <a matButton="filled" class="open-match-link" [routerLink]="AppEndpoints.match(cardData.matchId)">
       <span>Open match</span>
-      <mat-icon aria-hidden="true">chevron_right</mat-icon>
+      <mat-icon iconPositionEnd aria-hidden="true">chevron_right</mat-icon>
     </a>
 
     <span class="last-visited">Last visited:

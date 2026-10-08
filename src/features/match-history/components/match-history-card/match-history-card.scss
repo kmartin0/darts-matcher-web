@@ -14,6 +14,8 @@ $header-text: var(--mat-sys-on-primary-container);
 $header-divider: color-mix(in srgb, $header-text 35%, transparent);
 
 $winner-background: color-mix(in srgb, var(--mat-sys-primary-container) 50%, var(--mat-sys-surface-container-low));
+$open-match-background: color-mix(in srgb, var(--mat-sys-primary) 5%, transparent);
+
 $outline-color: var(--mat-sys-primary-container);
 
 :host {
@@ -150,16 +152,15 @@ mat-card {
 }
 
 .open-match-link {
-  display: inline-flex;
   justify-self: end;
-  align-items: center;
-  gap: 2px;
-  color: inherit;
-  text-decoration: none;
 
-  &:hover {
-    text-decoration: underline;
-  }
+  @include mat.button-overrides((
+    filled-container-shape: var(--mat-sys-corner-medium),
+    filled-horizontal-padding: 12px,
+    filled-container-color: $open-match-background,
+    filled-label-text-color: $card-text,
+    filled-state-layer-color: $card-text
+  ));
 }
 
 .last-visited {
