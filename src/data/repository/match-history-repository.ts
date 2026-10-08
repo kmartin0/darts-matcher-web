@@ -21,6 +21,7 @@ interface MatchHistoryRecord {
 }
 
 const MATCH_HISTORY_DB_NAME = 'darts-matcher-match-history';
+const MATCH_HISTORY_TABLE_NAME = 'matchHistory';
 
 /**
  * Persists local match visits and exposes history pages with loading notifications.
@@ -34,7 +35,7 @@ export class MatchHistoryRepository {
 
   private readonly database = this.createDatabase();
   private readonly matchHistoryTable =
-    this.database.table<MatchHistoryRecord, string>('matchHistory');
+    this.database.table<MatchHistoryRecord, string>(MATCH_HISTORY_TABLE_NAME);
 
   /**
    * Records a match visit using the current timestamp.
@@ -245,7 +246,9 @@ export class MatchHistoryRepository {
   private createDatabase(): Dexie {
     const database = new Dexie(MATCH_HISTORY_DB_NAME);
 
-    database.version(1).stores({recentMatches: 'matchId, lastVisitedAt'});
+    database.version(1).stores({
+      [MATCH_HISTORY_TABLE_NAME]: 'matchId, lastVisitedAt'
+    });
 
     database.on('ready', initializationDatabase => this.cleanMatchHistoryTable(initializationDatabase));
 
@@ -260,7 +263,7 @@ export class MatchHistoryRepository {
    */
   private async cleanMatchHistoryTable(database: Dexie): Promise<void> {
     await database
-      .table<MatchHistoryRecord, string>('recentMatches')
+      .table<MatchHistoryRecord, string>(MATCH_HISTORY_TABLE_NAME)
       .filter(record => !this.isMatchHistoryRecord(record))
       .delete();
   }
