@@ -1,6 +1,7 @@
 import {DOCUMENT, effect, inject, Injectable} from '@angular/core';
 import {SettingsRepository} from '../data/repository/settings-repository';
 import {THEME_MODE_BODY_CLASSES, ThemeMode} from '../data/model/settings/theme-mode';
+import {ErrorDialogService} from '../shared/services/error-dialog.service';
 
 /**
  * Application-level store that exposes global UI state and actions.
@@ -10,6 +11,7 @@ import {THEME_MODE_BODY_CLASSES, ThemeMode} from '../data/model/settings/theme-m
 })
 export class AppStore {
   private readonly settingsRepository = inject(SettingsRepository);
+  private readonly errorDialogService = inject(ErrorDialogService);
   private readonly document = inject(DOCUMENT);
 
   readonly themeMode = this.settingsRepository.themeMode;
@@ -28,10 +30,14 @@ export class AppStore {
   }
 
   /**
-   * Toggles between the available application theme modes.
+   * Toggles the application theme, showing an error dialog if saving fails.
    */
   toggleThemeMode(): void {
-    this.settingsRepository.toggleThemeMode();
+    try {
+      this.settingsRepository.toggleThemeMode();
+    } catch {
+      this.errorDialogService.openPersistenceErrorDialog();
+    }
   }
 
   /**

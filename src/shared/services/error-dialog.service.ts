@@ -59,4 +59,23 @@ export class ErrorDialogService {
       stackable
     );
   }
+
+  /**
+   * Opens an error dialog when changes could not be saved.
+   *
+   * @param stackable - Whether the dialog can be opened while another dialog is already open.
+   */
+  openPersistenceErrorDialog(stackable: boolean = false): void {
+    const data: TextDialogData = {
+      title: 'Could not save changes',
+      contentText: 'Your changes could not be saved. Please try again.',
+      matIcon: 'error'
+    };
+
+    void this.dialogManagerService.open<TextDialog, TextDialogData, undefined>(
+      TextDialog,
+      {data: data},
+      stackable
+    );
+  }
 }

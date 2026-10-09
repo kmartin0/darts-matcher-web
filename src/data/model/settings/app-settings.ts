@@ -9,21 +9,17 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
 };
 
 /**
- * Resolves application settings from an unknown stored value.
+ * Checks whether a value contains valid application settings.
  *
- * Missing or invalid properties are replaced with their defaults.
- *
- * @param value - Stored value to resolve.
- * @returns Valid application settings.
+ * @param value - Value to check.
+ * @returns Whether the value is valid application settings.
  */
-export function resolveAppSettings(value: unknown): AppSettings {
+export function isAppSettings(value: unknown): value is AppSettings {
   if (value === null || typeof value !== 'object' || Array.isArray(value)) {
-    return {...DEFAULT_APP_SETTINGS};
+    return false;
   }
 
   const settings = value as Record<string, unknown>;
 
-  return {
-    themeMode: isThemeMode(settings['themeMode']) ? settings['themeMode'] : DEFAULT_APP_SETTINGS.themeMode
-  };
+  return isThemeMode(settings['themeMode']);
 }
