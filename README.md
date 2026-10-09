@@ -1,59 +1,62 @@
-# DartsMatcherWeb
+# Darts Matcher Web
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.4.
+Web application for creating, playing and sharing X01 darts matches using the Darts Matcher platform.
 
-## Development server
+Demo hosted on a Raspberry Pi using Docker and nginx: https://dartsmatcher.kmartin.nl/
 
-To start a local development server, run:
+## Features
 
-```bash
-ng serve
-```
+- Create 301 and 501 matches.
+- Configure matches using sets or legs.
+- Configure clear-by-two rules for sets, legs and final sets.
+- Support up to four players.
+- Play against configurable Dart Bot opponents.
+- Track checkout attempts and checkout percentages.
+- Enter scores using an integrated keypad.
+- Display remaining scores, suggested checkouts, averages and match standings.
+- Edit or undo previously entered scores.
+- View match information, statistics and a complete match timeline.
+- Reset, repair, delete and create rematches.
+- Share matches using a match link or match ID.
+- Synchronize match updates between clients in real time.
+- Store recently visited matches locally with paginated match history.
+- Configure which players are being scored for on each device.
+- Light and dark mode.
+- Responsive layouts for mobile and desktop.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Technical Overview
 
-## Code scaffolding
+- Angular.
+- TypeScript.
+- Angular Material and CDK.
+- Angular Signals for application and page state.
+- Angular Signal Forms with custom validation.
+- REST API communication using `HttpClient`.
+- STOMP over WebSocket for real-time match updates.
+- IndexedDB persistence using Dexie.
+- Centralized HTTP and WebSocket error handling.
+- Feature-based application structure.
+- Responsive SCSS styling.
+- Docker multi-stage build served using nginx.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Screenshots
 
-```bash
-ng generate component component-name
-```
+<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_home.png?raw=true" alt="Home screenshot" width="300" />
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_home-light.png?raw=true" alt="Home light mode screenshot" width="300" />
 
-```bash
-ng generate --help
-```
+<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_match.png?raw=true" alt="Match screenshot" width="300" />
 
-## Building
+<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_match-light.png?raw=true" alt="Match light mode screenshot" width="300" />
 
-To build the project run:
+<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_match-score-for.png?raw=true" alt="Match score for screenshot" width="300" />
 
-```bash
-ng build
-```
+<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_match-information.png?raw=true" alt="Match information screenshot" width="300" />
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_match-statistics.png?raw=true" alt="Match statistics screenshot" width="300" />
 
-## Running unit tests
+<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_match-timeline.png?raw=true" alt="Match timeline screenshot" width="300" />
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_match-history.png?raw=true" alt="Match history screenshot" width="300" />
 
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_match-win.png?raw=true" alt="Match win screenshot" width="300" />
