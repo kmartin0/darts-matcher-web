@@ -42,6 +42,11 @@
 
 .players-section {
   margin-top: 8px;
+
+  @include mat.card-overrides((
+    outlined-container-color: transparent,
+    outlined-outline-width: 2px,
+  ))
 }
 
 .player-action-container {

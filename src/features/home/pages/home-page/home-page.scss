@@ -1,16 +1,12 @@
 @use "mixins/helpers";
 @use "mixins/devices";
+@use "@angular/material" as mat;
 
 :host {
   display: flex;
   flex-direction: column;
   flex: 1;
   width: 100%;
-}
-
-.content-container {
-  @include helpers.module-page;
-  gap: 24px;
 }
 
 // Header and subheader
@@ -46,16 +42,64 @@
   }
 }
 
-// Create match heading and theme toggle
-.create-match-header {
-  align-items: center;
-  justify-content: space-between;
+// Page section
+.content-container {
+  @include helpers.module-page;
+  gap: 24px;
+
+  @include mat.card-overrides((
+    elevated-container-color: var(--mat-sys-surface-container-low),
+    elevated-container-elevation: var(--mat-sys-level2)
+  ));
+
+  @include helpers.dark-mode {
+    @include mat.card-overrides((
+      elevated-container-color: var(--mat-sys-surface-container-high),
+    ));
+  }
 }
 
-// Page section
 .section-container {
   width: 100%;
   max-width: 575px;
+  margin-top: 12px;
+
+  > mat-card-content {
+    padding: 0 20px 20px;
+
+    @include devices.device(phone, phablet) {
+      padding: 0 16px 16px;
+    }
+  }
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+  > h3 {
+    margin: 0;
+    font: var(--mat-sys-title-large);
+    font-weight: 500;
+  }
+
+  > mat-icon {
+    flex-shrink: 0;
+  }
+
+  @include devices.device(phone, phablet) {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+}
+
+app-theme-toggle {
+  margin-left: auto;
+  color: var(--mat-sys-primary);
 }
 
 // Match history section

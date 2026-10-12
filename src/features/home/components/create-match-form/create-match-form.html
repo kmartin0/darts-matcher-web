@@ -1,4 +1,4 @@
-<form class="form" [formRoot]="matchForm">
+<form class="container-vertical" [formRoot]="matchForm">
   <!-- Section - X01 -->
   <div class="container-vertical no-gap">
     <!-- Field - X01 -->
@@ -83,7 +83,7 @@
     <div class="clear-by-two-input-container">
       <div class="container-vertical">
         <mat-form-field subscriptSizing="dynamic" appearance="outline">
-          <mat-label>Extra set limit</mat-label>
+          <mat-label>Limit</mat-label>
           <input matInput type="number" [formField]="matchForm.clearByTwo.setLimit"/>
         </mat-form-field>
         <app-form-error [field]="matchForm.clearByTwo.setLimit"/>
@@ -91,7 +91,7 @@
 
       <div class="container-vertical">
         <mat-form-field subscriptSizing="dynamic" appearance="outline">
-          <mat-label>Extra leg limit</mat-label>
+          <mat-label>Limit</mat-label>
           <input matInput type="number" [formField]="matchForm.clearByTwo.legLimit"/>
         </mat-form-field>
         <app-form-error [field]="matchForm.clearByTwo.legLimit"/>
@@ -99,7 +99,7 @@
 
       <div class="container-vertical">
         <mat-form-field subscriptSizing="dynamic" appearance="outline">
-          <mat-label>Extra leg limit final set</mat-label>
+          <mat-label>Limit</mat-label>
           <input matInput type="number" [formField]="matchForm.clearByTwo.finalSetLegLimit"/>
         </mat-form-field>
         <app-form-error [field]="matchForm.clearByTwo.finalSetLegLimit"/>

@@ -4,28 +4,44 @@
 </div>
 
 <div class="content-container">
-  <div class="section-container">
-    <div class="container-horizontal create-match-header">
+  <mat-card class="section-container" appearance="raised">
+    <div class="section-header">
+      <mat-icon aria-hidden="true">target</mat-icon>
       <h3>Create match</h3>
       <app-theme-toggle/>
     </div>
-    <app-create-match-form [submitAction]="onCreateMatchSubmit"/>
-  </div>
 
-  <div class="section-container">
-    <h3>Go to match page</h3>
-    <app-match-id-form [submitAction]="onMatchIdSubmit"/>
-  </div>
+    <mat-card-content>
+      <app-create-match-form [submitAction]="onCreateMatchSubmit"/>
+    </mat-card-content>
+  </mat-card>
 
-  <div class="section-container">
-    <h3>Match history</h3>
-    <a
-      matButton="outlined"
-      class="match-history-button"
-      [routerLink]="AppEndpoints.matchHistory()">
-      <mat-icon></mat-icon>
-      Open match history
-      <mat-icon iconPositionEnd>arrow_forward</mat-icon>
-    </a>
-  </div>
+  <mat-card class="section-container" appearance="raised">
+    <div class="section-header">
+      <mat-icon aria-hidden="true">login</mat-icon>
+      <h3>Go to match page</h3>
+    </div>
+
+    <mat-card-content>
+      <app-match-id-form [submitAction]="onMatchIdSubmit"/>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="section-container" appearance="raised">
+    <div class="section-header">
+      <mat-icon aria-hidden="true">list_alt</mat-icon>
+      <h3>Match history</h3>
+    </div>
+
+    <mat-card-content>
+      <a
+        matButton="outlined"
+        class="match-history-button"
+        [routerLink]="AppEndpoints.matchHistory()">
+        <mat-icon></mat-icon>
+        Open match history
+        <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+      </a>
+    </mat-card-content>
+  </mat-card>
 </div>

@@ -2,7 +2,6 @@ import {Component, inject} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
 import {AppEndpoints} from '../../../../app/app-endpoints';
 import {ThemeToggle} from '../../../../shared/components/theme-toggle/theme-toggle';
-import {CommonDialogService} from '../../../../shared/services/common-dialog.service';
 import {observeSignalProperty} from '../../../../shared/utils/signal.util';
 import {CreateMatchForm} from '../../components/create-match-form/create-match-form';
 import * as CreateMatchFormModel from '../../components/create-match-form/create-match-form.model';
@@ -11,12 +10,12 @@ import * as MatchIdFormModel from '../../components/match-id-form/match-id-form.
 import {HomePageStore} from './home-page-store';
 import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
-import {MatDivider} from '@angular/material/list';
+import {MatCard, MatCardContent} from '@angular/material/card';
 
 @Component({
   selector: 'app-home-page',
   providers: [HomePageStore],
-  imports: [ThemeToggle, CreateMatchForm, MatchIdForm, RouterLink, MatIcon, MatButton],
+  imports: [ThemeToggle, CreateMatchForm, MatchIdForm, RouterLink, MatIcon, MatButton, MatCard, MatCardContent],
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss'
 })
