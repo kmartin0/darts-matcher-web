@@ -6,12 +6,14 @@ $card-corner: var(--mat-sys-corner-medium);
 
 :host {
   @include mat.table-overrides((
+    background-color: transparent,
     row-item-container-height: auto,
     header-container-height: auto
   ));
 
   @include mat.card-overrides((
-    elevated-container-shape: $card-corner
+    elevated-container-shape: $card-corner,
+    elevated-container-elevation: var(--mat-sys-level2)
   ));
 }
 
@@ -34,7 +36,7 @@ $card-corner: var(--mat-sys-corner-medium);
   padding: 8px;
 
   @include helpers.dark-mode {
-    background-color: var(--mat-sys-surface-container-highest);
+    background-color: var(--mat-sys-surface-container-high);
     color: var(--mat-sys-on-surface);
   }
 }
@@ -67,11 +69,6 @@ $card-corner: var(--mat-sys-corner-medium);
   width: 100%;
   border-radius: 0 0 $card-corner $card-corner;
   overflow: hidden;
-}
-
-table {
-  background-color: var(--mat-sys-surface-container);
-  color: var(--mat-sys-on-surface);
 }
 
 .mat-mdc-header-cell {

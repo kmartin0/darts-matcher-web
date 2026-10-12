@@ -9,7 +9,7 @@
 
   @include helpers.dark-mode {
     @include mat.button-overrides((
-      filled-container-color: var(--mat-sys-surface-bright),
+      filled-container-color: var(--mat-sys-surface-container-high),
       filled-label-text-color: var(--mat-sys-on-surface)
     ));
   }

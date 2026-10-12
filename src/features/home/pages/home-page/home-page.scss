@@ -2,13 +2,27 @@
 @use "mixins/devices";
 
 :host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+}
+
+.content-container {
   @include helpers.module-page;
   gap: 24px;
 }
 
 // Header and subheader
 .header-container {
-  margin-bottom: 8px;
+  padding: 12px;
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+
+  @include helpers.dark-mode {
+    background-color: var(--mat-sys-surface-container-high);
+    color: var(--mat-sys-on-surface);
+  }
 }
 
 .header, .subheader {
@@ -25,7 +39,7 @@
 }
 
 .subheader {
-  font: var(--mat-sys-headline-small);
+  font: var(--mat-sys-title-large);
 
   @include devices.device(phone, phablet) {
     font: var(--mat-sys-title-medium);

@@ -11,6 +11,7 @@ import * as MatchIdFormModel from '../../components/match-id-form/match-id-form.
 import {HomePageStore} from './home-page-store';
 import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
+import {MatDivider} from '@angular/material/list';
 
 @Component({
   selector: 'app-home-page',

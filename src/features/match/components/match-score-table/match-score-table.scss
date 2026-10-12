@@ -13,7 +13,7 @@
   @include helpers.dark-mode {
     background-color: color-mix(
       in srgb,
-      var(--mat-sys-surface-container) $mix-percent-dark,
+      var(--mat-sys-surface-container-high) $mix-percent-dark,
       var(--mat-sys-inverse-surface)
     );
   }
@@ -65,15 +65,15 @@ table {
   }
 
   th {
-    @include table-row-color(60%, 95%);
+    @include table-row-color(60%, 100%);
   }
 
   tr:nth-child(odd) td {
-    @include table-row-color(70%, 85%);
+    @include table-row-color(70%, 96%);
   }
 
   tr:nth-child(even) td {
-    @include table-row-color(80%, 80%);
+    @include table-row-color(80%, 92%);
   }
 
   td:not(:first-child),

@@ -1,3 +1,5 @@
+@use "@angular/material" as mat;
+
 // Best of
 
 .best-of-fields {
@@ -17,6 +19,12 @@
 .clear-by-two-toggle-container {
   width: 100%;
   margin-bottom: 12px;
+
+  @include mat.button-toggle-overrides((
+    selected-state-background-color: var(--mat-sys-primary),
+    selected-state-text-color: var(--mat-sys-on-primary),
+    divider-color: var(--mat-sys-outline-variant)
+  ));
 
   mat-button-toggle {
     flex: 1 1 0;

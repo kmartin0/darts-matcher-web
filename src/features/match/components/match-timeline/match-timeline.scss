@@ -1,4 +1,5 @@
 @use "mixins/devices";
+@use "mixins/helpers";
 
 $card-corner: var(--mat-sys-corner-medium);
 
@@ -13,6 +14,7 @@ $card-corner: var(--mat-sys-corner-medium);
   width: 100%;
   min-width: fit-content;
   overflow-x: auto;
+  padding-bottom: 6px;
 }
 
 // Header section.
@@ -37,6 +39,11 @@ $card-corner: var(--mat-sys-corner-medium);
 
   @include devices.device(phone, phablet) {
     font: var(--mat-sys-title-small);
+  }
+
+  @include helpers.dark-mode {
+    background-color: var(--mat-sys-surface-container-highest);
+    color: var(--mat-sys-on-surface);
   }
 }
 
@@ -85,10 +92,6 @@ app-match-timeline-leg-card {
   width: 100%;
   min-width: 300px;
   max-width: 650px;
-
-  &:last-child {
-    padding-bottom: 2px;
-  }
 
   @include devices.device(tablet) {
     max-width: 550px;

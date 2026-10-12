@@ -1,5 +1,6 @@
 @use "@angular/material" as mat;
 @use "mixins/devices";
+@use "mixins/helpers";
 
 :host {
   display: block;
@@ -9,8 +10,14 @@
   @include mat.card-overrides((
     elevated-container-shape: var(--mat-sys-corner-small),
     elevated-container-elevation: var(--mat-sys-level1),
-    elevated-container-color: var(--mat-sys-surface-bright)
+    elevated-container-color: var(--mat-sys-surface)
   ));
+
+  @include helpers.dark-mode {
+    @include mat.card-overrides((
+      elevated-container-color: var(--mat-sys-surface-container-high)
+    ));
+  }
 }
 
 .match-score-input {

@@ -1,22 +1,25 @@
 @use "@angular/material" as mat;
 @use "mixins/devices";
+@use "mixins/helpers";
 
 // Sizing
 $card-inset: 16px;
-$outline-width: 2px;
+$outline-width: 1px;
 
 // Colors
-$card-background: color-mix(in srgb, var(--mat-sys-primary-container) 12%, var(--mat-sys-surface-container-low));
-$card-text: var(--mat-sys-on-primary-container);
+$card-background: var(--mat-sys-surface-container-low);
+$card-text: var(--mat-sys-on-surface);
 
 $header-background: var(--mat-sys-primary-container);
 $header-text: var(--mat-sys-on-primary-container);
-$header-divider: color-mix(in srgb, $header-text 35%, transparent);
+$header-background-dark: var(--mat-sys-surface-container-highest);
+$header-text-dark: var(--mat-sys-on-surface);
+$header-divider: var(--mat-sys-outline);
 
-$winner-background: color-mix(in srgb, var(--mat-sys-primary-container) 50%, var(--mat-sys-surface-container-low));
-$open-match-background: color-mix(in srgb, var(--mat-sys-primary) 5%, transparent);
+$winner-background: var(--mat-sys-surface-container-high);
+$open-match-background: var(--mat-sys-surface-container-high);
 
-$outline-color: var(--mat-sys-primary-container);
+$outline-color: var(--mat-sys-outline-variant);
 
 :host {
   display: block;
@@ -29,9 +32,7 @@ mat-card {
   color: $card-text;
 
   @include mat.card-overrides((
-    outlined-outline-width: $outline-width,
-    outlined-outline-color: $outline-color,
-    outlined-container-color: $card-background
+    elevated-container-elevation: var(--mat-sys-level2)
   ));
 }
 
@@ -45,6 +46,11 @@ mat-card {
   padding: $card-inset;
   background: $header-background;
   color: $header-text;
+
+  @include helpers.dark-mode {
+    background: $header-background-dark;
+    color: $header-text-dark;
+  }
 }
 
 .card-header-start,
