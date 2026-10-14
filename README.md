@@ -43,13 +43,15 @@ Demo hosted on a Raspberry Pi using Docker and nginx: https://dartsmatcher.kmart
 
 <img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_home.png?raw=true" alt="Home screenshot" width="300" />
 
-<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_home-light.png?raw=true" alt="Home light mode screenshot" width="300" />
+<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_home-dark.png?raw=true" alt="Home dark mode screenshot" width="300" />
 
 <img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_match.png?raw=true" alt="Match screenshot" width="300" />
 
-<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_match-light.png?raw=true" alt="Match light mode screenshot" width="300" />
+<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_match-dark.png?raw=true" alt="Match dark mode screenshot" width="300" />
 
-<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_match-score-for.png?raw=true" alt="Match score for screenshot" width="300" />
+<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_score-for.png?raw=true" alt="Score for screenshot" width="300" />
+
+<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_match-win.png?raw=true" alt="Match win screenshot" width="300" />
 
 <img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_match-information.png?raw=true" alt="Match information screenshot" width="300" />
 
@@ -58,5 +60,3 @@ Demo hosted on a Raspberry Pi using Docker and nginx: https://dartsmatcher.kmart
 <img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_match-timeline.png?raw=true" alt="Match timeline screenshot" width="300" />
 
 <img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_match-history.png?raw=true" alt="Match history screenshot" width="300" />
-
-<img src="https://github.com/kmartin0/assets/blob/master/darts-matcher-web/darts-matcher_match-win.png?raw=true" alt="Match win screenshot" width="300" />
