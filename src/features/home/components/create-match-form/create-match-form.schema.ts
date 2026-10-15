@@ -34,6 +34,7 @@ export const MAX_PLAYERS = 4;
 export const CREATE_MATCH_FORM_SCHEMA =
   schema<CreateMatchFormModel.FormModel>(path => {
     registerX01Rules(path);
+    registerFormatRules(path);
     registerBestOfRules(path);
     registerClearByTwoRules(path);
     registerPlayersRules(path);
@@ -62,6 +63,19 @@ function registerX01Rules(path: SchemaPathTree<CreateMatchFormModel.FormModel>):
     message: ValidationErrorMessageUtil.getErrorMessage({
       key: ValidationErrorKey.MAX,
       max: MAX_X01,
+    }),
+  });
+}
+
+/**
+ * Registers validation rules for the match format field.
+ *
+ * @param path - Schema path tree for the create match form.
+ */
+function registerFormatRules(path: SchemaPathTree<CreateMatchFormModel.FormModel>): void {
+  required(path.format, {
+    message: ValidationErrorMessageUtil.getErrorMessage({
+      key: ValidationErrorKey.REQUIRED,
     }),
   });
 }

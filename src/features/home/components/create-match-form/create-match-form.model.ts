@@ -1,6 +1,7 @@
 import {PlayerType} from '../../../../data/model/base-match/player-type';
 import {X01BestOfType} from '../../../../data/model/x01/rules/x01-best-of-type';
 import {FormSubmitAction, FormSubmitError} from '../../../../shared/forms/form-submit';
+import {X01MatchFormat} from '../../../../data/model/x01/match/x01-match-format';
 
 export enum ClearByTwoType {
   SETS = 'SETS',
@@ -18,6 +19,7 @@ export interface PlayerFormModel {
 
 export interface FormModel {
   x01: number;
+  format: X01MatchFormat;
   bestOf: {
     bestOfType: X01BestOfType;
     sets: number;
@@ -54,6 +56,7 @@ export function createEmptyPlayer(): PlayerFormModel {
 export function createInitialFormModel(): FormModel {
   return {
     x01: 501,
+    format: X01MatchFormat.SIDO,
     bestOf: {
       bestOfType: X01BestOfType.SETS,
       sets: 1,
@@ -73,6 +76,7 @@ export function createInitialFormModel(): FormModel {
 export type StaticFormErrorTarget =
   | 'root'
   | 'x01'
+  | 'format'
   | 'bestOf.sets'
   | 'bestOf.legs'
   | 'clearByTwo.setLimit'

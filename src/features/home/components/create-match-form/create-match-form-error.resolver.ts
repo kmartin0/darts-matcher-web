@@ -35,6 +35,8 @@ function resolveStaticTargetFieldTree(
       return undefined;
     case 'x01':
       return fieldTree.x01;
+    case 'format':
+      return fieldTree.format;
     case 'bestOf.sets':
       return fieldTree.bestOf.sets;
     case 'bestOf.legs':

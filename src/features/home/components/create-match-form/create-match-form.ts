@@ -16,6 +16,7 @@ import {createSubmittingForm} from '../../../../shared/forms/submitting-form.fac
 import * as CreateMatchFormErrorResolver from './create-match-form-error.resolver';
 import * as CreateMatchFormModel from './create-match-form.model';
 import {CREATE_MATCH_FORM_SCHEMA, MAX_PLAYERS, MIN_PLAYERS} from './create-match-form.schema';
+import {X01MatchFormat} from '../../../../data/model/x01/match/x01-match-format';
 
 @Component({
   selector: 'app-create-match-form',
@@ -59,6 +60,7 @@ export class CreateMatchForm {
   private readonly formModel = this.submittingForm.formModel;
 
   protected readonly x01Options = CreateMatchFormModel.X01_OPTIONS;
+  protected readonly MatchFormat = X01MatchFormat;
   protected readonly BestOfType = X01BestOfType;
   protected readonly ClearByTwoType = CreateMatchFormModel.ClearByTwoType;
   protected readonly PlayerType = PlayerType;

@@ -11,6 +11,22 @@
     <app-form-error [field]="matchForm.x01"/>
   </div>
 
+  <!-- Section - Match format -->
+  <div class="container-vertical no-gap">
+    <label id="match-format-label">Select match format</label>
+    <mat-radio-group
+      aria-labelledby="match-format-label"
+      [formField]="matchForm.format">
+      <mat-radio-button [value]="MatchFormat.SIDO">
+        SIDO
+      </mat-radio-button>
+      <mat-radio-button [value]="MatchFormat.DIDO">
+        DIDO
+      </mat-radio-button>
+    </mat-radio-group>
+    <app-form-error [field]="matchForm.format"/>
+  </div>
+
   <!-- Section - Best of -->
   <div class="container-vertical">
     <!-- Field - Best of type -->

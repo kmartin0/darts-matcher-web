@@ -3,6 +3,7 @@ import {X01Match} from '../../../../../data/model/x01/match/x01-match';
 import {X01BestOfType} from '../../../../../data/model/x01/rules/x01-best-of-type';
 import {X01MatchSettings} from '../../../../../data/model/x01/match/x01-match-settings';
 import {formatCount} from '../../../../../shared/utils/number.util';
+import {X01MatchFormat} from '../../../../../data/model/x01/match/x01-match-format';
 
 export interface MatchFormatSummaryPipeData {
   matchSettings: X01MatchSettings;
@@ -18,11 +19,12 @@ export interface MatchFormatSummaryPipeData {
 export class MatchFormatSummaryPipe implements PipeTransform {
 
   /**
-   * Formats the best-of configuration, clear-by-two state, and starting score (x01).
+   * Formats the best-of configuration, clear-by-two state, starting score,
+   * and double-in format when applicable.
    *
    * Examples:
    * `Best of 5 legs • 501`
-   * `Best of 3 sets (BO5) • Clear by two • 501`
+   * `Best of 3 sets (BO5) • Clear by two • 501 • DIDO`
    *
    * @param data - Match settings and match type to format.
    * @returns Formatted match format summary.
@@ -36,6 +38,10 @@ export class MatchFormatSummaryPipe implements PipeTransform {
     }
 
     summaryParts.push(`${matchSettings.x01}`);
+
+    if (matchSettings.format === X01MatchFormat.DIDO) {
+      summaryParts.push('DIDO');
+    }
 
     return summaryParts.join(' • ');
   }

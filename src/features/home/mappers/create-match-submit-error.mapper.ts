@@ -8,6 +8,8 @@ const API_TARGETS_MAP: Readonly<Partial<Record<string, CreateMatchFormModel.Stat
   'matchSettings': 'root',
   'matchSettings.x01': 'x01',
 
+  'matchSettings.format': 'format',
+
   'matchSettings.bestOf': 'root',
   'matchSettings.bestOf.bestOfType': 'root',
   'matchSettings.bestOf.sets': 'bestOf.sets',

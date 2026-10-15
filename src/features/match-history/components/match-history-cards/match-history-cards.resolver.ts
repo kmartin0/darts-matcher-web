@@ -29,6 +29,7 @@ function resolveMatchHistoryCard(matchHistoryEntry: MatchHistoryItem): MatchHist
     bestOfSets: bestOf.sets,
     bestOfLegs: bestOf.legs,
     bestOfType: bestOf.bestOfType,
+    format: match.matchSettings.format,
     startDate: match.startDate,
     lastVisitedAt: matchHistoryEntry.lastVisitedAt,
     matchStatus: match.matchStatus,

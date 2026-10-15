@@ -1,6 +1,7 @@
 import {X01CreateMatchRequestDto} from '../../../data/dto/x01-create-match-request.dto';
 import {PlayerType} from '../../../data/model/base-match/player-type';
 import * as CreateMatchFormModel from '../components/create-match-form/create-match-form.model';
+import {X01MatchFormat} from '../../../data/model/x01/match/x01-match-format';
 
 /**
  * Maps the create match form model to the API request DTO.
@@ -32,6 +33,7 @@ export function mapToCreateMatchRequest(formModel: CreateMatchFormModel.FormMode
           limit: formModel.clearByTwo.finalSetLegLimit,
         },
       },
+      format: formModel.format,
     },
     players: formModel.players.map(player => ({
       playerName: player.playerName,

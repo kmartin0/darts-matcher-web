@@ -150,6 +150,7 @@ mat-card {
   grid-template-columns: 1fr auto;
   align-items: center;
   padding: 8px $card-inset;
+  gap: 4px;
 }
 
 .delete-match-button {
