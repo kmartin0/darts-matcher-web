@@ -84,7 +84,7 @@ function resolveLegCardPlayers(
       dartsUsed: legValues.dartsThrown,
       average: calculateX01Average(legValues.pointsThrown, legValues.dartsThrown),
       remaining: legValues.remaining,
-      doublesMissed: legValues.doublesMissed
+      checkoutDoublesMissed: legValues.checkoutDoublesMissed
     };
   });
 }

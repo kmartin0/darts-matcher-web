@@ -29,7 +29,7 @@ interface MatchTimelineLegCardRow {
   dartsUsed: number;
   average: number | null;
   remaining: number;
-  doublesMissed: number;
+  checkoutDoublesMissed: number;
 }
 
 @Component({
@@ -159,7 +159,7 @@ export class MatchTimelineLegCard {
       dartsUsed: player.dartsUsed,
       average: player.average,
       remaining: player.remaining,
-      doublesMissed: player.doublesMissed
+      checkoutDoublesMissed: player.checkoutDoublesMissed
     };
   }
 }

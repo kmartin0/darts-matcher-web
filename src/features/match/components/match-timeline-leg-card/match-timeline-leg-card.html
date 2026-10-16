@@ -85,7 +85,7 @@
 
         <td mat-cell *matCellDef="let row">
           @let doublesHit = row.winsLeg ? 1 : 0;
-          @let doublesAttempted = doublesHit + (row.doublesMissed ?? 0);
+          @let doublesAttempted = doublesHit + (row.checkoutDoublesMissed ?? 0);
 
           <ng-container>{{ doublesHit }}/{{ doublesAttempted }}</ng-container>
         </td>

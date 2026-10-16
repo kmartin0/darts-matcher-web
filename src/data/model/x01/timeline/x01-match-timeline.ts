@@ -56,5 +56,5 @@ export interface X01PlayerLegValues {
   dartsThrown: number;
   remaining: number;
   lastScore: number | null;
-  doublesMissed: number;
+  checkoutDoublesMissed: number;
 }

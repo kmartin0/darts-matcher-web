@@ -31,5 +31,5 @@ export interface MatchTimelineLegCardPlayerData {
   dartsUsed: number;
   average: number | null;
   remaining: number;
-  doublesMissed: number;
+  checkoutDoublesMissed: number;
 }

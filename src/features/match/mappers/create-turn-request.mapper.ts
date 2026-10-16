@@ -10,7 +10,8 @@ import {X01CreateTurnRequestDto} from '../../../data/dto/x01-create-turn-request
 export function mapToCreateTurnRequestDto(input: CreateTurnInput): X01CreateTurnRequestDto {
   return {
     score: input.score,
-    doublesMissed: input.doublesMissed,
+    checkoutDoublesMissed: input.checkoutDoublesMissed,
+    openingDoublesMissed: input.openingDoublesMissed,
     checkoutDartsUsed: input.checkoutDartsUsed
   };
 }

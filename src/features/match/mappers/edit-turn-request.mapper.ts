@@ -8,7 +8,8 @@ export function mapToEditTurnRequestDto(input: EditTurnInput): X01EditTurnReques
     leg: input.legNumber,
     round: input.roundNumber,
     score: input.score,
-    doublesMissed: input.doublesMissed,
+    checkoutDoublesMissed: input.checkoutDoublesMissed,
+    openingDoublesMissed: input.openingDoublesMissed,
     checkoutDartsUsed: input.checkoutDartsUsed
   };
 }

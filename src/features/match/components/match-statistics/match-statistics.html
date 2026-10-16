@@ -105,6 +105,40 @@
         </div>
       </section>
 
+      <!-- Double-in section -->
+      @if (statistics.doubleInStats; as doubleInStatistics) {
+        <section class="information-section">
+          <h3 class="information-section-title">Double-in</h3>
+
+          <div class="information-rows">
+            <!-- Doubles hit -->
+            <div class="information-row">
+              <span class="information-row-label">Doubles hit:</span>
+              <span class="information-row-value">{{ doubleInStatistics.doublesHit }}</span>
+            </div>
+
+            @if (isTrackDoubles()) {
+              @let doublesPercentage = doubleInStatistics.doublesPercentage;
+              @let doublesAttempted = doubleInStatistics.doublesHit + (doubleInStatistics.doublesMissed ?? 0);
+
+              <!-- Doubles attempted -->
+              <div class="information-row">
+                <span class="information-row-label">Doubles attempted:</span>
+                <span class="information-row-value">{{ doublesAttempted }}</span>
+              </div>
+
+              <!-- Doubles percentage -->
+              <div class="information-row">
+                <span class="information-row-label">Doubles percentage:</span>
+                <span class="information-row-value">{{
+                    doublesPercentage === null ? '-' : doublesPercentage + '%'
+                  }}</span>
+              </div>
+            }
+          </div>
+        </section>
+      }
+
       <!-- Checkout section -->
       <section class="information-section">
         <h3 class="information-section-title">Checkout</h3>

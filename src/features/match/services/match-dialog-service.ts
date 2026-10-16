@@ -73,15 +73,41 @@ export class MatchDialogService {
   }
 
   /**
-   * Opens the doubles missed dialog.
+   * Opens the checkout doubles missed dialog.
    *
    * @param stackable - Whether the dialog can be opened while another dialog is already open.
    * @returns Result of the doubles missed dialog.
    */
-  openDoublesMissedDialog(stackable: boolean = false): Promise<DialogResult<number>> {
+  openCheckoutDoublesMissedDialog(stackable: boolean = false): Promise<DialogResult<number>> {
     const data: NumberSelectionFormDialogData = {
-      title: 'Doubles Missed',
+      title: 'Checkout doubles missed',
       options: [0, 1, 2, 3]
+    };
+
+    return this.dialogManagerService.open<NumberSelectionFormDialog, NumberSelectionFormDialogData, number>(
+      NumberSelectionFormDialog,
+      {data: data},
+      stackable
+    );
+  }
+
+  /**
+   * Resolves opening misses automatically for a zero score, or opens a selection dialog.
+   *
+   * A positive opening score leaves at most two darts available for missed attempts.
+   *
+   * @param score - Submitted score for a turn that starts unopened.
+   * @param stackable - Whether the dialog may stack over another dialog.
+   * @returns The resolved opening misses, or a dismissed result.
+   */
+  openOpeningDoublesMissedDialog(score: number, stackable: boolean = false): Promise<DialogResult<number>> {
+    if (score === 0) {
+      return Promise.resolve({status: 'confirmed', value: 3});
+    }
+
+    const data: NumberSelectionFormDialogData = {
+      title: 'Opening doubles missed',
+      options: [0, 1, 2]
     };
 
     return this.dialogManagerService.open<NumberSelectionFormDialog, NumberSelectionFormDialogData, number>(

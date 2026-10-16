@@ -5,7 +5,8 @@ const DEFAULT_EDIT_TURN_ERROR = 'Failed to edit turn';
 
 const API_TARGET_PREFIX_MAP: Readonly<Partial<Record<string, string>>> = {
   score: 'Score',
-  doublesMissed: 'Doubles missed',
+  checkoutDoublesMissed: 'Checkout doubles missed',
+  openingDoublesMissed: 'Opening doubles missed',
   checkoutDartsUsed: 'Checkout darts used',
   playerId: 'Player',
   set: 'Set',

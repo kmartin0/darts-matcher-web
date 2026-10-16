@@ -123,7 +123,7 @@ export class MatchTimelineBuilder {
       dartsThrown: 0,
       remaining: x01,
       lastScore: null,
-      doublesMissed: 0
+      checkoutDoublesMissed: 0
     };
   }
 
@@ -173,7 +173,7 @@ export class MatchTimelineBuilder {
         legValues.dartsThrown += dartsUsed;
         legValues.remaining = turn.remaining;
         legValues.lastScore = turn.score;
-        legValues.doublesMissed += turn.doublesMissed ?? 0;
+        legValues.checkoutDoublesMissed += turn.checkoutDoublesMissed ?? 0;
 
         // Accumulate scoring totals through this leg.
         cumulativePlayerValues.pointsThrown += turn.score;

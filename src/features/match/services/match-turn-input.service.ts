@@ -9,6 +9,8 @@ import {MatchDialogService} from './match-dialog-service';
 import {DialogResult} from '../../../shared/types/dialog-result';
 import {MatchScoreTableEditTarget} from '../components/match-score-table/match-score-table-edit-target';
 import {CreateTurnInput, EditTurnInput, TurnInput} from '../model/turn-input';
+import {X01MatchSettings} from '../../../data/model/x01/match/x01-match-settings';
+import {X01MatchFormat} from '../../../data/model/x01/match/x01-match-format';
 
 @Injectable({providedIn: 'root'})
 export class MatchTurnInputService {
@@ -47,7 +49,7 @@ export class MatchTurnInputService {
     const checkout = this.resolveCheckout(score, remainingAfterTurn, checkouts);
 
     // Run the shared turn dialogs.
-    return this.runTurnDialogs(score, checkout, match.matchSettings.trackDoubles, remainingAfterTurn);
+    return this.runTurnDialogs(score, checkout, match.matchSettings, remainingAfterTurn, remainingBeforeTurn);
   }
 
   /**
@@ -83,7 +85,8 @@ export class MatchTurnInputService {
       roundNumber: editTarget.roundNumber,
       score: turnInput.score,
       checkoutDartsUsed: turnInput.checkoutDartsUsed,
-      doublesMissed: turnInput.doublesMissed
+      checkoutDoublesMissed: turnInput.checkoutDoublesMissed,
+      openingDoublesMissed: turnInput.openingDoublesMissed
     };
   }
 
@@ -123,8 +126,11 @@ export class MatchTurnInputService {
 
     const checkout = this.resolveCheckout(checkoutScore, remainingAfterEdit, checkouts);
 
+    // Resolve the remaining score before the selected turn, independently of later turns.
+    const remainingBeforeTurn = editTarget.currentTurn.remaining + editTarget.currentTurn.score;
+
     // Run the shared turn dialogs.
-    return this.runTurnDialogs(newScore, checkout, match.matchSettings.trackDoubles, remainingAfterEdit);
+    return this.runTurnDialogs(newScore, checkout, match.matchSettings, remainingAfterEdit, remainingBeforeTurn);
   }
 
   /**
@@ -132,29 +138,63 @@ export class MatchTurnInputService {
    *
    * @param score - Score to include in the resolved turn input.
    * @param checkout - Checkout that applies to the turn, if any.
-   * @param trackDoubles - Whether doubles missed are tracked for the match.
-   * @param remaining - Remaining score after applying the turn.
+   * @param matchSettings - Match settings defining the starting score, double tracking and format.
+   * @param remaining - Remaining score after applying the turn or edit, including later recorded turns.
+   * @param remainingBeforeTurn - Player's remaining score immediately before the selected turn.
    * @returns The resolved turn input, or null when the dialog flow is dismissed.
    */
   private async runTurnDialogs(
     score: number,
     checkout: X01Checkout | null,
-    trackDoubles: boolean,
-    remaining: number
+    matchSettings: X01MatchSettings,
+    remaining: number,
+    remainingBeforeTurn: number
   ): Promise<TurnInput | null> {
+    // Resolve opening doubles missed.
+    const openingDoublesMissedResult = await this.resolveOpeningDoublesMissed(matchSettings, remainingBeforeTurn, score);
+    if (openingDoublesMissedResult.status === 'dismissed') return null;
+
     // Resolve checkout darts used.
     const checkoutDartsUsedResult = await this.resolveCheckoutDartsUsed(checkout);
     if (checkoutDartsUsedResult.status === 'dismissed') return null;
 
-    // Resolve doubles missed.
-    const doublesMissedResult = await this.resolveDoublesMissed(trackDoubles, remaining);
-    if (doublesMissedResult.status === 'dismissed') return null;
+    // Resolve checkout doubles missed.
+    const checkoutDoublesMissedResult = await this.resolveCheckoutDoublesMissed(matchSettings.trackDoubles, remaining);
+    if (checkoutDoublesMissedResult.status === 'dismissed') return null;
 
     return {
       score: score,
       checkoutDartsUsed: checkoutDartsUsedResult.value,
-      doublesMissed: doublesMissedResult.value
+      checkoutDoublesMissed: checkoutDoublesMissedResult.value,
+      openingDoublesMissed: openingDoublesMissedResult.value
     };
+  }
+
+  /**
+   * Resolves opening doubles missed for a turn.
+   *
+   * When tracking is disabled or the format is SIDO, the value resolves to null.
+   * When the player had already opened, it resolves to zero.
+   *
+   * @param matchSettings - Match settings defining the starting score, double tracking and format.
+   * @param remainingBeforeTurn - Player's remaining score immediately before the selected turn.
+   * @param score - Submitted score for the turn.
+   * @returns Resolved opening misses, or a dismissed result when the dialog is dismissed.
+   */
+  private async resolveOpeningDoublesMissed(
+    matchSettings: X01MatchSettings,
+    remainingBeforeTurn: number,
+    score: number
+  ): Promise<DialogResult<number | null>> {
+    if (!matchSettings.trackDoubles || matchSettings.format !== X01MatchFormat.DIDO) {
+      return {status: 'confirmed', value: null};
+    }
+
+    if (remainingBeforeTurn !== matchSettings.x01) {
+      return {status: 'confirmed', value: 0};
+    }
+
+    return this.matchDialogService.openOpeningDoublesMissedDialog(score);
   }
 
   /**
@@ -216,7 +256,7 @@ export class MatchTurnInputService {
    * @param remaining - Remaining score after applying the turn.
    * @returns Resolved doubles missed, or a dismissed result when the dialog is dismissed.
    */
-  private async resolveDoublesMissed(trackDoubles: boolean, remaining: number): Promise<DialogResult<number | null>> {
+  private async resolveCheckoutDoublesMissed(trackDoubles: boolean, remaining: number): Promise<DialogResult<number | null>> {
     if (!trackDoubles) {
       return {status: 'confirmed', value: null};
     }
@@ -225,6 +265,6 @@ export class MatchTurnInputService {
       return {status: 'confirmed', value: 0};
     }
 
-    return this.matchDialogService.openDoublesMissedDialog();
+    return this.matchDialogService.openCheckoutDoublesMissedDialog();
   }
 }

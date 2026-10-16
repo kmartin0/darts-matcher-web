@@ -1,7 +1,8 @@
 export interface TurnInput {
   score: number;
   checkoutDartsUsed: number | null;
-  doublesMissed: number | null;
+  checkoutDoublesMissed: number | null;
+  openingDoublesMissed: number | null;
 }
 
 export type CreateTurnInput = TurnInput;

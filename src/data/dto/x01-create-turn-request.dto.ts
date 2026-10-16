@@ -1,5 +1,6 @@
 export interface X01CreateTurnRequestDto {
   score: number;
-  doublesMissed: number | null;
+  checkoutDoublesMissed: number | null;
+  openingDoublesMissed: number | null;
   checkoutDartsUsed: number | null;
 }
