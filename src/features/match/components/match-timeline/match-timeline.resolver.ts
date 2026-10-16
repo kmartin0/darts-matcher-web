@@ -52,7 +52,8 @@ function resolveLegCard(
     winner: legEntry.winner,
     checkoutScore: legEntry.checkoutScore,
 
-    players: resolveLegCardPlayers(match.players, legEntry)
+    players: resolveLegCardPlayers(match.players, legEntry),
+    format: match.matchSettings.format,
   };
 }
 
@@ -84,7 +85,10 @@ function resolveLegCardPlayers(
       dartsUsed: legValues.dartsThrown,
       average: calculateX01Average(legValues.pointsThrown, legValues.dartsThrown),
       remaining: legValues.remaining,
-      checkoutDoublesMissed: legValues.checkoutDoublesMissed
+      checkoutDoublesMissed: legValues.checkoutDoublesMissed,
+
+      hasOpened: legValues.pointsThrown > 0,
+      openingDoublesMissed: legValues.openingDoublesMissed
     };
   });
 }

@@ -57,4 +57,5 @@ export interface X01PlayerLegValues {
   remaining: number;
   lastScore: number | null;
   checkoutDoublesMissed: number;
+  openingDoublesMissed: number;
 }

@@ -79,6 +79,18 @@
         <td mat-cell *matCellDef="let row">{{ row.remaining }}</td>
       </ng-container>
 
+      <!-- Double-in column. -->
+      <ng-container matColumnDef="doubleIn">
+        <th mat-header-cell *matHeaderCellDef>Double-in</th>
+
+        <td mat-cell *matCellDef="let row">
+          @let doublesHit = row.hasOpened ? 1 : 0;
+          @let doublesAttempted = doublesHit + row.openingDoublesMissed;
+
+          <ng-container>{{ doublesHit }}/{{ doublesAttempted }}</ng-container>
+        </td>
+      </ng-container>
+
       <!-- Checkout column. -->
       <ng-container matColumnDef="checkout">
         <th mat-header-cell *matHeaderCellDef>Checkout</th>

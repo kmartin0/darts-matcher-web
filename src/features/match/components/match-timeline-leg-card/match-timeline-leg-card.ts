@@ -15,6 +15,7 @@ import {
 } from '@angular/material/table';
 import {X01BestOfType} from '../../../../data/model/x01/rules/x01-best-of-type';
 import {MatchTimelineLegCardData, MatchTimelineLegCardPlayerData} from './match-timeline-leg-card-data';
+import {X01MatchFormat} from '../../../../data/model/x01/match/x01-match-format';
 
 interface MatchTimelineLegCardRow {
   playerId: string;
@@ -30,6 +31,9 @@ interface MatchTimelineLegCardRow {
   average: number | null;
   remaining: number;
   checkoutDoublesMissed: number;
+
+  hasOpened: boolean;
+  openingDoublesMissed: number;
 }
 
 @Component({
@@ -58,7 +62,7 @@ export class MatchTimelineLegCard {
   protected readonly X01BestOfType = X01BestOfType;
 
   protected readonly displayedColumns = computed<string[]>(() =>
-    this.createDisplayedColumns(this.data().trackDoubles)
+    this.createDisplayedColumns(this.data())
   );
 
   protected readonly starterInitials = computed<string | null>(() =>
@@ -87,17 +91,18 @@ export class MatchTimelineLegCard {
   /**
    * Creates the table columns enabled by the match settings.
    *
-   * @param trackDoubles - Whether to include the checkout column.
+   * @param data - Timeline leg-card data containing the format and tracking settings.
    * @returns Ordered table column IDs.
    */
-  private createDisplayedColumns(trackDoubles: boolean): string[] {
+  private createDisplayedColumns(data: MatchTimelineLegCardData): string[] {
     return [
       'player',
       'score',
       'darts',
       'average',
       'remaining',
-      ...(trackDoubles ? ['checkout'] : [])
+      ...(data.trackDoubles && data.format === X01MatchFormat.DIDO ? ['doubleIn'] : []),
+      ...(data.trackDoubles ? ['checkout'] : [])
     ];
   }
 
@@ -159,7 +164,10 @@ export class MatchTimelineLegCard {
       dartsUsed: player.dartsUsed,
       average: player.average,
       remaining: player.remaining,
-      checkoutDoublesMissed: player.checkoutDoublesMissed
+      checkoutDoublesMissed: player.checkoutDoublesMissed,
+
+      hasOpened: player.hasOpened,
+      openingDoublesMissed: player.openingDoublesMissed
     };
   }
 }

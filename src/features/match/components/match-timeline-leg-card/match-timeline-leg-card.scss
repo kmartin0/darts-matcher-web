@@ -120,6 +120,14 @@ td.mat-column-player {
   }
 }
 
+.mat-column-doubleIn {
+  display: none;
+
+  @include devices.device(tablet, desktop, desktop-xl) {
+    display: table-cell;
+  }
+}
+
 @include devices.device(phone, phablet) {
   .player-cell {
     display: flex;
