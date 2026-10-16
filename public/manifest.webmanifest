@@ -1,0 +1,88 @@
+{
+  "id": "/",
+  "name": "Darts Matcher",
+  "short_name": "Darts Matcher",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#1E0F0E",
+  "background_color": "#1F0F0E",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+"screenshots": [
+  {
+    "src": "/screenshots/wide/home.png",
+    "sizes": "1080x1920",
+    "type": "image/png",
+    "form_factor": "wide",
+    "label": "Create and configure a darts match"
+  },
+  {
+    "src": "/screenshots/wide/home-dark.png",
+    "sizes": "1080x1920",
+    "type": "image/png",
+    "form_factor": "wide",
+    "label": "Create and configure a darts match in dark mode"
+  },
+  {
+    "src": "/screenshots/wide/match-board.png",
+    "sizes": "1080x1920",
+    "type": "image/png",
+    "form_factor": "wide",
+    "label": "Play and score a darts match"
+  },
+  {
+    "src": "/screenshots/wide/match-board-dark.png",
+    "sizes": "1080x1920",
+    "type": "image/png",
+    "form_factor": "wide",
+    "label": "Play and score a darts match in dark mode"
+  },
+  {
+    "src": "/screenshots/narrow/home.png",
+    "sizes": "540x960",
+    "type": "image/png",
+    "form_factor": "narrow",
+    "label": "Create and configure a darts match"
+  },
+  {
+    "src": "/screenshots/narrow/home-dark.png",
+    "sizes": "540x960",
+    "type": "image/png",
+    "form_factor": "narrow",
+    "label": "Create and configure a darts match in dark mode"
+  },
+  {
+    "src": "/screenshots/narrow/match-board.png",
+    "sizes": "540x960",
+    "type": "image/png",
+    "form_factor": "narrow",
+    "label": "Play and score a darts match"
+  },
+  {
+    "src": "/screenshots/narrow/match-board-dark.png",
+    "sizes": "540x960",
+    "type": "image/png",
+    "form_factor": "narrow",
+    "label": "Play and score a darts match in dark mode"
+  }
+]
+}
