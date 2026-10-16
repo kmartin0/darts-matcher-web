@@ -1,6 +1,6 @@
 <div class="keypad">
   @for (key of keys; track key) {
-    <button mat-flat-button [disabled]="key === 'enter' && !enterEnabled()" (click)="onKeyPress(key)">
+    <button matButton="filled" [disabled]="key === 'enter' && !enterEnabled()" (click)="onKeyPress(key)">
       @switch (key) {
         @case ('delete') {
           Del
