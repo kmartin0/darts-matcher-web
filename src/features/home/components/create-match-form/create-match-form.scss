@@ -1,4 +1,46 @@
+@use "mixins/devices";
 @use "@angular/material" as mat;
+
+// Form layout
+
+.create-match-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.section-label {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.section-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+// Section radio groups
+
+.section-radio-group {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 70px));
+  align-items: center;
+  gap: 12px;
+
+  mat-radio-button {
+    display: flex;
+    align-items: center;
+
+    // Let the full-size control extend into the surrounding spacing.
+    height: 24px;
+  }
+}
 
 // Best of
 
@@ -6,7 +48,6 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 125px));
   gap: 12px;
-  margin-bottom: 12px;
 }
 
 // Clear by two
@@ -23,7 +64,8 @@
   @include mat.button-toggle-overrides((
     selected-state-background-color: var(--mat-sys-primary),
     selected-state-text-color: var(--mat-sys-on-primary),
-    divider-color: var(--mat-sys-outline-variant)
+    divider-color: var(--mat-sys-outline-variant),
+    shape: var(--mat-sys-corner-extra-small)
   ));
 
   mat-button-toggle {
@@ -41,12 +83,10 @@
 // Players
 
 .players-section {
-  margin-top: 8px;
-
   @include mat.card-overrides((
     outlined-container-color: transparent,
     outlined-outline-width: 2px,
-  ))
+  ));
 }
 
 .player-action-container {

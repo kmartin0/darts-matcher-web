@@ -1,4 +1,5 @@
 @use "@angular/material" as mat;
+@use "mixins/devices";
 
 // ---------- Root layout ---------------------------
 
@@ -19,7 +20,9 @@ app-root {
 }
 
 body {
-  font-family: var(--mat-sys-body-medium-font), sans-serif;
+  font: var(--mat-sys-body-medium), sans-serif;
+  letter-spacing: var(--mat-sys-body-medium-tracking);
+
   background-color: var(--mat-sys-background);
   color: var(--mat-sys-on-background);
 
@@ -30,7 +33,6 @@ body {
     protected-container-shape: var(--mat-sys-corner-extra-small),
     text-container-shape: var(--mat-sys-corner-extra-small),
     tonal-container-shape: var(--mat-sys-corner-extra-small),
-
     // Touch target displays
     filled-touch-target-display: none,
     outlined-touch-target-display: none,

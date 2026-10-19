@@ -58,7 +58,7 @@ export function createInitialFormModel(): FormModel {
     x01: 501,
     format: X01MatchFormat.SIDO,
     bestOf: {
-      bestOfType: X01BestOfType.SETS,
+      bestOfType: X01BestOfType.LEGS,
       sets: 1,
       legs: 1,
     },

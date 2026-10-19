@@ -1,124 +1,145 @@
-<form class="container-vertical" [formRoot]="matchForm">
+<form class="create-match-form" [formRoot]="matchForm">
   <!-- Section - X01 -->
-  <div class="container-vertical no-gap">
-    <!-- Field - X01 -->
-    <label>Select X01</label>
-    <mat-radio-group [formField]="matchForm.x01">
-      @for (x01 of x01Options; track x01) {
-        <mat-radio-button [value]="x01">{{ x01 }}</mat-radio-button>
-      }
-    </mat-radio-group>
-    <app-form-error [field]="matchForm.x01"/>
+  <div class="form-section">
+    <label class="section-label" id="x01-label">Starting score</label>
+
+    <div class="section-content">
+      <!-- Field - X01 -->
+      <div class="container-vertical no-gap">
+        <mat-radio-group
+          class="section-radio-group"
+          aria-labelledby="x01-label"
+          [formField]="matchForm.x01">
+          @for (x01 of x01Options; track x01) {
+            <mat-radio-button [value]="x01">{{ x01 }}</mat-radio-button>
+          }
+        </mat-radio-group>
+        <app-form-error [field]="matchForm.x01"/>
+      </div>
+    </div>
   </div>
 
   <!-- Section - Match format -->
-  <div class="container-vertical no-gap">
-    <label id="match-format-label">Select match format</label>
-    <mat-radio-group
-      aria-labelledby="match-format-label"
-      [formField]="matchForm.format">
-      <mat-radio-button [value]="MatchFormat.SIDO">
-        SIDO
-      </mat-radio-button>
-      <mat-radio-button [value]="MatchFormat.DIDO">
-        DIDO
-      </mat-radio-button>
-    </mat-radio-group>
-    <app-form-error [field]="matchForm.format"/>
+  <div class="form-section">
+    <label class="section-label" id="match-format-label">Match format</label>
+
+    <div class="section-content">
+      <div class="container-vertical no-gap">
+        <mat-radio-group
+          class="section-radio-group"
+          aria-labelledby="match-format-label"
+          [formField]="matchForm.format">
+          <mat-radio-button [value]="MatchFormat.SIDO">
+            SIDO
+          </mat-radio-button>
+          <mat-radio-button [value]="MatchFormat.DIDO">
+            DIDO
+          </mat-radio-button>
+        </mat-radio-group>
+        <app-form-error [field]="matchForm.format"/>
+      </div>
+    </div>
   </div>
 
   <!-- Section - Best of -->
-  <div class="container-vertical">
-    <!-- Field - Best of type -->
-    <div class="container-vertical no-gap">
-      <label>Select best of type</label>
+  <div class="form-section">
+    <label class="section-label" id="best-of-label">Best of</label>
+
+    <div class="section-content">
+      <!-- Field - Best of type -->
       <mat-radio-group
+        class="section-radio-group"
+        aria-labelledby="best-of-label"
         [formField]="matchForm.bestOf.bestOfType"
         (change)="onBestOfTypeChange($event.value)">
         <mat-radio-button [value]="BestOfType.SETS">Sets</mat-radio-button>
         <mat-radio-button [value]="BestOfType.LEGS">Legs</mat-radio-button>
       </mat-radio-group>
-    </div>
 
-    <!-- Field - Sets input -->
-    <div class="best-of-fields">
-      <div class="container-vertical no-gap">
-        <mat-form-field subscriptSizing="dynamic" appearance="outline">
-          <mat-label>Sets</mat-label>
-          <input matInput [formField]="matchForm.bestOf.sets" type="number"/>
-        </mat-form-field>
-        <app-form-error [field]="matchForm.bestOf.sets"/>
-      </div>
+      <!-- Field - Sets input -->
+      <div class="best-of-fields">
+        <div class="container-vertical no-gap">
+          <mat-form-field subscriptSizing="dynamic" appearance="outline">
+            <mat-label>Sets</mat-label>
+            <input matInput [formField]="matchForm.bestOf.sets" type="number"/>
+          </mat-form-field>
+          <app-form-error [field]="matchForm.bestOf.sets"/>
+        </div>
 
-      <!-- Field - Legs input -->
-      <div class="container-vertical no-gap">
-        <mat-form-field subscriptSizing="dynamic" appearance="outline">
-          <mat-label>Legs</mat-label>
-          <input matInput [formField]="matchForm.bestOf.legs" type="number"/>
-        </mat-form-field>
-        <app-form-error [field]="matchForm.bestOf.legs"/>
+        <!-- Field - Legs input -->
+        <div class="container-vertical no-gap">
+          <mat-form-field subscriptSizing="dynamic" appearance="outline">
+            <mat-label>Legs</mat-label>
+            <input matInput [formField]="matchForm.bestOf.legs" type="number"/>
+          </mat-form-field>
+          <app-form-error [field]="matchForm.bestOf.legs"/>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Section - Clear by two -->
-  <label>Clear by two</label>
-  <div class="container-vertical clear-by-two-container">
-    @let isBestOfTypeSets =
-      matchForm.bestOf.bestOfType().value() === BestOfType.SETS;
+  <div class="form-section">
+    <label class="section-label" id="clear-by-two-label">Clear by two</label>
 
-    <!-- Field - Clear by two types -->
-    <mat-button-toggle-group
-      class="clear-by-two-toggle-container"
-      multiple
-      [hideMultipleSelectionIndicator]="true"
-      [formField]="matchForm.clearByTwo.selectedTypes">
+    <div class="section-content clear-by-two-container">
+      @let isBestOfTypeSets =
+        matchForm.bestOf.bestOfType().value() === BestOfType.SETS;
 
-      <mat-button-toggle
-        [value]="ClearByTwoType.SETS"
-        [disabled]="!isBestOfTypeSets"
-        (change)="onClearByTwoTypeChange(ClearByTwoType.SETS, $event.source.checked)">
-        Sets
-      </mat-button-toggle>
+      <!-- Field - Clear by two types -->
+      <mat-button-toggle-group
+        class="clear-by-two-toggle-container"
+        aria-labelledby="clear-by-two-label"
+        multiple
+        [hideMultipleSelectionIndicator]="true"
+        [formField]="matchForm.clearByTwo.selectedTypes">
 
-      <mat-button-toggle
-        [value]="ClearByTwoType.LEGS"
-        (change)="onClearByTwoTypeChange(ClearByTwoType.LEGS, $event.source.checked)">
-        Legs
-      </mat-button-toggle>
+        <mat-button-toggle
+          [value]="ClearByTwoType.SETS"
+          [disabled]="!isBestOfTypeSets"
+          (change)="onClearByTwoTypeChange(ClearByTwoType.SETS, $event.source.checked)">
+          Sets
+        </mat-button-toggle>
 
-      <mat-button-toggle
-        [value]="ClearByTwoType.LEGS_FINAL_SET"
-        [disabled]="!isBestOfTypeSets"
-        (change)="onClearByTwoTypeChange(ClearByTwoType.LEGS_FINAL_SET, $event.source.checked)">
-        Legs final set
-      </mat-button-toggle>
-    </mat-button-toggle-group>
+        <mat-button-toggle
+          [value]="ClearByTwoType.LEGS"
+          (change)="onClearByTwoTypeChange(ClearByTwoType.LEGS, $event.source.checked)">
+          Legs
+        </mat-button-toggle>
 
-    <!-- Field - Clear by two limits -->
-    <div class="clear-by-two-input-container">
-      <div class="container-vertical">
-        <mat-form-field subscriptSizing="dynamic" appearance="outline">
-          <mat-label>Limit</mat-label>
-          <input matInput type="number" [formField]="matchForm.clearByTwo.setLimit"/>
-        </mat-form-field>
-        <app-form-error [field]="matchForm.clearByTwo.setLimit"/>
-      </div>
+        <mat-button-toggle
+          [value]="ClearByTwoType.LEGS_FINAL_SET"
+          [disabled]="!isBestOfTypeSets"
+          (change)="onClearByTwoTypeChange(ClearByTwoType.LEGS_FINAL_SET, $event.source.checked)">
+          Legs final set
+        </mat-button-toggle>
+      </mat-button-toggle-group>
 
-      <div class="container-vertical">
-        <mat-form-field subscriptSizing="dynamic" appearance="outline">
-          <mat-label>Limit</mat-label>
-          <input matInput type="number" [formField]="matchForm.clearByTwo.legLimit"/>
-        </mat-form-field>
-        <app-form-error [field]="matchForm.clearByTwo.legLimit"/>
-      </div>
+      <!-- Field - Clear by two limits -->
+      <div class="clear-by-two-input-container">
+        <div class="container-vertical">
+          <mat-form-field subscriptSizing="dynamic" appearance="outline">
+            <mat-label>Limit</mat-label>
+            <input matInput type="number" [formField]="matchForm.clearByTwo.setLimit"/>
+          </mat-form-field>
+          <app-form-error [field]="matchForm.clearByTwo.setLimit"/>
+        </div>
 
-      <div class="container-vertical">
-        <mat-form-field subscriptSizing="dynamic" appearance="outline">
-          <mat-label>Limit</mat-label>
-          <input matInput type="number" [formField]="matchForm.clearByTwo.finalSetLegLimit"/>
-        </mat-form-field>
-        <app-form-error [field]="matchForm.clearByTwo.finalSetLegLimit"/>
+        <div class="container-vertical">
+          <mat-form-field subscriptSizing="dynamic" appearance="outline">
+            <mat-label>Limit</mat-label>
+            <input matInput type="number" [formField]="matchForm.clearByTwo.legLimit"/>
+          </mat-form-field>
+          <app-form-error [field]="matchForm.clearByTwo.legLimit"/>
+        </div>
+
+        <div class="container-vertical">
+          <mat-form-field subscriptSizing="dynamic" appearance="outline">
+            <mat-label>Limit</mat-label>
+            <input matInput type="number" [formField]="matchForm.clearByTwo.finalSetLegLimit"/>
+          </mat-form-field>
+          <app-form-error [field]="matchForm.clearByTwo.finalSetLegLimit"/>
+        </div>
       </div>
     </div>
   </div>
@@ -127,109 +148,111 @@
   <mat-checkbox [formField]="matchForm.trackDoubles">Track checkout percentage</mat-checkbox>
 
   <!-- Section - Players -->
-  <div
-    class="container-vertical players-section"
-    cdkDropList
-    (cdkDropListDropped)="onDropPlayerCard($event)">
+  <div class="form-section">
+    <label class="section-label">Players</label>
 
-    <label>Players</label>
+    <div
+      class="section-content players-section"
+      cdkDropList
+      (cdkDropListDropped)="onDropPlayerCard($event)">
 
-    <!-- Section - Player cards -->
-    @for (player of matchForm.players; track player; let i = $index) {
-      <mat-card cdkDrag appearance="outlined">
-        <mat-card-content>
-          <div class="container-vertical">
+      <!-- Section - Player cards -->
+      @for (player of matchForm.players; track player; let i = $index) {
+        <mat-card cdkDrag appearance="outlined">
+          <mat-card-content>
+            <div class="container-vertical">
 
-            <!-- Field - Player type -->
-            <div class="container-vertical no-gap">
-              <div class="container-horizontal no-gap">
-                <mat-radio-group
-                  [value]="player.playerType().value()"
-                  (change)="onPlayerTypeChange(i, $event.value)">
-
-                  <mat-radio-button
-                    [value]="PlayerType.HUMAN">
-                    <ng-container>Human</ng-container>
-                  </mat-radio-button>
-
-                  <mat-radio-button
-                    [value]="PlayerType.DART_BOT"
-                    [disabled]="hasBotPlayer() && player.playerType().value() === PlayerType.HUMAN">
-                    <ng-container>Bot</ng-container>
-                  </mat-radio-button>
-                </mat-radio-group>
-
-                <!-- Action - Player controls -->
-                <div class="container-horizontal player-action-container">
-                  <button
-                    mat-icon-button
-                    cdkDragHandle
-                    type="button"
-                    aria-label="Rearrange player"
-                    [disabled]="isMinPlayersReached()">
-                    <mat-icon>drag_indicator</mat-icon>
-                  </button>
-
-                  <button
-                    mat-icon-button
-                    matTooltip="Remove player"
-                    type="button"
-                    aria-label="Remove player"
-                    (click)="removePlayer(i)"
-                    [disabled]="isMinPlayersReached()">
-                    <mat-icon>cancel</mat-icon>
-                  </button>
-                </div>
-              </div>
-
-              <app-form-error [field]="player.playerType"/>
-            </div>
-
-            <div
-              class="create-player-input-container"
-              [class.has-avg]="!player.threeDartAverage().disabled()">
-
-              <!-- Field - Player name -->
+              <!-- Field - Player type -->
               <div class="container-vertical no-gap">
-                <mat-form-field subscriptSizing="dynamic" appearance="outline">
-                  <mat-label>Name</mat-label>
-                  <input matInput type="text" [formField]="player.playerName"/>
+                <div class="container-horizontal no-gap">
+                  <mat-radio-group
+                    [value]="player.playerType().value()"
+                    (change)="onPlayerTypeChange(i, $event.value)">
 
-                  <mat-icon
-                    matIconPrefix
-                    [matTooltip]="getPlayerTooltip(player.playerType().value())">
-                    {{ getPlayerIcon(player.playerType().value()) }}
-                  </mat-icon>
-                </mat-form-field>
+                    <mat-radio-button
+                      [value]="PlayerType.HUMAN">
+                      <ng-container>Human</ng-container>
+                    </mat-radio-button>
 
-                <app-form-error [field]="player.playerName"/>
+                    <mat-radio-button
+                      [value]="PlayerType.DART_BOT"
+                      [disabled]="hasBotPlayer() && player.playerType().value() === PlayerType.HUMAN">
+                      <ng-container>Bot</ng-container>
+                    </mat-radio-button>
+                  </mat-radio-group>
+
+                  <!-- Action - Player controls -->
+                  <div class="container-horizontal player-action-container">
+                    <button
+                      mat-icon-button
+                      cdkDragHandle
+                      type="button"
+                      aria-label="Rearrange player"
+                      [disabled]="isMinPlayersReached()">
+                      <mat-icon>drag_indicator</mat-icon>
+                    </button>
+
+                    <button
+                      mat-icon-button
+                      matTooltip="Remove player"
+                      type="button"
+                      aria-label="Remove player"
+                      (click)="removePlayer(i)"
+                      [disabled]="isMinPlayersReached()">
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  </div>
+                </div>
+
+                <app-form-error [field]="player.playerType"/>
               </div>
 
-              <!-- Field - Three dart average -->
-              @if (!player.threeDartAverage().disabled()) {
+              <div
+                class="create-player-input-container"
+                [class.has-avg]="!player.threeDartAverage().disabled()">
+
+                <!-- Field - Player name -->
                 <div class="container-vertical no-gap">
                   <mat-form-field subscriptSizing="dynamic" appearance="outline">
-                    <mat-label>Avg</mat-label>
-                    <input matInput type="number" [formField]="player.threeDartAverage"/>
+                    <mat-label>Name</mat-label>
+                    <input matInput type="text" [formField]="player.playerName"/>
+
+                    <mat-icon
+                      matIconPrefix
+                      [matTooltip]="getPlayerTooltip(player.playerType().value())">
+                      {{ getPlayerIcon(player.playerType().value()) }}
+                    </mat-icon>
                   </mat-form-field>
 
-                  <app-form-error [field]="player.threeDartAverage"/>
+                  <app-form-error [field]="player.playerName"/>
                 </div>
-              }
+
+                <!-- Field - Three dart average -->
+                @if (!player.threeDartAverage().disabled()) {
+                  <div class="container-vertical no-gap">
+                    <mat-form-field subscriptSizing="dynamic" appearance="outline">
+                      <mat-label>Avg</mat-label>
+                      <input matInput type="number" [formField]="player.threeDartAverage"/>
+                    </mat-form-field>
+
+                    <app-form-error [field]="player.threeDartAverage"/>
+                  </div>
+                }
+              </div>
             </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    }
+          </mat-card-content>
+        </mat-card>
+      }
 
-    <!-- Field - Players -->
-    <app-form-error [field]="matchForm.players"/>
+      <!-- Field - Players -->
+      <app-form-error [field]="matchForm.players"/>
 
-    <!-- Action - Add player -->
-    <button mat-button type="button" (click)="addPlayer()" [disabled]="isMaxPlayersReached()">
-      <mat-icon>add</mat-icon>
-      <span>Add Player</span>
-    </button>
+      <!-- Action - Add player -->
+      <button mat-button type="button" (click)="addPlayer()" [disabled]="isMaxPlayersReached()">
+        <mat-icon>add</mat-icon>
+        <span>Add Player</span>
+      </button>
+    </div>
   </div>
 
   <!-- Field - Form -->

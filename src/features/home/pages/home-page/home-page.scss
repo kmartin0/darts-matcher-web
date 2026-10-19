@@ -7,6 +7,11 @@
   flex-direction: column;
   flex: 1;
   width: 100%;
+
+  @include mat.form-field-overrides((
+    container-vertical-padding: 12px,
+    container-height: 48px
+  ));
 }
 
 // Header and subheader
@@ -16,7 +21,7 @@
   color: var(--mat-sys-on-primary);
 
   @include helpers.dark-mode {
-    background-color: var(--mat-sys-surface-container-high);
+    background-color: var(--mat-sys-surface-container);
     color: var(--mat-sys-on-surface);
   }
 }
@@ -57,11 +62,20 @@
       elevated-container-color: var(--mat-sys-surface-container-high),
     ));
   }
+
+  @include devices.device(phone, phablet) {
+    padding: 0;
+
+    @include mat.card-overrides((
+      elevated-container-elevation: var(--mat-sys-level0),
+      elevated-container-shape: var(--mat-sys-corner-none)
+    ));
+  }
 }
 
 .section-container {
   width: 100%;
-  max-width: 575px;
+  max-width: 600px;
   margin-top: 12px;
 
   > mat-card-content {
@@ -77,8 +91,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 16px;
+  margin-bottom: 16px;
   border-bottom: 1px solid var(--mat-sys-outline-variant);
 
   > h3 {
@@ -92,12 +106,15 @@
   }
 
   @include devices.device(phone, phablet) {
-    padding: 16px;
-    margin-bottom: 16px;
+    padding-bottom: 12px;
+    padding-top: 12px;
   }
 }
 
 app-theme-toggle {
+  display: flex;
+  align-items: center;
+  height: var(--mat-sys-title-large-line-height);
   margin-left: auto;
   color: var(--mat-sys-primary);
 }
