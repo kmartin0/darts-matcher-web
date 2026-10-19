@@ -7,11 +7,6 @@
   flex-direction: column;
   flex: 1;
   width: 100%;
-
-  @include mat.form-field-overrides((
-    container-vertical-padding: 12px,
-    container-height: 48px
-  ));
 }
 
 // Header and subheader
@@ -108,6 +103,12 @@
   @include devices.device(phone, phablet) {
     padding-bottom: 12px;
     padding-top: 12px;
+
+    > h3 {
+      margin: 0;
+      font: var(--mat-sys-title-medium);
+      font-weight: 500;
+    }
   }
 }
 

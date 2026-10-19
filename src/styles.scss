@@ -40,6 +40,12 @@ body {
     text-touch-target-display: none,
     tonal-touch-target-display: none,
   ));
+
+  // Mat form field size
+  @include mat.form-field-overrides((
+    container-vertical-padding: 12px,
+    container-height: 48px
+  ));
 }
 
 button {

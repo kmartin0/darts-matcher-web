@@ -21,7 +21,7 @@
     grid-template-rows: minmax(0, 1fr) max-content minmax(310px, min(30vh, 425px));
 
     @include devices.device(phone, phablet, tablet) {
-      grid-template-rows: minmax(0, 1fr) max-content minmax(200px, min(30vh, 300px));
+      grid-template-rows: minmax(0, 1fr) max-content minmax(200px, min(35vh, 300px));
     }
   }
 }
@@ -31,12 +31,12 @@
   width: 100%;
   display: grid;
   grid-template-rows: max-content max-content max-content minmax(160px, 1fr);
-  gap: 20px;
+  gap: 16px;
   overflow-y: auto;
 
   @include devices.device(phone, phablet) {
     grid-template-rows: max-content max-content max-content;
-    gap: 12px;
+    gap: 8px;
   }
 }
 
@@ -55,7 +55,7 @@ app-match-score-input {
   align-self: stretch;
 
   @include devices.device(phone, phablet) {
-    width: 90%;
+    width: 100%;
   }
 }
 
