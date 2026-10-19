@@ -26,8 +26,9 @@ app-match-history-toolbar {
 }
 
 .header {
-  font: var(--mat-sys-headline-small);
   margin: 0;
+  font: var(--mat-sys-title-large);
+  font-weight: 500;
 }
 
 app-match-history-cards {

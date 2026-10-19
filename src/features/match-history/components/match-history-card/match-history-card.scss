@@ -3,7 +3,7 @@
 @use "mixins/helpers";
 
 // Sizing
-$card-inset: 16px;
+$card-inset: 8px;
 $outline-width: 1px;
 
 // Colors
@@ -17,7 +17,6 @@ $header-text-dark: var(--mat-sys-on-surface);
 $header-divider: var(--mat-sys-outline);
 
 $winner-background: var(--mat-sys-surface-container-high);
-$open-match-background: var(--mat-sys-surface-container-high);
 
 $outline-color: var(--mat-sys-outline-variant);
 
@@ -32,18 +31,13 @@ mat-card {
   color: $card-text;
 
   @include mat.card-overrides((
+    elevated-container-color: $card-background,
     elevated-container-elevation: var(--mat-sys-level2)
   ));
 }
 
 // Header
 .card-header {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: $card-inset;
   background: $header-background;
   color: $header-text;
 
@@ -53,36 +47,55 @@ mat-card {
   }
 }
 
-.card-header-start,
-.card-header-end {
-  display: flex;
+.card-header-top {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 8px;
+  padding: $card-inset $card-inset 4px $card-inset;
+}
+
+.start-date {
+  grid-column: 2;
   white-space: nowrap;
+  font: var(--mat-sys-label-large);
+}
 
-  @include devices.device(phone) {
-    flex-direction: column;
-    gap: 4px;
+.status-indicator {
+  grid-column: 3;
+  justify-self: end;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+
+  &.in-play {
+    background: var(--mat-sys-tertiary);
+  }
+
+  &.concluded {
+    background: var(--mat-sys-secondary);
   }
 }
 
-.card-header-start {
-  @include devices.device(phone) {
-    align-items: flex-start;
-  }
-}
+.match-settings {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 4px $card-inset $card-inset $card-inset;
 
-.card-header-end {
-  @include devices.device(phone) {
-    align-items: flex-end;
-  }
-}
+  > span {
+    position: relative;
+    text-align: center;
+    white-space: nowrap;
 
-.separator {
-  color: $header-divider;
-
-  @include devices.device(phone) {
-    display: none;
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 1px;
+      background: $header-divider;
+    }
   }
 }
 
@@ -147,7 +160,7 @@ mat-card {
 // Actions
 .card-actions {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   padding: 8px $card-inset;
   gap: 4px;
@@ -160,18 +173,10 @@ mat-card {
 
 .open-match-link {
   justify-self: end;
-
-  @include mat.button-overrides((
-    filled-container-shape: var(--mat-sys-corner-medium),
-    filled-horizontal-padding: 12px,
-    filled-container-color: $open-match-background,
-    filled-label-text-color: $card-text,
-    filled-state-layer-color: $card-text
-  ));
+  color: inherit;
 }
 
 .last-visited {
-  grid-column: 1 / -1;
   justify-self: center;
   font: var(--mat-sys-label-medium);
   text-align: center;

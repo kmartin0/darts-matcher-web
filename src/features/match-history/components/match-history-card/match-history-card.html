@@ -3,36 +3,34 @@
 <mat-card appearance="raised">
   <!-- Header -->
   <div class="card-header">
-    <div class="card-header-start">
-      <span>{{ cardData.x01 }} {{ cardData.format }}</span>
-
-      <span class="separator" aria-hidden="true">•</span>
-
-      <div>
-        @switch (cardData.bestOfType) {
-          @case (X01BestOfType.SETS) {
-            <span>BO{{ cardData.bestOfSets }} (BO{{ cardData.bestOfLegs }})</span>
-          }
-          @case (X01BestOfType.LEGS) {
-            <span>BO{{ cardData.bestOfLegs }}</span>
-          }
-        }
-      </div>
-    </div>
-
-    <div class="card-header-end">
-      <span [title]="(cardData.startDate | epochSecondsToDate | date:'d MMM y, HH:mm zzzz') ?? ''">
-        <span>{{ cardData.startDate | epochSecondsToDate | date:'d MMM y' }}</span>
-      </span>
-
-      <span class="separator" aria-hidden="true">|</span>
+    <div class="card-header-top">
+    <span
+      class="start-date"
+      [title]="(cardData.startDate | epochSecondsToDate | date:'d MMM y, HH:mm zzzz') ?? ''">
+      <span>{{ cardData.startDate | epochSecondsToDate | date:'d MMM y, HH:mm' }}</span>
+    </span>
 
       @switch (cardData.matchStatus) {
         @case (MatchStatus.CONCLUDED) {
-          <span class="status">Concluded</span>
+          <span class="status-indicator concluded" aria-label="Concluded" matTooltip="Concluded"></span>
         }
         @case (MatchStatus.IN_PLAY) {
-          <span class="status">In play</span>
+          <span class="status-indicator in-play" aria-label="In play" matTooltip="In play"></span>
+        }
+      }
+    </div>
+
+    <div class="match-settings">
+      <span>{{ cardData.x01 }}</span>
+
+      <span>{{ cardData.format }}</span>
+
+      @switch (cardData.bestOfType) {
+        @case (X01BestOfType.SETS) {
+          <span>BO{{ cardData.bestOfSets }} (BO{{ cardData.bestOfLegs }})</span>
+        }
+        @case (X01BestOfType.LEGS) {
+          <span>BO{{ cardData.bestOfLegs }}</span>
         }
       }
     </div>
@@ -105,18 +103,22 @@
       <mat-icon>delete</mat-icon>
     </button>
 
-    <a matButton="filled" class="open-match-link" [routerLink]="AppEndpoints.match(cardData.matchId)">
-      <span>Open match</span>
-      <mat-icon iconPositionEnd aria-hidden="true">chevron_right</mat-icon>
-    </a>
-
     <span class="last-visited">Last visited:
-      <span class="last-visited-date-extended">
-        <span>{{ cardData.lastVisitedAt | epochSecondsToDate | date:'d MMM y, HH:mm' }}</span>
-      </span>
-      <span class="last-visited-date-short">
-        <span>{{ cardData.lastVisitedAt | epochSecondsToDate | date:'d MMM, HH:mm' }}</span>
-      </span>
+    <span class="last-visited-date-extended">
+      <span>{{ cardData.lastVisitedAt | epochSecondsToDate | date:'d MMM y, HH:mm' }}</span>
     </span>
+    <span class="last-visited-date-short">
+      <span>{{ cardData.lastVisitedAt | epochSecondsToDate | date:'d MMM, HH:mm' }}</span>
+    </span>
+  </span>
+
+    <a
+      mat-icon-button
+      class="open-match-link"
+      aria-label="Open match"
+      matTooltip="Open match"
+      [routerLink]="AppEndpoints.match(cardData.matchId)">
+      <mat-icon>arrow_forward</mat-icon>
+    </a>
   </mat-card-actions>
 </mat-card>
