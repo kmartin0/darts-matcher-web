@@ -5,7 +5,7 @@
   [error]="state.toolbarError?.message ?? null"
   [loading]="state.loading"/>
 
-<div class="match-history-page-scroll">
+<div #historyScroll class="match-history-page-scroll">
   <div class="match-history-page-content">
     @if (matchHistory !== null) {
       @if (matchHistory.items.length > 0) {

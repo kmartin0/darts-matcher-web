@@ -1,4 +1,13 @@
-import {Component, computed, DestroyRef, inject, input, untracked} from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  ElementRef,
+  inject,
+  input,
+  untracked,
+  viewChild
+} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {ActivatedRoute, Params, Router} from '@angular/router';
@@ -10,6 +19,7 @@ import {observeSignalProperty} from '../../../../shared/utils/signal.util';
 import {MatchHistoryCards} from '../../components/match-history-cards/match-history-cards';
 import {MatchHistoryToolbar} from '../../components/match-history-toolbar/match-history-toolbar';
 import {MatchHistoryPageStore} from './match-history-page-store';
+import {MatchHistoryScrollService} from '../../services/match-history-scroll.service';
 
 export const PAGE_INDEX_QUERY_PARAM = 'page';
 export const PAGE_SIZE_QUERY_PARAM = 'pageSize';
@@ -35,7 +45,10 @@ export class MatchHistoryPage {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly commonDialogService = inject(CommonDialogService);
+  private readonly scrollService = inject(MatchHistoryScrollService);
   private readonly store = inject(MatchHistoryPageStore);
+
+  private readonly historyScroll = viewChild<ElementRef<HTMLElement>>('historyScroll');
 
   readonly pageIndex = input(DEFAULT_PAGE_INDEX, {
     alias: 'page',
@@ -46,7 +59,6 @@ export class MatchHistoryPage {
     alias: 'pageSize',
     transform: (value: unknown) => resolvePageSize(value, PAGE_SIZE_OPTIONS, DEFAULT_PAGE_SIZE)
   });
-
 
   protected readonly uiState = this.store.state;
   protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
@@ -62,6 +74,12 @@ export class MatchHistoryPage {
   }));
 
   constructor() {
+    this.scrollService.connect(
+      () => this.historyScroll()?.nativeElement,
+      () => this.isHistoryReady(),
+      this.destroyRef
+    );
+
     this.registerQueryParamsObserver();
     this.registerPaginationRequestObserver();
     this.registerNavigateToPageIndexObserver();
@@ -94,6 +112,20 @@ export class MatchHistoryPage {
       pageIndex: event.pageIndex,
       pageSize: event.pageSize
     });
+  }
+
+  /**
+   * Checks that the loaded results belong to the requested history page.
+   *
+   * Prevents scroll restoration against previous results retained while loading.
+   */
+  private isHistoryReady(): boolean {
+    const {loading, matchHistory} = this.uiState();
+
+    return !loading &&
+      matchHistory !== null &&
+      matchHistory.pageIndex === this.pageIndex() &&
+      matchHistory.pageSize === this.pageSize();
   }
 
   /**
