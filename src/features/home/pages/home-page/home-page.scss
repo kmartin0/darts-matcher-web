@@ -59,7 +59,9 @@
   }
 
   @include devices.device(phone, phablet) {
-    padding: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-left: 0;
 
     @include mat.card-overrides((
       elevated-container-elevation: var(--mat-sys-level0),
