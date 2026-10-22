@@ -26,6 +26,7 @@ export class ApiErrorHandlerService {
       case ApiErrorCode.INTERNAL:
       case ApiErrorCode.MESSAGE_NOT_READABLE:
       case ApiErrorCode.METHOD_NOT_ALLOWED:
+      case ApiErrorCode.NOT_ACCEPTABLE:
       case ApiErrorCode.UNSUPPORTED_MEDIA_TYPE:
       case ApiErrorCode.INVALID_ARGUMENTS:
       case ApiErrorCode.RESOURCE_NOT_FOUND:
