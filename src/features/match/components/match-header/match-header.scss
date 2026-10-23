@@ -24,4 +24,8 @@
 app-match-rules-menu {
   grid-column: 3;
   justify-self: center;
+
+  @include devices.device(phone, phablet) {
+    transform: scale(0.9);
+  }
 }
