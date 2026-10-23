@@ -1,19 +1,27 @@
 <mat-toolbar>
-  @if (titleLink(); as link) {
-    <a class="plain" [routerLink]="link">{{ title() }}</a>
-  } @else {
-    <span>{{ title() }}</span>
-  }
+  <div class="toolbar-title">
+    @if (titleLink(); as link) {
+      <a class="plain" [routerLink]="link">{{ toolbarTitle() }}</a>
+    } @else {
+      <span>{{ toolbarTitle() }}</span>
+    }
+  </div>
 
-  <span class="spacer"></span>
+  <div class="toolbar-status">
+    @if (loading()) {
+      <mat-spinner [diameter]="24" aria-label="Loading"/>
+    }
 
-  @if (loading()) {
-    <mat-spinner [diameter]="24" aria-label="Loading"/>
-  }
+    @if (error(); as errorMessage) {
+      <app-error-message
+        class="toolbar-error"
+        [message]="errorMessage"
+        [contrast]="true"
+        [truncate]="true"/>
+    }
+  </div>
 
-  @if (error(); as errorMessage) {
-    <app-error-message [message]="errorMessage" [contrast]="true"/>
-  }
-
-  <ng-content/>
+  <div class="toolbar-actions">
+    <ng-content/>
+  </div>
 </mat-toolbar>

@@ -95,3 +95,18 @@ a.plain {
   text-decoration: none;
   cursor: pointer;
 }
+
+// ---------- App toolbar ------------------------
+
+app-toolbar {
+  @include devices.device(phone, phablet) {
+    @include mat.icon-button-overrides((
+      state-layer-size: 32px,
+      touch-target-size: 34px
+    ));
+
+    .mat-mdc-icon-button .mat-icon {
+      transform: scale(0.9);
+    }
+  }
+}

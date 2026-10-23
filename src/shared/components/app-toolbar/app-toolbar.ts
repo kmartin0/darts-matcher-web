@@ -16,7 +16,7 @@ import {ErrorMessage} from '../error-message/error-message';
   styleUrl: './app-toolbar.scss'
 })
 export class AppToolbar {
-  readonly title = input.required<string>();
+  readonly toolbarTitle = input.required<string>();
   readonly titleLink = input<string | null>(null);
   readonly error = input<string | null>(null);
   readonly loading = input(false);

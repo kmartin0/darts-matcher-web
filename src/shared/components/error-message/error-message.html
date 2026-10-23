@@ -1,7 +1,9 @@
 @if (message()) {
   <div
     class="error-message"
-    [class.contrast]="contrast()">
+    [class.contrast]="contrast()"
+    [class.truncate]="truncate()"
+    [title]="truncate() ? message() : null">
     {{ message() }}
   </div>
 }

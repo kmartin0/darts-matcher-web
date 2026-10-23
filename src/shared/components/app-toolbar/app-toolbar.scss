@@ -1,4 +1,5 @@
 @use "@angular/material" as mat;
+@use "mixins/devices";
 @use "mixins/helpers";
 
 :host {
@@ -7,8 +8,10 @@
 }
 
 mat-toolbar {
-  display: flex;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 6px;
   width: 100%;
 
   @include mat.toolbar-overrides((
@@ -42,20 +45,55 @@ mat-toolbar {
   }
 }
 
-.spacer {
-  flex: 1 1 auto;
+.toolbar-title {
+  min-width: 0;
+  white-space: nowrap;
+
+  @include devices.device(phone, phablet) {
+    font: var(--mat-sys-title-medium);
+  }
+}
+
+.toolbar-status {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: max-content;
+}
+
+.toolbar-error {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+
+  @include devices.device(phone, phablet) {
+    transform: scale(0.9);
+  }
 }
 
 mat-spinner {
-  margin: 16px;
+  flex-shrink: 0;
 
   @include mat.progress-spinner-overrides((
-    active-indicator-color: var(--mat-sys-on-primary)
+    active-indicator-color: var(--mat-sys-on-primary),
   ));
 
   @include helpers.dark-mode {
     @include mat.progress-spinner-overrides((
       active-indicator-color: var(--mat-sys-on-surface)
     ));
+  }
+
+  @include devices.device(phone, phablet) {
+    transform: scale(0.9);
   }
 }

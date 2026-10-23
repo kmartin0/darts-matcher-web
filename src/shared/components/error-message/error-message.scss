@@ -2,11 +2,17 @@
   max-width: 100%;
   color: var(--mat-sys-error);
   font: var(--mat-sys-body-medium);
-}
 
-.error-message.contrast {
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--mat-sys-corner-small);
-  color: var(--mat-sys-on-error-container);
-  background-color: var(--mat-sys-error-container);
+  &.truncate {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  &.contrast {
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--mat-sys-corner-small);
+    color: var(--mat-sys-on-error-container);
+    background-color: var(--mat-sys-error-container);
+  }
 }

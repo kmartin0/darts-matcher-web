@@ -1,8 +1,31 @@
 <app-toolbar
-  title="Match"
+  toolbarTitle="Match"
   [titleLink]="AppEndpoints.home()"
   [error]="error()"
   [loading]="loading()">
+
+  @switch (matchView()) {
+    @case ('board') {
+      <button
+        mat-icon-button
+        type="button"
+        aria-label="Show match summary"
+        matTooltip="Match summary"
+        (click)="toggleMatchView.emit()">
+        <mat-icon>analytics</mat-icon>
+      </button>
+    }
+    @case ('summary') {
+      <button
+        mat-icon-button
+        type="button"
+        aria-label="Show match board"
+        matTooltip="Match board"
+        (click)="toggleMatchView.emit()">
+        <mat-icon>scoreboard</mat-icon>
+      </button>
+    }
+  }
 
   <app-theme-toggle/>
 
@@ -20,27 +43,6 @@
 
 <!-- More options menu -->
 <mat-menu #menu="matMenu">
-  @switch (displayedMatchView()) {
-    @case ('board') {
-      <button
-        mat-menu-item
-        type="button"
-        (click)="toggleMatchView.emit()">
-        <mat-icon>analytics</mat-icon>
-        <span>Match summary</span>
-      </button>
-    }
-    @case ('summary') {
-      <button
-        mat-menu-item
-        type="button"
-        (click)="toggleMatchView.emit()">
-        <mat-icon>scoreboard</mat-icon>
-        <span>Match board</span>
-      </button>
-    }
-  }
-
   <button
     mat-menu-item
     type="button"
