@@ -364,8 +364,8 @@ export class MatchPageStore {
   /**
    * Handles a match update message.
    *
-   * Updates with an equal or older broadcast version are ignored. The first
-   * accepted load attempts to record the match in recent history.
+   * Updates received after deletion or with an equal or older broadcast version
+   * are ignored. The first accepted load attempts to record the match in recent history.
    *
    * @param message - Match update message to handle.
    */
@@ -374,11 +374,16 @@ export class MatchPageStore {
     const currentMatchState = this._state().match;
 
     // Ignore stale or duplicate match updates.
-    if (currentMatchState.status === 'loaded' &&
-      currentMatchState.data.broadcastVersion >= match.broadcastVersion) {
+    if (currentMatchState.status === 'loaded' && currentMatchState.data.broadcastVersion >= match.broadcastVersion) {
       return;
     }
 
+    // Ignore updates after the observed match has been deleted.
+    if (currentMatchState.status === 'deleted') {
+      return;
+    }
+
+    // Record the match in recent history on the first accepted load.
     if (currentMatchState.status !== 'loaded') {
       void this.recentMatchesRepository.addMatch(match.id)
         .catch(error => {
@@ -388,6 +393,7 @@ export class MatchPageStore {
 
     this.patchState({match: {status: 'loaded', data: match}});
 
+    // Show the rematch prompt when a rematch update includes its ID.
     if (message.messageType === MatchMessageType.REMATCH && match.rematchId) {
       this.patchState({rematchPrompt: {rematchId: match.rematchId}});
     }
