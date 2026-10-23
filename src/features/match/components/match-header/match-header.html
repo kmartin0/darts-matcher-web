@@ -1,3 +1,4 @@
 <div class="match-header">
-  <span>{{ match() | matchFormatSummary }}</span>
+  <span class="format-summary">{{ match() | matchFormatSummary }}</span>
+  <app-match-rules-menu [matchSettings]="match().matchSettings"/>
 </div>

@@ -3,7 +3,6 @@ import {X01Match} from '../../../../../data/model/x01/match/x01-match';
 import {X01BestOfType} from '../../../../../data/model/x01/rules/x01-best-of-type';
 import {X01MatchSettings} from '../../../../../data/model/x01/match/x01-match-settings';
 import {formatCount} from '../../../../../shared/utils/number.util';
-import {X01MatchFormat} from '../../../../../data/model/x01/match/x01-match-format';
 
 export interface MatchFormatSummaryPipeData {
   matchSettings: X01MatchSettings;
@@ -11,7 +10,7 @@ export interface MatchFormatSummaryPipeData {
 }
 
 /**
- * Formats the match format summary displayed in the Match Header.
+ * Formats the best-of configuration displayed in the match header.
  */
 @Pipe({
   name: 'matchFormatSummary'
@@ -19,63 +18,24 @@ export interface MatchFormatSummaryPipeData {
 export class MatchFormatSummaryPipe implements PipeTransform {
 
   /**
-   * Formats the best-of configuration, clear-by-two state, starting score,
-   * and double-in format when applicable.
+   * Formats the configured number of sets and legs.
    *
    * Examples:
-   * `Best of 5 legs • 501`
-   * `Best of 3 sets (BO5) • Clear by two • 501 • DIDO`
+   * `Best of 5 legs`
+   * `Best of 3 sets (BO5)`
    *
-   * @param data - Match settings and match type to format.
-   * @returns Formatted match format summary.
-   */
-  transform(data: MatchFormatSummaryPipeData): string {
-    const matchSettings = data.matchSettings;
-    const summaryParts = [this.getBestOf(matchSettings)];
-
-    if (this.hasClearByTwo(matchSettings)) {
-      summaryParts.push('Clear by two');
-    }
-
-    summaryParts.push(`${matchSettings.x01}`);
-
-    if (matchSettings.format === X01MatchFormat.DIDO) {
-      summaryParts.push('DIDO');
-    }
-
-    return summaryParts.join(' • ');
-  }
-
-  /**
-   * Formats the best-of settings for the match header.
-   *
-   * @param matchSettings - Match settings containing the best-of configuration.
+   * @param data - Match data containing the best-of configuration.
    * @returns Formatted best-of description.
    */
-  private getBestOf(matchSettings: X01MatchSettings): string {
-    switch (matchSettings.bestOf.bestOfType) {
-      case X01BestOfType.SETS: {
-        const formattedSets = formatCount(matchSettings.bestOf.sets, 'set', 'sets');
+  transform(data: MatchFormatSummaryPipeData): string {
+    const bestOf = data.matchSettings.bestOf;
 
-        return `Best of ${formattedSets} (BO${matchSettings.bestOf.legs})`;
-      }
+    switch (bestOf.bestOfType) {
+      case X01BestOfType.SETS:
+        return `Best of ${formatCount(bestOf.sets, 'set', 'sets')} (BO${bestOf.legs})`;
 
       case X01BestOfType.LEGS:
-        return `Best of ${formatCount(matchSettings.bestOf.legs, 'leg', 'legs')}`;
+        return `Best of ${formatCount(bestOf.legs, 'leg', 'legs')}`;
     }
-  }
-
-  /**
-   * Checks whether any clear-by-two rule is enabled.
-   *
-   * @param matchSettings - Match settings containing the clear-by-two rules.
-   * @returns Whether any clear-by-two rule is enabled.
-   */
-  private hasClearByTwo(matchSettings: X01MatchSettings): boolean {
-    const bestOfSettings = matchSettings.bestOf;
-
-    return bestOfSettings.clearByTwoSetsRule.enabled ||
-      bestOfSettings.clearByTwoLegsRule.enabled ||
-      bestOfSettings.clearByTwoLegsInFinalSetRule.enabled;
   }
 }

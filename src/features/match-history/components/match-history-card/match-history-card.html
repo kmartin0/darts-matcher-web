@@ -1,36 +1,39 @@
 @let cardData = matchHistoryCardData();
+@let matchSettings = cardData.matchSettings;
+@let bestOf = matchSettings.bestOf;
+@let statusIndicator = matchStatusIndicator();
 
 <mat-card appearance="raised">
   <!-- Header -->
   <div class="card-header">
     <div class="card-header-top">
-    <span
-      class="start-date"
-      [title]="(cardData.startDate | epochSecondsToDate | date:'d MMM y, HH:mm zzzz') ?? ''">
-      <span>{{ cardData.startDate | epochSecondsToDate | date:'d MMM y, HH:mm' }}</span>
-    </span>
+      <app-match-rules-menu class="rules-menu" [matchSettings]="matchSettings"/>
 
-      @switch (cardData.matchStatus) {
-        @case (MatchStatus.CONCLUDED) {
-          <span class="status-indicator concluded" aria-label="Concluded" matTooltip="Concluded"></span>
-        }
-        @case (MatchStatus.IN_PLAY) {
-          <span class="status-indicator in-play" aria-label="In play" matTooltip="In play"></span>
-        }
-      }
+      <span class="start-date" [title]="(cardData.startDate | epochSecondsToDate | date:'d MMM y, HH:mm zzzz') ?? ''">
+        <span>{{ cardData.startDate | epochSecondsToDate | date:'d MMM y, HH:mm' }}</span>
+      </span>
+
+      <button
+        mat-icon-button
+        class="status-indicator {{ statusIndicator.className }}"
+        type="button"
+        [attr.aria-label]="statusIndicator.label"
+        [matTooltip]="statusIndicator.label">
+        <mat-icon>{{ statusIndicator.icon }}</mat-icon>
+      </button>
     </div>
 
     <div class="match-settings">
-      <span>{{ cardData.x01 }}</span>
+      <span>{{ matchSettings.x01 }}</span>
 
-      <span>{{ cardData.format }}</span>
+      <span>{{ matchSettings.format }}</span>
 
-      @switch (cardData.bestOfType) {
+      @switch (bestOf.bestOfType) {
         @case (X01BestOfType.SETS) {
-          <span>BO{{ cardData.bestOfSets }} (BO{{ cardData.bestOfLegs }})</span>
+          <span>BO{{ bestOf.sets }} (BO{{ bestOf.legs }})</span>
         }
         @case (X01BestOfType.LEGS) {
-          <span>BO{{ cardData.bestOfLegs }}</span>
+          <span>BO{{ bestOf.legs }}</span>
         }
       }
     </div>
@@ -49,7 +52,7 @@
     <tr>
       <th scope="col">Player</th>
       <th scope="col">
-        @switch (cardData.bestOfType) {
+        @switch (bestOf.bestOfType) {
           @case (X01BestOfType.SETS) {
             <span>Sets</span>
           }
@@ -70,7 +73,7 @@
             <span class="player-name" [title]="player.name">{{ player.name }}</span>
           </td>
           <td>
-            @switch (cardData.bestOfType) {
+            @switch (bestOf.bestOfType) {
               @case (X01BestOfType.SETS) {
                 <span>{{ player.setsWon }}</span>
                 @if (cardData.matchStatus === MatchStatus.IN_PLAY) {

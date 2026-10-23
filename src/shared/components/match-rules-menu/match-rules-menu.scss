@@ -1,0 +1,29 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+button {
+  color: inherit;
+}
+
+.match-rules {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  gap: 4px 16px;
+  padding: 8px 16px;
+  font: var(--mat-sys-body-medium);
+  text-align: left;
+  white-space: normal;
+}
+
+.rule-label {
+  min-width: 0;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.rule-value {
+  font-weight: 400;
+}

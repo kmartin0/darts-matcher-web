@@ -1,0 +1,20 @@
+<button
+  mat-icon-button
+  type="button"
+  [matMenuTriggerFor]="matchRulesMenu"
+  aria-label="Show match rules"
+  (keydown)="$event.stopPropagation()"
+  matTooltip="Match rules">
+  <mat-icon>info</mat-icon>
+</button>
+
+<mat-menu #matchRulesMenu="matMenu">
+  <div
+    class="match-rules"
+    (click)="$event.stopPropagation()">
+    @for (rule of rules(); track rule.label) {
+      <span class="rule-label">{{ rule.label }}</span>
+      <span class="rule-value">{{ rule.value }}</span>
+    }
+  </div>
+</mat-menu>

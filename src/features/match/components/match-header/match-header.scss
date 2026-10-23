@@ -1,6 +1,10 @@
 @use "mixins/devices";
 
 .match-header {
+  display: grid;
+  grid-template-columns: 48px minmax(0, auto) 48px;
+  justify-content: center;
+  align-items: center;
   font: var(--mat-sys-title-large);
   min-height: var(--mat-sys-title-large-line-height);
   font-weight: 500;
@@ -10,4 +14,14 @@
     font: var(--mat-sys-title-medium);
     min-height: var(--mat-sys-title-medium-line-height);
   }
+}
+
+.format-summary {
+  grid-column: 2;
+  min-width: 0;
+}
+
+app-match-rules-menu {
+  grid-column: 3;
+  justify-self: center;
 }

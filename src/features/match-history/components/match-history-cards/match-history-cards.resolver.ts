@@ -21,15 +21,10 @@ export function resolveMatchHistoryCards(matchHistoryEntries: MatchHistoryItem[]
  */
 function resolveMatchHistoryCard(matchHistoryEntry: MatchHistoryItem): MatchHistoryCardData {
   const match = matchHistoryEntry.match;
-  const bestOf = match.matchSettings.bestOf;
 
   return {
     matchId: match.id,
-    x01: match.matchSettings.x01,
-    bestOfSets: bestOf.sets,
-    bestOfLegs: bestOf.legs,
-    bestOfType: bestOf.bestOfType,
-    format: match.matchSettings.format,
+    matchSettings: match.matchSettings,
     startDate: match.startDate,
     lastVisitedAt: matchHistoryEntry.lastVisitedAt,
     matchStatus: match.matchStatus,
