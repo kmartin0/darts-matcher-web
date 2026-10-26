@@ -15,6 +15,7 @@ import {DialogResult} from '../../../../shared/types/dialog-result';
 import {MatchLocalSettingsFormDialogData} from './match-local-settings-form-dialog-data';
 import * as MatchLocalSettingsFormDialogModel from './match-local-settings-form-dialog.model';
 import {MATCH_LOCAL_SETTING_FORM_DIALOG_SCHEMA} from './match-local-settings-form-dialog.schema';
+import {PlayerType} from '../../../../data/model/base-match/player-type';
 
 @Component({
   selector: 'app-match-local-settings-form-dialog',
@@ -33,11 +34,15 @@ import {MATCH_LOCAL_SETTING_FORM_DIALOG_SCHEMA} from './match-local-settings-for
 export class MatchLocalSettingsFormDialog {
   protected readonly dialogData = inject<MatchLocalSettingsFormDialogData>(MAT_DIALOG_DATA);
 
+  protected readonly humanPlayers = this.dialogData.players.filter(
+    player => player.playerType === PlayerType.HUMAN
+  );
+
   private readonly dialogRef = inject<MatDialogRef<MatchLocalSettingsFormDialog, DialogResult<LocalMatchSettings>>>(MatDialogRef);
 
   private readonly formModel = signal<MatchLocalSettingsFormDialogModel.FormModel>(
     MatchLocalSettingsFormDialogModel.createInitialFormModel(
-      this.dialogData.players,
+      this.humanPlayers,
       this.dialogData.localMatchSettings
     )
   );

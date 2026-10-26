@@ -8,7 +8,7 @@
     <h3 class="subtitle">Who are you scoring for?</h3>
 
     <div class="player-options">
-      @for (player of dialogData.players; track player.playerId; let index = $index) {
+      @for (player of humanPlayers; track player.playerId; let index = $index) {
         <mat-checkbox class="player-option" [formField]="matchLocalSettingsForm.playerSelections[index].selected">
           {{ player.playerName }}
         </mat-checkbox>

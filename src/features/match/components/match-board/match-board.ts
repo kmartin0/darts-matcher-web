@@ -21,6 +21,7 @@ import {MatchScoreInput} from '../match-score-input/match-score-input';
 import {MatchScoreTable} from '../match-score-table/match-score-table';
 import {MatchScoreTableEditTarget} from '../match-score-table/match-score-table-edit-target';
 import {isCurrentLegSelected, isCurrentOrLastLegSelected, LegSelection} from './leg-selection';
+import {PlayerType} from '../../../../data/model/base-match/player-type';
 
 @Component({
   selector: 'app-match-board',
@@ -72,8 +73,7 @@ export class MatchBoard {
   protected readonly scoreSubmissionEnabled = computed<boolean>(() => {
     const currentThrowerId = this.match().matchProgress.currentThrower;
 
-    return currentThrowerId !== null &&
-      this.localMatchSettings().scoreForPlayerIds.includes(currentThrowerId);
+    return currentThrowerId !== null && this.localMatchSettings().scoreForPlayerIds.includes(currentThrowerId);
   });
 
   constructor() {
@@ -207,7 +207,7 @@ export class MatchBoard {
    *
    * @returns Scroll target, or null when no current thrower is displayed.
    */
-  private getCurrentThrowerScrollTarget(): {left: number} | null {
+  private getCurrentThrowerScrollTarget(): { left: number } | null {
     const card = this.playerCards().getCurrentThrowerElement();
 
     if (card === null) {

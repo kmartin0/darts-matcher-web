@@ -1,5 +1,6 @@
 import {MatchPlayer} from '../base-match/match-player';
 import {isValidObjectId} from '../../api/utils/object-id.util';
+import {PlayerType} from '../base-match/player-type';
 
 export interface LocalMatchSettings {
   matchId: string;
@@ -25,16 +26,18 @@ export function isLocalMatchSettings(value: unknown): value is LocalMatchSetting
 }
 
 /**
- * Creates default local settings with every match player selected.
+ * Creates default local settings with every human match player selected.
  *
  * @param matchId - Match ID to include in the settings.
- * @param players - Match players to select.
+ * @param players - Match players from which to select human players.
  * @returns Default local match settings.
  */
 export function createDefaultLocalMatchSettings(matchId: string, players: readonly MatchPlayer[]): LocalMatchSettings {
   return {
     matchId: matchId,
-    scoreForPlayerIds: players.map(player => player.playerId)
+    scoreForPlayerIds: players
+      .filter(player => player.playerType === PlayerType.HUMAN)
+      .map(player => player.playerId)
   };
 }
 
