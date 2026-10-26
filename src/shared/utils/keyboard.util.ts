@@ -1,14 +1,15 @@
 /**
- * Determines whether a keyboard event should be ignored by shortcut handlers.
+ * Identifies keydown events excluded from shortcut handling.
  *
- * Ignores repeated keydown strokes, keys pressed during text composition, and
- * keydown strokes with Ctrl, Alt, Meta, or Shift held.
+ * Excludes already-handled events, repeated presses, text composition,
+ * and presses with Ctrl, Alt, Meta, or Shift held.
  *
  * @param event - Keyboard event to check.
- * @returns `true` when the event should be ignored.
+ * @returns Whether the event is excluded from shortcut handling.
  */
-export function shouldIgnoreKeyDown(event: KeyboardEvent): boolean {
-  return event.repeat ||
+export function isNonShortcutKeyDown(event: KeyboardEvent): boolean {
+  return event.defaultPrevented ||
+    event.repeat ||
     event.isComposing ||
     event.ctrlKey ||
     event.altKey ||

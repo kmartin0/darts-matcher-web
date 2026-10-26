@@ -16,7 +16,7 @@ import {FormError} from '../../../../shared/components/form-error/form-error';
 import * as EditScoreFormDialogModel from './match-edit-score-form-dialog.model';
 import {EDIT_SCORE_FORM_DIALOG_SCHEMA} from './match-edit-score-form-dialog.schema';
 import {MatchEditScoreFormDialogData} from './match-edit-score-form-dialog-data';
-import {shouldIgnoreKeyDown} from '../../../../shared/utils/keyboard.util';
+import {isNonShortcutKeyDown} from '../../../../shared/utils/keyboard.util';
 
 @Component({
   selector: 'app-match-edit-score-dialog',
@@ -67,7 +67,7 @@ export class MatchEditScoreFormDialog {
    * @param event - Keyboard event routed to the dialog.
    */
   private onDialogKeyDown(event: KeyboardEvent): void {
-    if (shouldIgnoreKeyDown(event)) return;
+    if (isNonShortcutKeyDown(event)) return;
     if (event.key !== 'Enter' || event.target instanceof HTMLButtonElement) return;
 
     event.preventDefault();

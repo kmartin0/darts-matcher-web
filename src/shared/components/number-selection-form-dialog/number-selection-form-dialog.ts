@@ -11,7 +11,7 @@ import {
 } from '@angular/material/dialog';
 import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
 import {DialogResult} from '../../types/dialog-result';
-import {shouldIgnoreKeyDown} from '../../utils/keyboard.util';
+import {isNonShortcutKeyDown} from '../../utils/keyboard.util';
 import {NumberSelectionFormDialogData} from './number-selection-form-dialog-data';
 import * as NumberSelectionFormDialogModel from './number-selection-form-dialog.model';
 import {NUMBER_SELECTION_FORM_DIALOG_SCHEMA} from './number-selection-form-dialog.schema';
@@ -75,7 +75,7 @@ export class NumberSelectionFormDialog {
    * @param event - Keyboard event routed to the dialog.
    */
   private onDialogKeyDown(event: KeyboardEvent): void {
-    if (shouldIgnoreKeyDown(event)) return;
+    if (isNonShortcutKeyDown(event)) return;
 
     if (event.key === 'Enter') {
       this.onEnterKeyDown(event);

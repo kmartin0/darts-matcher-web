@@ -1,6 +1,6 @@
-import {Component, input, output} from '@angular/core';
+import {Component, ElementRef, inject, input, output} from '@angular/core';
 import {MatButton} from '@angular/material/button';
-import {shouldIgnoreKeyDown} from '../../utils/keyboard.util';
+import {isNonShortcutKeyDown} from '../../utils/keyboard.util';
 
 export type KeypadButton = | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 'delete' | 'enter';
 
@@ -20,25 +20,24 @@ export class Keypad {
 
   protected readonly keys: KeypadButton[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'delete', 0, 'enter'];
 
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
   /**
    * Handles supported physical keyboard keys.
    *
-   * Emits the matching keypad button unless the keydown is ignored
-   * or the Enter button is disabled.
+   * Leaves excluded events and external interactive controls untouched.
+   * Emits the matching keypad button unless Enter is disabled.
    *
    * @param event - Keyboard event to handle.
    */
   protected onWindowKeyDown(event: KeyboardEvent): void {
-    // Ignore repeated presses, composition, and modified key presses.
-    if (shouldIgnoreKeyDown(event)) {
+    if (isNonShortcutKeyDown(event) || this.isExternalControl(event.target)) {
       return;
     }
 
-    // Resolve the keypad button represented by the keyboard event.
     const key = this.mapKey(event);
     if (key === null) return;
 
-    // Do not intercept Enter when the Enter button is disabled.
     if (key === 'enter' && !this.enterEnabled()) return;
 
     event.preventDefault();
@@ -52,6 +51,23 @@ export class Keypad {
    */
   protected onKeyPress(key: KeypadButton): void {
     this.keyPress.emit(key);
+  }
+
+  /**
+   * Checks whether the keyboard event originated outside the keypad,
+   * excluding the page body and document element.
+   *
+   * @param target - Target of the keyboard event.
+   * @returns Whether focus is outside the keypad and its shortcuts should be ignored.
+   */
+  private isExternalControl(target: EventTarget | null): boolean {
+    if (!(target instanceof HTMLElement)) return false;
+
+    const document = target.ownerDocument;
+
+    return target !== document.body &&
+      target !== document.documentElement &&
+      !this.elementRef.nativeElement.contains(target);
   }
 
   /**
