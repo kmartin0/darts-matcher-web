@@ -3,6 +3,7 @@ export interface TurnInput {
   checkoutDartsUsed: number | null;
   checkoutDoublesMissed: number | null;
   openingDoublesMissed: number | null;
+  matchVersion: number | null;
 }
 
 export type CreateTurnInput = TurnInput;

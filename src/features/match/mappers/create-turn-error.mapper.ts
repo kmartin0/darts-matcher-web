@@ -1,7 +1,8 @@
 import {ApiErrorCode} from '../../../data/api/errors/api-error-code';
 import {ApiErrorResponse} from '../../../data/api/errors/api-error-response';
 
-const DEFAULT_CREATE_TURN_ERROR = 'Failed to create turn';
+const DEFAULT_CREATE_TURN_ERROR = 'Failed to create turn.';
+const CONFLICT_ERROR = 'Turn not added: the match has changed. Please try again.';
 
 const API_TARGET_PREFIX_MAP: Readonly<Partial<Record<string, string>>> = {
   score: 'Score',
@@ -20,6 +21,9 @@ export function mapToCreateTurnErrorMessage(errorResponse: ApiErrorResponse | un
   switch (errorResponse?.type) {
     case ApiErrorCode.INVALID_ARGUMENTS:
       return mapInvalidArgumentsToErrorMessage(errorResponse);
+
+    case ApiErrorCode.CONFLICT:
+      return CONFLICT_ERROR;
 
     default:
       return DEFAULT_CREATE_TURN_ERROR;

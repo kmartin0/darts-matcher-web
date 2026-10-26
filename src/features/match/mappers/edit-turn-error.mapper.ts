@@ -2,6 +2,7 @@ import {ApiErrorCode} from '../../../data/api/errors/api-error-code';
 import {ApiErrorResponse} from '../../../data/api/errors/api-error-response';
 
 const DEFAULT_EDIT_TURN_ERROR = 'Failed to edit turn';
+const CONFLICT_ERROR = 'Turn not added: the match has changed. Please try again.';
 
 const API_TARGET_PREFIX_MAP: Readonly<Partial<Record<string, string>>> = {
   score: 'Score',
@@ -24,6 +25,9 @@ export function mapToEditTurnErrorMessage(errorResponse: ApiErrorResponse | unde
   switch (errorResponse?.type) {
     case ApiErrorCode.INVALID_ARGUMENTS:
       return mapInvalidArgumentsToErrorMessage(errorResponse);
+
+    case ApiErrorCode.CONFLICT:
+      return CONFLICT_ERROR;
 
     default:
       return DEFAULT_EDIT_TURN_ERROR;

@@ -49,7 +49,7 @@ export class MatchTurnInputService {
     const checkout = this.resolveCheckout(score, remainingAfterTurn, checkouts);
 
     // Run the shared turn dialogs.
-    return this.runTurnDialogs(score, checkout, match.matchSettings, remainingAfterTurn, remainingBeforeTurn);
+    return this.runTurnDialogs(match.version, score, checkout, match.matchSettings, remainingAfterTurn, remainingBeforeTurn);
   }
 
   /**
@@ -84,6 +84,7 @@ export class MatchTurnInputService {
       legNumber: editTarget.legNumber,
       roundNumber: editTarget.roundNumber,
       score: turnInput.score,
+      matchVersion: turnInput.matchVersion,
       checkoutDartsUsed: turnInput.checkoutDartsUsed,
       checkoutDoublesMissed: turnInput.checkoutDoublesMissed,
       openingDoublesMissed: turnInput.openingDoublesMissed
@@ -130,12 +131,13 @@ export class MatchTurnInputService {
     const remainingBeforeTurn = editTarget.currentTurn.remaining + editTarget.currentTurn.score;
 
     // Run the shared turn dialogs.
-    return this.runTurnDialogs(newScore, checkout, match.matchSettings, remainingAfterEdit, remainingBeforeTurn);
+    return this.runTurnDialogs(match.version, newScore, checkout, match.matchSettings, remainingAfterEdit, remainingBeforeTurn);
   }
 
   /**
    * Runs the dialogs shared by create-turn and edit-turn input.
    *
+   * @param matchVersion - Version of the match against which the turn input was prepared.
    * @param score - Score to include in the resolved turn input.
    * @param checkout - Checkout that applies to the turn, if any.
    * @param matchSettings - Match settings defining the starting score, double tracking and format.
@@ -144,6 +146,7 @@ export class MatchTurnInputService {
    * @returns The resolved turn input, or null when the dialog flow is dismissed.
    */
   private async runTurnDialogs(
+    matchVersion: number | null,
     score: number,
     checkout: X01Checkout | null,
     matchSettings: X01MatchSettings,
@@ -166,7 +169,8 @@ export class MatchTurnInputService {
       score: score,
       checkoutDartsUsed: checkoutDartsUsedResult.value,
       checkoutDoublesMissed: checkoutDoublesMissedResult.value,
-      openingDoublesMissed: openingDoublesMissedResult.value
+      openingDoublesMissed: openingDoublesMissedResult.value,
+      matchVersion: matchVersion
     };
   }
 

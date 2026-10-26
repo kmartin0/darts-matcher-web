@@ -3,4 +3,5 @@ export interface X01CreateTurnRequestDto {
   checkoutDoublesMissed: number | null;
   openingDoublesMissed: number | null;
   checkoutDartsUsed: number | null;
+  matchVersion: number | null;
 }

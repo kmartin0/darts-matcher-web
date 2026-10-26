@@ -12,6 +12,7 @@ export function mapToCreateTurnRequestDto(input: CreateTurnInput): X01CreateTurn
     score: input.score,
     checkoutDoublesMissed: input.checkoutDoublesMissed,
     openingDoublesMissed: input.openingDoublesMissed,
-    checkoutDartsUsed: input.checkoutDartsUsed
+    checkoutDartsUsed: input.checkoutDartsUsed,
+    matchVersion: input.matchVersion
   };
 }

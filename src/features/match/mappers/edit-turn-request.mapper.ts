@@ -8,6 +8,7 @@ export function mapToEditTurnRequestDto(input: EditTurnInput): X01EditTurnReques
     leg: input.legNumber,
     round: input.roundNumber,
     score: input.score,
+    matchVersion: input.matchVersion,
     checkoutDoublesMissed: input.checkoutDoublesMissed,
     openingDoublesMissed: input.openingDoublesMissed,
     checkoutDartsUsed: input.checkoutDartsUsed
