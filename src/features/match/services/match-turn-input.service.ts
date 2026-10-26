@@ -129,9 +129,10 @@ export class MatchTurnInputService {
 
     // Resolve the remaining score before the selected turn, independently of later turns.
     const remainingBeforeTurn = editTarget.currentTurn.remaining + editTarget.currentTurn.score;
+    const remainingAfterTurn = remainingBeforeTurn - newScore;
 
     // Run the shared turn dialogs.
-    return this.runTurnDialogs(match.version, newScore, checkout, match.matchSettings, remainingAfterEdit, remainingBeforeTurn);
+    return this.runTurnDialogs(match.version, newScore, checkout, match.matchSettings, remainingAfterTurn, remainingBeforeTurn);
   }
 
   /**
@@ -141,7 +142,7 @@ export class MatchTurnInputService {
    * @param score - Score to include in the resolved turn input.
    * @param checkout - Checkout that applies to the turn, if any.
    * @param matchSettings - Match settings defining the starting score, double tracking and format.
-   * @param remaining - Remaining score after applying the turn or edit, including later recorded turns.
+   * @param remaining - Player's remaining score immediately after the selected turn.
    * @param remainingBeforeTurn - Player's remaining score immediately before the selected turn.
    * @returns The resolved turn input, or null when the dialog flow is dismissed.
    */
