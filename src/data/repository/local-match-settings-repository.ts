@@ -84,6 +84,32 @@ export class LocalMatchSettingsRepository {
   }
 
   /**
+   * Carries stored local settings over to a rematch.
+   *
+   * Does nothing when the original settings are missing or the rematch
+   * already has its own settings.
+   *
+   * @param matchId - Original match ID.
+   * @param rematchId - Rematch ID receiving the settings.
+   * @returns Promise resolving after the transaction completes.
+   */
+  initializeRematchSettings(matchId: string, rematchId: string): Promise<void> {
+    return this.localDatabase.transaction('rw', this.matchSettingsTable, async () => {
+      const settings = await this.matchSettingsTable.get(matchId);
+      if (settings === undefined) {
+        return;
+      }
+
+      const rematchSettings = await this.matchSettingsTable.get(rematchId);
+      if (rematchSettings !== undefined) {
+        return;
+      }
+
+      await this.matchSettingsTable.put({...settings, matchId: rematchId});
+    });
+  }
+
+  /**
    * Gets stored settings, creating defaults when missing or invalid for the match.
    *
    * @param matchId - Match ID whose settings should be resolved.

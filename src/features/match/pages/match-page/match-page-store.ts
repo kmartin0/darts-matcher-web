@@ -3,15 +3,12 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ActivatedRoute} from '@angular/router';
 import {
   catchError,
-  concatMap,
   defer,
-  delay,
   EMPTY,
   exhaustMap,
   filter,
   map,
   Observable,
-  of,
   switchMap,
   tap
 } from 'rxjs';
@@ -39,8 +36,7 @@ import {LocalMatchSettingsRepository} from '../../../../data/repository/local-ma
 import {MatchPlayer} from '../../../../data/model/base-match/match-player';
 import {LocalMatchSettings} from '../../../../data/model/settings/local-match-settings';
 import {MatchHistoryRepository} from '../../../../data/repository/match-history-repository';
-
-const BOT_TURN_DELAY_MS = 500;
+import {delayBotTurns} from '../../operators/match-stream.operators';
 
 @Injectable()
 export class MatchPageStore {
@@ -257,7 +253,7 @@ export class MatchPageStore {
     this.patchState({match: {status: 'loading'}});
 
     return this.matchRepository.streamMatch(matchId, ALL_API_ERROR_CODES).pipe(
-      concatMap(event => this.delayBotTurnEvent$(event)),
+      delayBotTurns(),
       tap(streamEvent => this.handleStreamMatchEvent(streamEvent)),
       catchError((error: unknown) => {
         this.handleObserveMatchError(matchId, error);
@@ -294,22 +290,6 @@ export class MatchPageStore {
           return EMPTY;
         })
       );
-  }
-
-  /**
-   * Delays incoming bot turn events while preserving stream event order.
-   *
-   * All other stream events receive no additional delay.
-   *
-   * @param event - Stream event to evaluate.
-   * @returns Observable emitting the stream event, optionally delayed.
-   */
-  private delayBotTurnEvent$(event: StreamEventType<MatchMessageUnion>): Observable<StreamEventType<MatchMessageUnion>> {
-    if (event.type === 'data' && event.data.messageType === MatchMessageType.ADD_BOT_TURN) {
-      return of(event).pipe(delay(BOT_TURN_DELAY_MS));
-    }
-
-    return of(event);
   }
 
   /**
@@ -362,41 +342,84 @@ export class MatchPageStore {
   }
 
   /**
-   * Handles a match update message.
-   *
-   * Updates received after deletion or with an equal or older broadcast version
-   * are ignored. The first accepted load attempts to record the match in recent history.
+   * Handles an accepted match update and its related side effects.
    *
    * @param message - Match update message to handle.
    */
   private handleMatchUpdate(message: MatchUpdateMessage): void {
     const match = message.payload;
-    const currentMatchState = this._state().match;
 
-    // Ignore stale or duplicate match updates.
-    if (currentMatchState.status === 'loaded' && currentMatchState.data.broadcastVersion >= match.broadcastVersion) {
+    if (this.shouldIgnoreMatchUpdate(match)) {
       return;
     }
 
-    // Ignore updates after the observed match has been deleted.
-    if (currentMatchState.status === 'deleted') {
-      return;
+    if (this._state().match.status !== 'loaded') {
+      this.recordRecentMatch(match.id);
     }
 
-    // Record the match in recent history on the first accepted load.
-    if (currentMatchState.status !== 'loaded') {
-      void this.recentMatchesRepository.addMatch(match.id)
-        .catch(error => {
-          console.error('Failed to record recent match', error);
-        });
-    }
+    this.handleRematchUpdate(message);
 
     this.patchState({match: {status: 'loaded', data: match}});
+  }
 
-    // Show the rematch prompt when a rematch update includes its ID.
-    if (message.messageType === MatchMessageType.REMATCH && match.rematchId) {
-      this.patchState({rematchPrompt: {rematchId: match.rematchId}});
+  /**
+   * Checks whether a match update should be ignored.
+   *
+   * Updates received after deletion or with an equal or older broadcast version are ignored.
+   *
+   * @param match - Incoming match.
+   * @returns Whether the update should be ignored.
+   */
+  private shouldIgnoreMatchUpdate(match: X01Match): boolean {
+    const currentMatchState = this._state().match;
+
+    return currentMatchState.status === 'deleted' ||
+      (
+        currentMatchState.status === 'loaded' &&
+        currentMatchState.data.broadcastVersion >= match.broadcastVersion
+      );
+  }
+
+  /**
+   * Attempts to record a match in local history.
+   *
+   * Logs failures without interrupting the match page.
+   *
+   * @param matchId - Match ID to record.
+   */
+  private recordRecentMatch(matchId: string): void {
+    void this.recentMatchesRepository.addMatch(matchId)
+      .catch(error => {
+        console.error('Failed to record recent match', error);
+      });
+  }
+
+  /**
+   * Initializes local settings and shows the prompt for a rematch update.
+   *
+   * The prompt is shown after the initialization attempt finishes,
+   * regardless of whether it succeeds or fails. Nothing is shown when the
+   * store is destroyed before the attempt finishes.
+   *
+   * @param message - Match update message to check for a rematch.
+   */
+  private handleRematchUpdate(message: MatchUpdateMessage): void {
+    const match = message.payload;
+
+    if (message.messageType !== MatchMessageType.REMATCH || match.rematchId === null) {
+      return;
     }
+
+    const rematchId = match.rematchId;
+
+    defer(() => this.localMatchSettingsRepository.initializeRematchSettings(match.id, rematchId)).pipe(
+      catchError((error: unknown) => {
+        console.error('Failed to initialize rematch settings', error);
+        return EMPTY;
+      }),
+      tap({complete: () => this.patchState({rematchPrompt: {rematchId}})}),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe();
   }
 
   /**
