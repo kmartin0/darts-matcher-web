@@ -1,0 +1,56 @@
+@use "mixins/helpers";
+@use "mixins/devices";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  min-height: 100dvh;
+}
+
+app-toolbar {
+  flex-shrink: 0;
+}
+
+.content-container {
+  @include helpers.module-page;
+
+  max-width: 1080px;
+  width: fit-content;
+  flex: 1 0 auto;
+  align-items: stretch;
+  padding: 32px 24px;
+  gap: 32px;
+  overflow-wrap: anywhere;
+
+  @include devices.device(phone, phablet) {
+    padding: 24px 16px;
+  }
+}
+
+.header {
+  margin: 0;
+  font: var(--mat-sys-headline-medium);
+
+  @include devices.device(phone, phablet) {
+    font: var(--mat-sys-headline-small);
+  }
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+h2 {
+  margin: 0;
+  font: var(--mat-sys-title-large);
+}
+
+p {
+  margin: 0;
+  font: var(--mat-sys-body-large);
+  color: var(--mat-sys-on-surface-variant);
+}

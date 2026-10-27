@@ -7,10 +7,12 @@
   flex-direction: column;
   flex: 1;
   width: 100%;
+  min-height: 100dvh;
 }
 
 // Header and subheader
 .header-container {
+  flex-shrink: 0;
   padding: 12px;
   background-color: var(--mat-sys-primary);
   color: var(--mat-sys-on-primary);
@@ -45,7 +47,9 @@
 // Page section
 .content-container {
   @include helpers.module-page;
+  flex: 1 0 auto;
   gap: 24px;
+  padding-bottom: 36px;
 
   @include mat.card-overrides((
     elevated-container-color: var(--mat-sys-surface-container-low),
@@ -126,4 +130,22 @@ app-theme-toggle {
 .match-history-button {
   width: 100%;
   justify-content: space-between;
+}
+
+// Footer
+.footer-container {
+  display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 24px;
+  padding: 12px 24px;
+  text-align: center;
+  font: var(--mat-sys-body-small);
+  background-color: var(--mat-sys-surface-container);
+}
+
+.copyright {
+  margin: 0;
 }

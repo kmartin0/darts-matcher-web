@@ -1,9 +1,9 @@
-<div class="header-container">
+<header class="header-container">
   <h1 class="header">Darts Matcher</h1>
   <h2 class="subheader">Create, play and share your darts matches.</h2>
-</div>
+</header>
 
-<div class="content-container">
+<main class="content-container">
   <mat-card class="section-container" appearance="raised">
     <div class="section-header">
       <mat-icon aria-hidden="true">target</mat-icon>
@@ -44,4 +44,9 @@
       </a>
     </mat-card-content>
   </mat-card>
-</div>
+</main>
+
+<footer class="footer-container">
+  <a matButton [routerLink]="AppEndpoints.legal()">Legal &amp; privacy</a>
+  <p class="copyright">&copy; 2026 Darts Matcher</p>
+</footer>
