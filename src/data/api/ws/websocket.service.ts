@@ -388,6 +388,9 @@ export class WebSocketService {
       heartbeatIncoming: this.heartbeatIntervalMs,
       heartbeatOutgoing: this.heartbeatIntervalMs,
       discardWebsocketOnCommFailure: true,
+      debug: message => console.debug(
+        `[STOMP ${new Date().toISOString()}] ${message}`
+      ),
     };
   }
 
